@@ -1,5 +1,14 @@
 #include <QtGui/QMouseEvent>
 
+#ifdef __APPLE__
+  #include <GL/glew.h>
+  #include <GLUT/glut.h>
+#else
+  #include <GL/glew.h>
+  #include <GL/glut.h>
+#endif
+
+
 #include "GLWidget.h"
 
 GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
@@ -20,7 +29,7 @@ void GLWidget::resizeGL(int w, int h) {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    //gluOrtho2D(0, w, 0, h); // set origin to bottom left corner
+    gluOrtho2D(0, w, 0, h); // set origin to bottom left corner
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }

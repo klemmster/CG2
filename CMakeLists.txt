@@ -9,6 +9,13 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 file (GLOB_RECURSE headers *.h)
 
 find_package( OpenGL )
+find_package( GLUT )
+
+IF(GLUT_FOUND)
+    MESSAGE(STATUS "Found glut")
+ELSE()
+    MESSAGE(STATUS "ERROR, no glut")
+ENDIF(GLUT_FOUND)
 
 find_package( Qt4 REQUIRED QtCore QtGui QtOpenGL )
 IF(QT4_FOUND)
@@ -31,4 +38,4 @@ IF(UNIX AND NOT WIN32)
 ENDIF(UNIX AND NOT WIN32)
 
 add_executable(PointMesh ./src/GLWidget.cpp ./src/main.cpp ${MOCFILES} ${headers} )
-target_link_libraries(PointMesh ${QT_LIBRARIES} ${OPENGL_LIBRARIES} )
+target_link_libraries(PointMesh ${GLUT_LIBRARY} ${QT_LIBRARIES} ${OPENGL_LIBRARIES} )
