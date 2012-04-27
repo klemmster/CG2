@@ -1,6 +1,6 @@
 #include <QtGui/QApplication>
 #include <QtOpenGL/QGLWidget>
-#include "GLWidget.h"
+#include "GLWidget.hpp"
 
 
 int main(int argc, char *argv[])

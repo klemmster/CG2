@@ -9,7 +9,7 @@
 #endif
 
 
-#include "GLWidget.h"
+#include "GLWidget.hpp"
 
 GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
     setMouseTracking(true);
