@@ -3,6 +3,7 @@
 
 
 #include <QtOpenGL/QGLWidget>
+#include "vertex.hpp"
 
 class GLWidget : public QGLWidget {
 
@@ -10,6 +11,7 @@ class GLWidget : public QGLWidget {
 
 public:
     GLWidget(QWidget *parent = NULL);
+    VertexList vertices;
 
 protected:
     void initializeGL();

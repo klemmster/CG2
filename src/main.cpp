@@ -12,13 +12,15 @@ int main(int argc, char *argv[])
 
     OffLoader loader;
 
+    /*
     std::string fileName;
     if(argc > 1){
         fileName = argv[1];
     }else{
         fileName = "torus.off";
     }
-    VertexList vertices = loader.readOff(fileName);
+     */
+    //VertexList vertices = loader.readOff(fileName);
     GLWidget window;
     window.resize(800,600);
     window.show();

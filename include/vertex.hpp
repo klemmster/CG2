@@ -5,6 +5,12 @@
 #include <memory>
 #include "vec.hpp"
 
+#ifdef __APPLE__
+#include <boost/smart_ptr.hpp>
+
+using namespace boost;
+#endif
+
 using namespace std;
 
 class Vertex
@@ -15,10 +21,12 @@ class Vertex
         Vertex(const float x, const float y, const float z);
 
         virtual ~Vertex();
+    
+        vec3f m_pos;
 
     protected:
     private:
-        vec3f m_pos;
+        
         Vertex() {};
 };
 typedef shared_ptr< Vertex > VertexPtr;
