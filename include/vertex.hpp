@@ -13,20 +13,20 @@ using namespace boost;
 
 using namespace std;
 
-class Vertex
+class Vertex: public vec3f
 {
     public:
         /** Default constructor */
         Vertex(const vec3f pos);
         Vertex(const float x, const float y, const float z);
 
+        //bool sortX(Vertex a, Vertex b) { return true; };
+
         virtual ~Vertex();
-    
-        vec3f m_pos;
 
     protected:
     private:
-        
+
         Vertex() {};
 };
 typedef shared_ptr< Vertex > VertexPtr;

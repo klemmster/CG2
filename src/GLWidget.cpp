@@ -29,7 +29,7 @@ void GLWidget::initializeGL() {
     glEnable(GL_POLYGON_SMOOTH);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0, 0, 0, 0);
-    
+
     OffLoader loader;
     vertices = loader.readOff("cow.off");
 }
@@ -41,7 +41,7 @@ void GLWidget::resizeGL(int w, int h) {
     gluOrtho2D(0, w, 0, h); // set origin to bottom left corner
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60, (GLfloat)w / (GLfloat)h, 0.1f, 100.0f);
@@ -51,7 +51,7 @@ void GLWidget::resizeGL(int w, int h) {
 }
 
 void GLWidget::paintGL() {
-    
+
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1,0,0);
     glLoadIdentity();
@@ -59,14 +59,14 @@ void GLWidget::paintGL() {
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
-    
+
     //glScalef(20, 20, 20);
     glBegin(GL_POINTS);
-    
-    for (int i = 0; i < vertices.size(); i++)
+
+    for (size_t i = 0; i < vertices.size(); i++)
     {
         glLoadName(i);
-        glVertex3fv(vertices.at(i)->m_pos._v);
+        glVertex3fv(vertices.at(i)->_v);
     }
     //glBegin(GL_POLYGON);
     //glVertex2f(0,0);
@@ -80,16 +80,16 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
 }
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     printf("%d, %d\n", event->x(), event->y());
-    
+
     GLfloat dx = (GLfloat)(event->x() - lastPos.x()) / width();
     GLfloat dy = (GLfloat)(event->y() - lastPos.y()) / height();
-    
+
     if (event->buttons() & Qt::LeftButton) {
         rotationX += 180 * dy;
         rotationY += 180 * dx;
         updateGL();
     }
-    
+
     lastPos = event->pos();
 }
 
