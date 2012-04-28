@@ -13,6 +13,10 @@ using namespace boost;
 
 using namespace std;
 
+class Vertex;
+typedef shared_ptr< Vertex > VertexPtr;
+typedef vector< VertexPtr > VertexList;
+
 class Vertex: public vec3f
 {
     public:
@@ -20,8 +24,9 @@ class Vertex: public vec3f
         Vertex(const vec3f pos);
         Vertex(const float x, const float y, const float z);
 
-        //bool sortX(Vertex a, Vertex b) { return true; };
-
+        static bool sortX(const VertexPtr a, const VertexPtr b) { return ((*a)[0] < (*b)[0]); };
+        static bool sortY(const VertexPtr a, const VertexPtr b) { return ((*a)[1] < (*b)[1]); };
+        static bool sortZ(const VertexPtr a, const VertexPtr b) { return ((*a)[2] < (*b)[2]); };
         virtual ~Vertex();
 
     protected:
@@ -29,8 +34,6 @@ class Vertex: public vec3f
 
         Vertex() {};
 };
-typedef shared_ptr< Vertex > VertexPtr;
-typedef vector< VertexPtr > VertexList;
 
 
 #endif // VERTEX_H

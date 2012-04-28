@@ -1,6 +1,9 @@
 #Executables
 PointMesh
 
+#Files
+meshes
+
 #QT- Files
 *.cxx
 

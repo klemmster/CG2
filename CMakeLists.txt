@@ -38,5 +38,6 @@ IF(UNIX AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "-g -Wall -O0 -march=corei7 -std=c++11")
 ENDIF(UNIX AND NOT WIN32)
 
-add_executable(PointMesh ./src/tree.cpp ./src/TokenizedFile.cpp ./src/vertex.cpp ./src/GLWidget.cpp ./src/offLoader.cpp ./src/main.cpp ${MOCFILES} ${headers} )
+add_executable(PointMesh ./src/leaf.cpp ./src/tree.cpp ./src/TokenizedFile.cpp ./src/vertex.cpp ./src/GLWidget.cpp ./src/offLoader.cpp ./src/main.cpp ${MOCFILES} ${headers} )
 target_link_libraries(PointMesh ${Boost_LIBRARIES} ${GLUT_LIBRARY} ${QT_LIBRARIES} ${OPENGL_LIBRARIES} )
+

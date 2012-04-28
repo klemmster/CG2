@@ -2,6 +2,7 @@
 #define TREE_HPP_HE0Q8ZRG
 
 #include "vertex.hpp"
+#include "leaf.hpp"
 
 class KDTree
 {
@@ -16,7 +17,9 @@ public:
     virtual ~KDTree ();
 
 private:
-    /* data */
+
+    LeafPtr m_root;
+
 };
 
 #endif /* end of include guard: TREE_HPP_HE0Q8ZRG */
