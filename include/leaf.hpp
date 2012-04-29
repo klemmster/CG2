@@ -3,12 +3,6 @@
 
 #include "vertex.hpp"
 
-#ifdef __APPLE__
-#include <boost/smart_ptr.hpp>
-
-using namespace boost;
-#endif
-
 using namespace std;
 
 class Leaf;
