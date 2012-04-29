@@ -4,6 +4,8 @@
 #include "vertex.hpp"
 #include "leaf.hpp"
 
+typedef std::pair<VertexList, VertexList> VertexListPair;
+typedef std::tuple<VertexList, VertexList,VertexList> ListTuple;
 class KDTree
 {
 public:
@@ -14,9 +16,13 @@ public:
     void draw() { throw "NOT yet implemented"; };
     void draw(const VertexList vertices) { throw "NOT yet implemented";};
 
+    //VertexListPair splitListAtElement(const VertexPtr vPtr, const VertexList vertices);
+
     virtual ~KDTree ();
 
 private:
+
+    LeafPtr makeTree(size_t depth, ListTuple t);
 
     LeafPtr m_root;
 

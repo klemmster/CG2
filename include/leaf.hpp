@@ -3,21 +3,22 @@
 
 #include "vertex.hpp"
 
+class Leaf;
+typedef std::shared_ptr< Leaf > LeafPtr;
+
 class Leaf
 {
 public:
-    Leaf (const VertexPtr position, const VertexPtr left, const VertexPtr right);
+    Leaf (const VertexPtr position, const LeafPtr left, const LeafPtr right);
     virtual ~Leaf ();
 
 private:
 
     Leaf() {};
     const VertexPtr m_position;
-    const VertexPtr m_left;
-    const VertexPtr m_right;
+    const LeafPtr m_left;
+    const LeafPtr m_right;
 };
-
-typedef std::shared_ptr< Leaf > LeafPtr;
 
 #endif /* end of include guard: LEAF_HPP_QAN5IUDG */
 

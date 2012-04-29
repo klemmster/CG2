@@ -79,7 +79,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
     lastPos = event->pos();
 }
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
-    printf("%d, %d\n", event->x(), event->y());
+    //printf("%d, %d\n", event->x(), event->y());
 
     GLfloat dx = (GLfloat)(event->x() - lastPos.x()) / width();
     GLfloat dy = (GLfloat)(event->y() - lastPos.y()) / height();
