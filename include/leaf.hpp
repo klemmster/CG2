@@ -3,6 +3,14 @@
 
 #include "vertex.hpp"
 
+#ifdef __APPLE__
+#include <boost/smart_ptr.hpp>
+
+using namespace boost;
+#endif
+
+using namespace std;
+
 class Leaf
 {
 public:
@@ -17,7 +25,7 @@ private:
     const VertexPtr m_right;
 };
 
-typedef std::shared_ptr< Leaf > LeafPtr;
+typedef shared_ptr< Leaf > LeafPtr;
 
 #endif /* end of include guard: LEAF_HPP_QAN5IUDG */
 

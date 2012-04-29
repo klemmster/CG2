@@ -31,7 +31,7 @@ void GLWidget::initializeGL() {
     glClearColor(0, 0, 0, 0);
 
     OffLoader loader;
-    vertices = loader.readOff("cow.off");
+    vertices = loader.readOff("805_neptune_3Mtriangles_uniform.off");
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -44,7 +44,7 @@ void GLWidget::resizeGL(int w, int h) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, (GLfloat)w / (GLfloat)h, 0.1f, 100.0f);
+    gluPerspective(60, (GLfloat)w / (GLfloat)h, 0.1f, 10000.0f);
     gluLookAt(0, 0, 1, 0, 0, 0, 0.0, 1.0, 0.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -55,7 +55,7 @@ void GLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1,0,0);
     glLoadIdentity();
-    glTranslatef(0, 0, -15);
+    glTranslatef(0, 0, -30);
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
