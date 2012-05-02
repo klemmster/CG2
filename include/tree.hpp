@@ -5,7 +5,8 @@
 #include "leaf.hpp"
 
 typedef std::pair<VertexList, VertexList> VertexListPair;
-typedef std::tuple<VertexList, VertexList,VertexList> ListTuple;
+typedef std::tuple<VertexList, VertexList,VertexList> ListTriple;
+typedef std::pair<VertexList, VertexList> ListPair;
 class KDTree
 {
 public:
@@ -22,7 +23,10 @@ public:
 
 private:
 
-    LeafPtr makeTree(size_t depth, ListTuple t);
+    LeafPtr makeTree(size_t depth, ListTriple t);
+
+    ListPair splitListBy(const size_t index, const VertexList sourceList,
+            const VertexPtr sourceVert);
 
     LeafPtr m_root;
 

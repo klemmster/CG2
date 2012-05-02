@@ -11,7 +11,7 @@ KDTree::KDTree(const VertexList vertices){
     std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX );
     std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY );
     std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ );
-    ListTuple t(sortedX, sortedY, sortedZ);
+    ListTriple t(sortedX, sortedY, sortedZ);
     m_root = makeTree(0, t);
 };
 
@@ -19,7 +19,7 @@ KDTree::~KDTree(){
 
 };
 
-LeafPtr KDTree::makeTree(size_t depth, ListTuple t){
+LeafPtr KDTree::makeTree(size_t depth, ListTriple t){
     /*
      * Tuple contains x, y, z  Dimensions Vertex list
      *
@@ -27,7 +27,6 @@ LeafPtr KDTree::makeTree(size_t depth, ListTuple t){
     // TODO: More sophisticated Implementation, taking other axis into account etc.
     VertexList xVertices = std::get<0>(t);
 
-    std::cout << "Size: " << xVertices.size() << "\n";
     if(xVertices.size() == 0){
         return nullptr;
     }
@@ -36,16 +35,33 @@ LeafPtr KDTree::makeTree(size_t depth, ListTuple t){
     }
     size_t median = (int) (xVertices.size()-1)/2;
     VertexPtr posElement = xVertices.at(median);
-    VertexList leftX = VertexList(xVertices.begin(), xVertices.begin()+median);
-    VertexList leftY = std::get<1>(t);
-    VertexList leftZ = std::get<2>(t);
-    ListTuple leftTuple(leftX, leftY, leftZ);
 
-    VertexList rightX= VertexList(xVertices.begin()+median+1, xVertices.end());
-    VertexList rightY = std::get<1>(t);
-    VertexList rightZ = std::get<2>(t);
-    ListTuple rightTuple(rightX, rightY, rightZ);
-    //return nullptr;
-    return LeafPtr(new Leaf(posElement, makeTree(depth+1, leftTuple), makeTree(depth+1, rightTuple)));
+    ListPair xPair = splitListBy(0, std::get<0>(t), posElement);
+    ListPair yPair = splitListBy(1, std::get<1>(t), posElement);
+    ListPair zPair = splitListBy(2, std::get<2>(t), posElement);
+
+    ListTriple left(std::get<0>(xPair), std::get<0>(yPair), std::get<0>(zPair));
+    ListTriple right(std::get<1>(xPair), std::get<1>(yPair), std::get<1>(zPair));
+
+    return LeafPtr(new Leaf(posElement, makeTree(depth+1, left),
+            makeTree(depth+1, right)));
 };
+
+
+ListPair KDTree::splitListBy(const size_t index, const VertexList sourceList,
+        const VertexPtr sourceVert){
+    VertexList left;
+    VertexList right;
+
+    for(auto elem : sourceList){
+        if(elem != sourceVert){
+            if((*elem)[index] < (*sourceVert)[index]){
+                left.push_back(elem);
+            }else{
+                right.push_back(elem);
+            }
+        }
+    }
+    return ListPair(left, right);
+}
 
