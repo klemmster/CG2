@@ -11,8 +11,6 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    OffLoader loader;
-
     std::string fileName;
     if(argc > 1){
         fileName = argv[1];
