@@ -49,7 +49,26 @@
 
 \task{1}
 
+
+
 \task{2}
+
+Eine Zelle der Kantenlänge $s$ kann bei einem Punkt-Mindestabstand $\epsilon$ maximal $n_{max} = (\frac{s}{\epsilon} + 1)^2$ Punkte enthalten, da am meisten Punkte in die Zelle passen, wenn diese Gitterförmig angeordnet sind:
+
+{\centering\image{0.2}{images/gridSample.png}}
+
+Ein Octree hat bei einer Tiefe $t$ maximal $n = 8^t$ Blätter, bzw. Punkte. Nach $t$ umgestellt ergibt sich für die maximale Tiefe bei $n_{max}$ Punkten:
+\formel{$t_{max} = log_8(n_{max}) = 2\cdot log_8(\frac{s}{\epsilon} + 1)$}
+
+\task{3}
+
+
+
+\task{4}
+
+\centering{\image{0.1}{images/bspline.jpg}}
+
+\task{5}
 
 
 
