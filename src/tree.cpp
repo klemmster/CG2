@@ -24,8 +24,17 @@ LeafPtr KDTree::makeTree(size_t depth, ListTriple t){
      * Tuple contains x, y, z  Dimensions Vertex list
      *
     */
-    // TODO: More sophisticated Implementation, taking other axis into account etc.
-    VertexList xVertices = std::get<0>(t);
+    VertexList xVertices;
+    const size_t axis = depth % 3;
+    if( axis == 0 ){
+        xVertices = std::get<0>(t);
+    }else if ( axis == 1){
+        xVertices = std::get<1>(t);
+    }
+    else{
+        xVertices = std::get<2>(t);
+    }
+
 
     if(xVertices.size() == 0){
         return nullptr;

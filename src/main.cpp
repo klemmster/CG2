@@ -20,9 +20,7 @@ int main(int argc, char *argv[])
         fileName = "torus.off";
     }
 
-    VertexList vertices = loader.readOff(fileName);
-    KDTree tree(vertices);
-    GLWidget window;
+    GLWidget window(fileName);
     window.resize(800,600);
     window.show();
 

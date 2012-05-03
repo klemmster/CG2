@@ -24,6 +24,10 @@ class Vertex: public vec3f
         Vertex(const vec3f pos);
         Vertex(const float x, const float y, const float z);
 
+        void draw() const;
+        void highlight();
+        void resetColor();
+
         static bool sortX(const VertexPtr a, const VertexPtr b) { return ((*a)[0] < (*b)[0]); };
         static bool sortY(const VertexPtr a, const VertexPtr b) { return ((*a)[1] < (*b)[1]); };
         static bool sortZ(const VertexPtr a, const VertexPtr b) { return ((*a)[2] < (*b)[2]); };
@@ -33,6 +37,7 @@ class Vertex: public vec3f
     private:
 
         Vertex() {};
+        vec3f m_Color;
 };
 
 

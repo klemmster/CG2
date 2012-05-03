@@ -11,8 +11,11 @@
 
 #include "GLWidget.hpp"
 #include "offLoader.hpp"
+#include "tree.hpp"
 
-GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
+GLWidget::GLWidget(const std::string& fileName, QWidget *parent) :
+    QGLWidget(parent),
+    m_fileName(fileName){
     setMouseTracking(true);
 }
 
@@ -31,7 +34,8 @@ void GLWidget::initializeGL() {
     glClearColor(0, 0, 0, 0);
 
     OffLoader loader;
-    vertices = loader.readOff("805_neptune_3Mtriangles_uniform.off");
+    vertices = loader.readOff(m_fileName);
+    KDTree tree(vertices);
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -63,10 +67,9 @@ void GLWidget::paintGL() {
     //glScalef(20, 20, 20);
     glBegin(GL_POINTS);
 
-    for (size_t i = 0; i < vertices.size(); i++)
+    for(auto vertex : vertices)
     {
-        glLoadName(i);
-        glVertex3fv(vertices.at(i)->_v);
+        vertex->draw();
     }
     //glBegin(GL_POLYGON);
     //glVertex2f(0,0);

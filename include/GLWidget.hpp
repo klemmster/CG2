@@ -10,8 +10,7 @@ class GLWidget : public QGLWidget {
     Q_OBJECT // must include this if you use Qt signals/slots
 
 public:
-    GLWidget(QWidget *parent = NULL);
-    VertexList vertices;
+    GLWidget(const std::string& fileName, QWidget *parent = NULL);
 
 protected:
     void initializeGL();
@@ -20,6 +19,8 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
+    std::string m_fileName;
+    VertexList vertices;
 };
 
 #endif  /* _GLWIDGET_H */
