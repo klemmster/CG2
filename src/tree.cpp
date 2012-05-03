@@ -74,3 +74,14 @@ ListPair KDTree::splitListBy(const size_t index, const VertexList sourceList,
     return ListPair(left, right);
 }
 
+VertexList KDTree::findNearestNeighbour(const VertexPtr source){
+    VertexList result;
+
+    return result;
+}
+
+VertexList KDTree::findInRadius(const VertexPtr source, const size_t radius){
+    VertexList result;
+
+    return result;
+}

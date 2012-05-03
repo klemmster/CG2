@@ -17,7 +17,8 @@ public:
     void draw() { throw "NOT yet implemented"; };
     void draw(const VertexList vertices) { throw "NOT yet implemented";};
 
-    //VertexListPair splitListAtElement(const VertexPtr vPtr, const VertexList vertices);
+    VertexList findNearestNeighbour(const VertexPtr source);
+    VertexList findInRadius(const VertexPtr source, const size_t radius);
 
     virtual ~KDTree ();
 
