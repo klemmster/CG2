@@ -65,6 +65,7 @@ void GLWidget::paintGL() {
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
 
     //glScalef(20, 20, 20);
+    glPointSize(3);
     glBegin(GL_POINTS);
 
     for(auto vertex : vertices)

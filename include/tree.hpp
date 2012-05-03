@@ -4,7 +4,6 @@
 #include "vertex.hpp"
 #include "leaf.hpp"
 
-typedef std::pair<VertexList, VertexList> VertexListPair;
 typedef std::tuple<VertexList, VertexList,VertexList> ListTriple;
 typedef std::pair<VertexList, VertexList> ListPair;
 class KDTree
