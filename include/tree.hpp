@@ -1,11 +1,13 @@
 #ifndef TREE_HPP_HE0Q8ZRG
 #define TREE_HPP_HE0Q8ZRG
 
+#include <array>
+
 #include "vertex.hpp"
-#include "leaf.hpp"
+#include "node.hpp"
 
 typedef std::pair<VertexList, VertexList> VertexListPair;
-typedef std::tuple<VertexList, VertexList,VertexList> ListTriple;
+typedef std::array<VertexList, 3> ListTriple;
 typedef std::pair<VertexList, VertexList> ListPair;
 class KDTree
 {
@@ -24,12 +26,12 @@ public:
 
 private:
 
-    LeafPtr makeTree(size_t depth, ListTriple t);
+    NodePtr makeTree(size_t depth, ListTriple t);
 
     ListPair splitListBy(const size_t index, const VertexList sourceList,
             const VertexPtr sourceVert);
 
-    LeafPtr m_root;
+    NodePtr m_root;
 
 };
 

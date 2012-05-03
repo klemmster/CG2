@@ -1,6 +1,7 @@
 #include "tree.hpp"
 
 #include <algorithm>
+
 KDTree::KDTree(const VertexList vertices){
 
     // Copy Input arrays for individual sorting
@@ -11,7 +12,7 @@ KDTree::KDTree(const VertexList vertices){
     std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX );
     std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY );
     std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ );
-    ListTriple t(sortedX, sortedY, sortedZ);
+    ListTriple t = { sortedX, sortedY, sortedZ };
     m_root = makeTree(0, t);
 };
 
@@ -19,40 +20,32 @@ KDTree::~KDTree(){
 
 };
 
-LeafPtr KDTree::makeTree(size_t depth, ListTriple t){
+NodePtr KDTree::makeTree(size_t depth, ListTriple t){
     /*
      * Tuple contains x, y, z  Dimensions Vertex list
      *
     */
-    VertexList xVertices;
     const size_t axis = depth % 3;
-    if( axis == 0 ){
-        xVertices = std::get<0>(t);
-    }else if ( axis == 1){
-        xVertices = std::get<1>(t);
-    }
-    else{
-        xVertices = std::get<2>(t);
-    }
+    VertexList vertices = t.at(axis);
 
-
-    if(xVertices.size() == 0){
+    if(vertices.size() == 0){
         return nullptr;
     }
-    if(xVertices.size() == 1){
-        return LeafPtr(new Leaf(xVertices.at(0), nullptr, nullptr));
+    if(vertices.size() == 1){
+        return NodePtr(new Node(vertices.at(0), nullptr, nullptr));
     }
-    size_t median = (int) (xVertices.size()-1)/2;
-    VertexPtr posElement = xVertices.at(median);
+
+    size_t median = (int) (vertices.size()-1)/2;
+    VertexPtr posElement = vertices.at(median);
 
     ListPair xPair = splitListBy(0, std::get<0>(t), posElement);
     ListPair yPair = splitListBy(1, std::get<1>(t), posElement);
     ListPair zPair = splitListBy(2, std::get<2>(t), posElement);
 
-    ListTriple left(std::get<0>(xPair), std::get<0>(yPair), std::get<0>(zPair));
-    ListTriple right(std::get<1>(xPair), std::get<1>(yPair), std::get<1>(zPair));
+    ListTriple left = {std::get<0>(xPair), std::get<0>(yPair), std::get<0>(zPair)};
+    ListTriple right = {std::get<1>(xPair), std::get<1>(yPair), std::get<1>(zPair)};
 
-    return LeafPtr(new Leaf(posElement, makeTree(depth+1, left),
+    return NodePtr(new Node(posElement, makeTree(depth+1, left),
             makeTree(depth+1, right)));
 };
 
