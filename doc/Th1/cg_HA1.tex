@@ -8,6 +8,10 @@
 
 \newcommand{\heading}[1]{\item{\textbf{#1}}$ $\\}
 \newcommand{\formel}[1]{\begin{center}#1\end{center}}
+\newcommand{\eqs}[1]{
+$\begin{array}{rcll}
+$ #1 $
+\end{array}$}
 \newcommand{\image}[2]{
 \begin{center}
 \includegraphics[scale = #1]{#2}
@@ -26,13 +30,14 @@
 \newcommand{\subtask}[1]{\subsection*{#1}}
 \newcommand{\subsubtask}[1]{#1$ $\\}
 \newcommand{\mathsum}[3]{\underset{#1}{\overset{#2}{\sum}}#3}
-\newcommand{\isum}[1]{\mathsum{i=1}{n}{#1}}
+\newcommand{\isum}[1]{\mathsum{i=0}{n}{#1}}
 
 \newcommand{\twovector}[2]{\left(\begin{array}{c} #1 \\ #2 \end{array}\right)}
 \newcommand{\fourmatrix}[4]{\left(\begin{array}{cc} #1 & #2 \\ #3 & #4 \end{array}\right)}
 \newcommand{\ninematrix}[9]{\left(\begin{array}{ccc} #1 & #2 & #3 \\ #4 & #5 & #6 \\ #7 & #8 & #9 \end{array}\right)}
 \newcommand{\nvector}[2]{\left(\begin{array}{c} #1 \\ \vdots \\ #2 \end{array}\right)}
 \newcommand{\nmatrix}[4]{\left(\begin{array}{ccc} #1 & \ldots & #2 \\ \vdots & \ddots & \vdots \\ #3 & \ldots & #4 \end{array}\right)}
+\newcommand{\eq}{&=&}
 \newcommand{\eqbreak}{\\[0.5cm]}
 \newcommand{\eqsmbreak}{\\[0.35cm]}
 \newcommand{\eqtbreak}{\\[0.12cm]}
@@ -40,6 +45,7 @@
 \newcommand{\eqsmbreakp}{\\[0.65cm]}
 \newcommand{\eqtbreakp}{\\[0.32cm]}
 \newcommand{\rc}{r^c}
+\newcommand{\vvec}{\vec v}
 
 \parindent 0pt
 
@@ -66,11 +72,28 @@ Ein Octree hat bei einer Tiefe $t$ maximal $n = 8^t$ Blätter, bzw. Punkte. Nach 
 
 \task{4}
 
-\centering{\image{0.1}{images/bspline.jpg}}
+{\centering\image{0.1}{images/bspline.jpg}}
 
 \task{5}
 
+Seien:\\
+$n$ die Anzahl der Kontrollpunkte\\
+$p_i$ mit $i \in \{0,1,2 ... n\}$ die Kontrollpunkte\\
+$ $\\
+Eine affine Transformation lässt sich in einen multiplikativen Teil (Matrix $M$) und einen additiven Teil (Vektor $\vec a$) aufteilen:
 
+\formel{$T(\vvec) = M\cdot\vvec + \vec a$}
 
-
+Affine Invarianz: Es ist egal, ob zuerst $T$ auf die Kontrollpunkte angewandt wird mit anschließender Interpolation oder umgekehrt:
+\formel{$T(\isum{p_i\cdot L_i^n(u)}) = \isum{(T(p_i\cdot L_i^n(u)))}$}
+Setze gleich:\\
+\eqs{$
+T(\isum{p_i\cdot L_i^n(u)}) \eq \isum{(T(p_i\cdot L_i^n(u)))}\\
+M(\isum{p_i\cdot L_i^n(u)}) + \vec a \eq \isum{(M(p_i\cdot L_i^n(u)) + \vec a)}\\
+\isum{M(p_i\cdot L_i^n(u))} + \vec a \eq \isum{M(p_i\cdot L_i^n(u))} + \isum{\vec a\cdot L_i^n(u)}\\
+\vec a \eq \vec a \cdot \isum{L_i^n(u)} & \Leftrightarrow \isum{L_i^n(u) = 1} \qed
+$}
+$ $\\\\\\
+Demnach sind beide Seiten gleich, genau dann, wenn für die Basisfunktion gilt:
+\formel{$L_i^n(u) = 1$ $\forall u$ //Partition der Eins}
 \end{document}
