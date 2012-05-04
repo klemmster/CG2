@@ -1,18 +1,19 @@
 #ifndef TREE_HPP_HE0Q8ZRG
 #define TREE_HPP_HE0Q8ZRG
 
-#include "vertex.hpp"
-#include "leaf.hpp"
+#include <array>
 
-typedef std::tuple<VertexList, VertexList,VertexList> ListTriple;
+#include "vertex.hpp"
+#include "node.hpp"
+#include "hyperSphere.hpp"
+
+typedef std::array<VertexList, 3> ListTriple;
 typedef std::pair<VertexList, VertexList> ListPair;
 class KDTree
 {
 public:
     KDTree (const VertexList vertices);
 
-    void collectKNearest() {throw "NOT yet implemented";};
-    void collectInRadius() {throw "NOT yet implemented";};
     void draw() { throw "NOT yet implemented"; };
     void draw(const VertexList vertices) { throw "NOT yet implemented";};
 
@@ -23,12 +24,15 @@ public:
 
 private:
 
-    LeafPtr makeTree(size_t depth, ListTriple t);
+    NodePtr makeTree(size_t depth, ListTriple t, Boundaries boundaries);
 
     ListPair splitListBy(const size_t index, const VertexList sourceList,
             const VertexPtr sourceVert);
 
-    LeafPtr m_root;
+    void findInRadius(const NodePtr& src, const HyperSphere& sphere,
+            VertexList& result) const;
+
+    NodePtr m_root;
 
 };
 

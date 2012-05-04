@@ -2,6 +2,7 @@
 #define HYPERREGION_HPP_SV8YTUQ2
 
 #include "vertex.hpp"
+#include "node.hpp"
 
 class HyperRegion
 {
@@ -9,8 +10,11 @@ public:
     HyperRegion ();
     virtual ~HyperRegion ();
 
-    virtual bool inRegion(const VertexPtr srcVertex) = 0;
-    virtual bool intersectsRegion(const
+    /* Yields true if VertexPtr is within this region */
+    virtual bool inRegion(const VertexPtr srcVertex) const = 0;
+
+    /* Yields true if Region is within boundaries */
+    virtual bool intersectsRegion(const Boundaries boundaries) const = 0;
 
 private:
     /* data */
