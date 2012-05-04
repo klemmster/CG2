@@ -5,6 +5,7 @@
 
 #include "vertex.hpp"
 #include "node.hpp"
+#include "hyperSphere.hpp"
 
 typedef std::pair<VertexList, VertexList> VertexListPair;
 typedef std::array<VertexList, 3> ListTriple;
@@ -14,8 +15,6 @@ class KDTree
 public:
     KDTree (const VertexList vertices);
 
-    void collectKNearest() {throw "NOT yet implemented";};
-    void collectInRadius() {throw "NOT yet implemented";};
     void draw() { throw "NOT yet implemented"; };
     void draw(const VertexList vertices) { throw "NOT yet implemented";};
 
@@ -26,10 +25,13 @@ public:
 
 private:
 
-    NodePtr makeTree(size_t depth, ListTriple t);
+    NodePtr makeTree(size_t depth, ListTriple t, Boundaries boundaries);
 
     ListPair splitListBy(const size_t index, const VertexList sourceList,
             const VertexPtr sourceVert);
+
+    void findInRadius(const NodePtr& src, const HyperSphere& sphere,
+            VertexList& result) const;
 
     NodePtr m_root;
 

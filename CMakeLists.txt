@@ -43,6 +43,6 @@ ELSEIF(APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -stdlib=libc++ -g -Wall")
 ENDIF()
 
-add_executable(PointMesh ./src/node.cpp ./src/tree.cpp ./src/TokenizedFile.cpp ./src/vertex.cpp ./src/GLWidget.cpp ./src/offLoader.cpp ./src/main.cpp ${MOCFILES} ${headers} )
+add_executable(PointMesh ./src/hyperRegion.cpp ./src/hyperSphere.cpp ./src/node.cpp ./src/tree.cpp ./src/TokenizedFile.cpp ./src/vertex.cpp ./src/GLWidget.cpp ./src/offLoader.cpp ./src/main.cpp ${MOCFILES} ${headers} )
 target_link_libraries(PointMesh ${Boost_LIBRARIES} ${GLUT_LIBRARY} ${QT_LIBRARIES} ${OPENGL_LIBRARIES} )
 
