@@ -12,10 +12,11 @@ typedef std::pair<VertexList, VertexList> ListPair;
 class KDTree
 {
 public:
+    KDTree ();
     KDTree (const VertexList vertices);
 
-    void draw() { throw "NOT yet implemented"; };
-    void draw(const VertexList vertices) { throw "NOT yet implemented";};
+    void draw();// { throw "NOT yet implemented"; };
+    void draw(const VertexList vertices);// { throw "NOT yet implemented";};
 
     VertexList findNearestNeighbour(const VertexPtr source);
     VertexList findInRadius(const VertexPtr source, const size_t radius);

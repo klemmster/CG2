@@ -4,6 +4,7 @@
 
 #include <QtOpenGL/QGLWidget>
 #include "vertex.hpp"
+#include "tree.hpp"
 
 class GLWidget : public QGLWidget {
 
@@ -21,6 +22,7 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     std::string m_fileName;
     VertexList vertices;
+    KDTree tree;
 };
 
 #endif  /* _GLWIDGET_H */

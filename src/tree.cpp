@@ -3,6 +3,14 @@
 #include <algorithm>
 #include <float.h>
 
+#ifdef __APPLE__
+#include <GL/glew.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/glew.h>
+#include <GL/glut.h>
+#endif
+
 KDTree::KDTree(const VertexList vertices){
 
     // Copy Input arrays for individual sorting
@@ -22,6 +30,10 @@ KDTree::KDTree(const VertexList vertices){
         findInRadius(vertices.at(0), 4);
     //END TODO DELETE
 };
+
+KDTree::KDTree(){
+    
+}
 
 KDTree::~KDTree(){
 
@@ -114,4 +126,36 @@ VertexList KDTree::findInRadius(const VertexPtr source, const size_t radius){
         ptr->highlight();
     }
     return result;
+}
+
+void KDTree::draw() {
+    std::cout << "Drawing KDTree" << std::endl;
+    
+    std::array<float, 6> bounds = m_root->getBoundaries();
+    
+    for (size_t i = 0; i < bounds.size(); i++) {
+        std::cout <<  i << " " << bounds[i] << std::endl;
+    }
+    
+    glColor3f(0, 1, 0);
+    glPointSize(10);
+    glBegin(GL_POINTS);
+    
+    glVertex3fv(m_root->getPosition()->_v);
+    
+//    glVertex3f(bounds[1], bounds[3], bounds[5]);
+//    glVertex3f(bounds[0], bounds[2], bounds[4]);
+//    glVertex3f(bounds[0], bounds[3], bounds[4]);
+//    glVertex3f(bounds[1], bounds[2], bounds[5]);
+//    glVertex3f(bounds[0], bounds[2], bounds[5]);
+//    glVertex3f(bounds[0], bounds[3], bounds[5]);
+//    glVertex3f(bounds[1], bounds[3], bounds[4]);
+//    glVertex3f(bounds[1], bounds[2], bounds[4]);
+    
+    glEnd();
+    
+}
+
+void KDTree::draw(const VertexList vertices) {
+    
 }

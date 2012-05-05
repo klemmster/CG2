@@ -11,7 +11,6 @@
 
 #include "GLWidget.hpp"
 #include "offLoader.hpp"
-#include "tree.hpp"
 
 GLWidget::GLWidget(const std::string& fileName, QWidget *parent) :
     QGLWidget(parent),
@@ -35,7 +34,7 @@ void GLWidget::initializeGL() {
 
     OffLoader loader;
     vertices = loader.readOff(m_fileName);
-    KDTree tree(vertices);
+    tree = KDTree(vertices);
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -64,6 +63,8 @@ void GLWidget::paintGL() {
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
 
+    tree.draw();
+    
     //glScalef(20, 20, 20);
     glPointSize(3);
     glBegin(GL_POINTS);
