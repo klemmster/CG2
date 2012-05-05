@@ -12,10 +12,13 @@
 #include "GLWidget.hpp"
 #include "offLoader.hpp"
 
-GLWidget::GLWidget(const std::string& fileName, QWidget *parent) :
-    QGLWidget(parent),
-    m_fileName(fileName){
+GLWidget::GLWidget(QWidget *parent) :
+    QGLWidget(parent){
     setMouseTracking(true);
+}
+
+void GLWidget::setFilename(const std::string& fileName) {
+    m_fileName = fileName;
 }
 
 QPoint lastPos;

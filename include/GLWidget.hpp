@@ -11,7 +11,8 @@ class GLWidget : public QGLWidget {
     Q_OBJECT // must include this if you use Qt signals/slots
 
 public:
-    GLWidget(const std::string& fileName, QWidget *parent = NULL);
+    GLWidget(QWidget *parent = NULL);
+    void setFilename(const std::string& fileName);
 
 protected:
     void initializeGL();
