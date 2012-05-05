@@ -1,7 +1,6 @@
 #include "tree.hpp"
 
 #include <algorithm>
-#include <float.h>
 
 #ifdef __APPLE__
 #include <GL/glew.h>
@@ -21,8 +20,15 @@ KDTree::KDTree(const VertexList vertices){
     std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX );
     std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY );
     std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ );
+
+    float xMin = (*sortedX.front())[0];
+    float xMax = (*sortedX.back())[0];
+    float yMin = (*sortedY.front())[1];
+    float yMax = (*sortedY.back())[1];
+    float zMin = (*sortedZ.front())[2];
+    float zMax = (*sortedZ.back())[2];
     ListTriple t = { {sortedX, sortedY, sortedZ} };
-    Boundaries boundaries = {{ FLT_MIN, FLT_MAX, FLT_MIN, FLT_MAX, FLT_MIN, FLT_MAX }};
+    Boundaries boundaries = {{ xMin, xMax, yMin, yMax, zMin, zMax }};
     m_root = makeTree(0, t, boundaries);
 
 
@@ -32,7 +38,7 @@ KDTree::KDTree(const VertexList vertices){
 };
 
 KDTree::KDTree(){
-    
+
 }
 
 KDTree::~KDTree(){
@@ -130,30 +136,30 @@ VertexList KDTree::findInRadius(const VertexPtr source, const size_t radius){
 
 void KDTree::draw() {
     std::cout << "Drawing KDTree" << std::endl;
-    
+
     std::array<float, 6> bounds = m_root->getLeft()->getBoundaries();
-    
+
     for (size_t i = 0; i < bounds.size(); i++) {
         std::cout <<  i << " " << bounds[i] << std::endl;
     }
-    
+
     glColor3f(0, 1, 0);
     glPointSize(10);
     glBegin(GL_POINTS);
-    
+
     //glVertex3fv(m_root->getPosition()->_v);
-    
+
     glVertex3f(bounds[0], 0, 0);
     glVertex3f(bounds[1], 0, 0);
     glVertex3f(0, bounds[2], 0);
     glVertex3f(0, bounds[3], 0);
     glVertex3f(0, 0, bounds[4]);
     glVertex3f(0, 0, bounds[5]);
-    
+
     glEnd();
-    
+
 }
 
 void KDTree::draw(const VertexList vertices) {
-    
+
 }
