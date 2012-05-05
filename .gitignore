@@ -3,6 +3,8 @@ PointMesh
 
 #Files
 meshes
+CMakeScripts
+*xcodeproj
 
 #QT- Files
 *.cxx
