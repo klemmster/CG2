@@ -33,7 +33,8 @@ KDTree::KDTree(const VertexList vertices){
 
 
     //TODO: DELETE
-        findInRadius(vertices.at(0), 4);
+        //findInRadius(vertices.at(0), 4);
+        findKNearestNeighbours(vertices.at(0), 55);
     //END TODO DELETE
 };
 
@@ -99,10 +100,38 @@ ListPair KDTree::splitListBy(const size_t index, const VertexList sourceList,
     return ListPair(left, right);
 }
 
-VertexList KDTree::findNearestNeighbour(const VertexPtr source){
+VertexList KDTree::findKNearestNeighbours(const VertexPtr source,
+        const size_t numNeighbours){
     VertexList result;
-
+    LimitedPriorityQueue resultQueue(numNeighbours);
+    findKNearestNeighbours(m_root, resultQueue, source);
+    while(!resultQueue.empty()){
+        VertexDistPair pair = resultQueue.top();
+        VertexPtr vrtx = std::get<0>(pair);
+        result.push_back(vrtx);
+        vrtx->highlight();
+        resultQueue.pop();
+    }
     return result;
+}
+
+void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& results,
+        const VertexPtr& target){
+    Vertex tmp = (*src->getPosition()) - (*target);
+    float dist = norm(tmp);
+    results.push(VertexDistPair(src->getPosition(), dist));
+
+    HyperSphere sphere(target, std::get<1>(results.top()));
+    if(src->getLeft()){
+        if(sphere.intersectsRegion(src->getLeft()->getBoundaries())){
+            findKNearestNeighbours(src->getLeft(), results, target);
+        }
+    }
+    if(src->getRight()){
+        if(sphere.intersectsRegion(src->getRight()->getBoundaries())){
+            findKNearestNeighbours(src->getRight(), results, target);
+        }
+    }
 }
 
 void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,

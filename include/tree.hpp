@@ -6,6 +6,8 @@
 #include "vertex.hpp"
 #include "node.hpp"
 #include "hyperSphere.hpp"
+#include "limitedPriorityQueue.hpp"
+
 
 typedef std::array<VertexList, 3> ListTriple;
 typedef std::pair<VertexList, VertexList> ListPair;
@@ -18,7 +20,7 @@ public:
     void draw();// { throw "NOT yet implemented"; };
     void draw(const VertexList vertices);// { throw "NOT yet implemented";};
 
-    VertexList findNearestNeighbour(const VertexPtr source);
+    VertexList findKNearestNeighbours(const VertexPtr source, const size_t numNeighbours);
     VertexList findInRadius(const VertexPtr source, const size_t radius);
 
     virtual ~KDTree ();
@@ -32,6 +34,9 @@ private:
 
     void findInRadius(const NodePtr& src, const HyperSphere& sphere,
             VertexList& result) const;
+
+    void findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& results,
+            const VertexPtr& target);
 
     NodePtr m_root;
 
