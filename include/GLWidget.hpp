@@ -13,6 +13,9 @@ class GLWidget : public QGLWidget {
 public:
     GLWidget(QWidget *parent = NULL);
     void setFilename(const std::string& fileName);
+    
+public slots:
+    void showKDTree(bool show);
 
 protected:
     void initializeGL();
@@ -24,6 +27,9 @@ protected:
     std::string m_fileName;
     VertexList vertices;
     KDTree tree;
+    
+private:
+    bool showTree;
 };
 
 #endif  /* _GLWIDGET_H */

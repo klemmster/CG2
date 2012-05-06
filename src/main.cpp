@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         fileName = "torus.off";
     }
 
-    ui.widget->setFilename(fileName);
+    ui.glWidget->setFilename(fileName);
     window->show();
     //GLWidget window;
     

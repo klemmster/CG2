@@ -15,6 +15,7 @@
 GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent){
     setMouseTracking(true);
+        showTree = 0;
 }
 
 void GLWidget::setFilename(const std::string& fileName) {
@@ -66,8 +67,10 @@ void GLWidget::paintGL() {
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
 
-    tree.draw();
-    
+    if (showTree)
+    {
+        tree.draw();
+    }
     //glScalef(20, 20, 20);
     glPointSize(3);
     glBegin(GL_POINTS);
@@ -110,5 +113,13 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         event->ignore();
         break;
     }
+}
+
+void GLWidget::showKDTree(bool show) {
+    
+    showTree = show;
+    updateGL();
+    
+    //std::cout << "click " << show << std::endl;
 }
 
