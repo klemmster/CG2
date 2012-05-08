@@ -34,6 +34,7 @@ $ #1 $
 \newcommand{\isum}[1]{\mathsum{i=0}{n}{#1}}
 
 \newcommand{\twovector}[2]{\left(\begin{array}{c} #1 \\ #2 \end{array}\right)}
+\newcommand{\threevector}[3]{\left(\begin{array}{c} #1 \\ #2 \\ #3 \end{array}\right)}
 \newcommand{\fourmatrix}[4]{\left(\begin{array}{cc} #1 & #2 \\ #3 & #4 \end{array}\right)}
 \newcommand{\ninematrix}[9]{\left(\begin{array}{ccc} #1 & #2 & #3 \\ #4 & #5 & #6 \\ #7 & #8 & #9 \end{array}\right)}
 \newcommand{\nvector}[2]{\left(\begin{array}{c} #1 \\ \vdots \\ #2 \end{array}\right)}
@@ -56,7 +57,7 @@ $ #1 $
 
 \task{1}
 
-Um den Median in linearer Zeit zu bestimmen, kann der Median of Medians Algorithmus verwendet werden. Im folgenden ist der Algorithmus in Form von Pseudocode näher erläutert.
+Um den Median in linearer Zeit zu bestimmen, kann der Median of Medians Algorithmus verwendet werden. Im Folgenden ist der Algorithmus in Form von Pseudocode näher erläutert.
 \\
 \begin{algorithmic}
 \Function{select}{L, k}
@@ -84,14 +85,14 @@ Um den Median in linearer Zeit zu bestimmen, kann der Median of Medians Algorith
 \EndIf
 \EndFunction
 \end{algorithmic}
-
-Beweis f"ur lineare Zeit:
-
-Wir werfen entweder $L3$ (Werte gr"oßer als $M$) oder $L1$ (Werte kleiner als $M$) weg. Angenommen wir werfen $L3$ weg. Unter den $n/5$ Werten von $X$ befinden sich $n/10$ gr"oßere Werte als $M$. Wenn ein Wert aus $X$ gr"oßer als $M$ ist, dann sind genau 2 Werte aus $S[i]$ ebenfalls gr"oßer als der Wert aus $X$. Daraus folgt, dass $L3$ mindestens 3 Elemente in jeder der $n/10$ Gruppen von $S[i]$ hat, woraus sich mindestens $3n/10$ Elemente ergeben. Das gleiche gilt f"ur $L1$, wodurch sich h"ochstens $7n/10$ Elemente ergeben ($T(7n/10)$).
+$ $\\
+\textbf{Aussage:} Der o.g. Algorithmus liefert den Median in $O(n)$.\\
+\\
+\textsc{Beweis:} Wir werfen entweder $L3$ (Werte größer als $M$) oder $L1$ (Werte kleiner als $M$) weg. Angenommen wir werfen $L3$ weg. Unter den $n/5$ Werten von $X$ befinden sich $n/10$ gr"oßere Werte als $M$. Wenn ein Wert aus $X$ gr"oßer als $M$ ist, dann sind genau 2 Werte aus $S[i]$ ebenfalls gr"oßer als der Wert aus $X$. Daraus folgt, dass $L3$ mindestens 3 Elemente in jeder der $n/10$ Gruppen von $S[i]$ hat, woraus sich mindestens $3n/10$ Elemente ergeben. Das gleiche gilt f"ur $L1$, wodurch sich h"ochstens $7n/10$ Elemente ergeben ($T(7n/10)$).
 
 \task{2}
 
-Eine Zelle der Kantenlänge $s$ kann bei einem Punkt-Mindestabstand $\epsilon$ maximal $n_{max} = (\frac{s}{\epsilon} + 1)^2$ Punkte enthalten, da am meisten Punkte in die Zelle passen, wenn diese Gitterförmig angeordnet sind:
+Eine Zelle der Kantenlänge $s$ kann bei einem Punkt-Mindestabstand $\epsilon$ maximal $n_{max} = (\frac{s}{\epsilon} + 1)^2$ Punkte enthalten, da am meisten Punkte in die Zelle passen, wenn die Punkte Gitterförmig angeordnet sind:
 
 {\centering\image{0.2}{images/gridSample.png}}
 
@@ -100,7 +101,19 @@ Ein Octree hat bei einer Tiefe $t$ maximal $n = 8^t$ Blätter, bzw. Punkte. Nach 
 
 \task{3}
 
+Ein weiteres volumetrisches Primitiv wäre ein Prisma mit einem gleichseitigen Dreieck als Grundfläche (Dreiecke können in 2D auf einfache Weise selbstähnlich angeordnet werden). Eine Unterteilungsstrategie könnte das Ausgangsprimitiv folgendermaßen in acht Unterprimitive teilen:\\
+\\
+Die Spitze des Ausgangsprismas zeige in negative Y-Richtung. Alle Unterprimitive werden zuerst (d.h. als letzte Transformationsmatrix) um $0.5$ skaliert.\\
+Folgende Translationen werden für die ersten vier Primitiven durchgeführt ($h$ sei die Höhe des Ausgangsprimitivs):\\
 
+$\threevector{0}{-\frac{h}{4}}{0}, \threevector{-\frac{h}{4}}{\frac{h}{4}}{0}, \threevector{\frac{h}{4}}{\frac{h}{4}}{0}, \threevector{0}{\frac{h}{4}}{0}$\\
+
+Das Prisma mit der letztgenannten Translation wird vorher um 180° um die Y-Achse gedreht.\\
+Folgende Translationen werden für die letzten vier Primitiven durchgeführt ($h$ sei die Höhe des Ausgangsprimitivs, $l$ die Länge in Z-Richtung):\\
+
+$\threevector{0}{-\frac{h}{4}}{\frac{l}{2}}, \threevector{-\frac{h}{4}}{\frac{h}{4}}{\frac{l}{2}}, \threevector{\frac{h}{4}}{\frac{h}{4}}{\frac{l}{2}}, \threevector{0}{\frac{h}{4}}{\frac{l}{2}}$\\
+
+Auch hier wird das Prisma mit der letztgenannten Translation vorher um 180° um die Y-Achse gedreht.
 
 \task{4}
 
