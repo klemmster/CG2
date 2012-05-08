@@ -5,6 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{ngerman,url,booktabs,scrpage2}
 \usepackage{color}
+\usepackage{algpseudocode}
 
 \newcommand{\heading}[1]{\item{\textbf{#1}}$ $\\}
 \newcommand{\formel}[1]{\begin{center}#1\end{center}}
@@ -55,7 +56,29 @@ $ #1 $
 
 \task{1}
 
+Um den Median in linearer Zeit zu bestimmen, kann der Quickselect-Algorithmus verwendet werden. Im folgenden ist der Algorithmus in Form von Pseudocode näher erläutert.
 
+\begin{algorithmic}
+\Function{findMedian}{Array A, Nummer k}
+\\
+\\ Nimm zufällige Zahl $a$ aus $A$
+\\ Teile die Zahlen in $A$ in 2 Sets auf
+\\ S - alle Nummern kleiner als $a$
+\\ B - alle Nummern größer als $a$
+\\
+\If {$|S| = k - 1$}
+\State \Return {$a$}
+\ElsIf{$|S| \le k - 1$}
+\State $findMedian(B, k - |S| - 1)$
+\Else
+\State $findMedian(S, k)$
+\EndIf
+\EndFunction
+\end{algorithmic}
+
+Beweis f"ur lineare Zeit:
+\\
+Test
 
 \task{2}
 
