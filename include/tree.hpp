@@ -27,6 +27,8 @@ public:
 
 private:
 
+    void drawSingleNode(const NodePtr& src);
+    
     NodePtr makeTree(size_t depth, ListTriple t, Boundaries boundaries);
 
     ListPair splitListBy(const size_t index, const VertexList sourceList,

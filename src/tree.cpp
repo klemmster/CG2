@@ -164,56 +164,63 @@ VertexList KDTree::findInRadius(const VertexPtr source, const size_t radius){
 }
 
 void KDTree::draw() {
-    std::cout << "Drawing KDTree" << std::endl;
-
-    std::array<float, 6> bounds = m_root->getBoundaries();
-
-    for (size_t i = 0; i < bounds.size(); i++) {
-        std::cout <<  i << " " << bounds[i] << std::endl;
-    }
+    // std::cout << "Drawing KDTree" << std::endl;
 
     glColor3f(0, 1, 0);
-    glPointSize(10);
+    drawSingleNode(m_root);
+   
+}
+
+void KDTree::drawSingleNode(const NodePtr &src) {
+
+    if (src == nullptr) {
+        return;
+    }
+    
+    std::array<float, 6> bounds = src->getBoundaries();
+    
     glBegin(GL_LINES);
-
-        glVertex3f(bounds[0], bounds[2], bounds[4]);
-        glVertex3f(bounds[0], bounds[2], bounds[5]);
     
-        glVertex3f(bounds[0], bounds[2], bounds[5]);
-        glVertex3f(bounds[0], bounds[3], bounds[5]);
+    glVertex3f(bounds[0], bounds[2], bounds[4]);
+    glVertex3f(bounds[0], bounds[2], bounds[5]);
     
-        glVertex3f(bounds[0], bounds[3], bounds[5]);
-        glVertex3f(bounds[0], bounds[3], bounds[4]);
+    glVertex3f(bounds[0], bounds[2], bounds[5]);
+    glVertex3f(bounds[0], bounds[3], bounds[5]);
     
-        glVertex3f(bounds[0], bounds[3], bounds[4]);
-        glVertex3f(bounds[0], bounds[2], bounds[4]);
+    glVertex3f(bounds[0], bounds[3], bounds[5]);
+    glVertex3f(bounds[0], bounds[3], bounds[4]);
     
-        glVertex3f(bounds[0], bounds[2], bounds[4]);
-        glVertex3f(bounds[1], bounds[2], bounds[4]);
-
-        glVertex3f(bounds[0], bounds[3], bounds[4]);
-        glVertex3f(bounds[1], bounds[3], bounds[4]);
+    glVertex3f(bounds[0], bounds[3], bounds[4]);
+    glVertex3f(bounds[0], bounds[2], bounds[4]);
     
-        glVertex3f(bounds[1], bounds[3], bounds[4]);
-        glVertex3f(bounds[1], bounds[2], bounds[4]);
+    glVertex3f(bounds[0], bounds[2], bounds[4]);
+    glVertex3f(bounds[1], bounds[2], bounds[4]);
     
-        glVertex3f(bounds[1], bounds[3], bounds[4]);
-        glVertex3f(bounds[1], bounds[3], bounds[5]);
+    glVertex3f(bounds[0], bounds[3], bounds[4]);
+    glVertex3f(bounds[1], bounds[3], bounds[4]);
     
-        glVertex3f(bounds[1], bounds[2], bounds[4]);
-        glVertex3f(bounds[1], bounds[2], bounds[5]);
+    glVertex3f(bounds[1], bounds[3], bounds[4]);
+    glVertex3f(bounds[1], bounds[2], bounds[4]);
     
-        glVertex3f(bounds[1], bounds[3], bounds[5]);
-        glVertex3f(bounds[1], bounds[2], bounds[5]);
+    glVertex3f(bounds[1], bounds[3], bounds[4]);
+    glVertex3f(bounds[1], bounds[3], bounds[5]);
     
-        glVertex3f(bounds[1], bounds[2], bounds[5]);
-        glVertex3f(bounds[0], bounds[2], bounds[5]);
+    glVertex3f(bounds[1], bounds[2], bounds[4]);
+    glVertex3f(bounds[1], bounds[2], bounds[5]);
     
-        glVertex3f(bounds[1], bounds[3], bounds[5]);
-        glVertex3f(bounds[0], bounds[3], bounds[5]);
-
+    glVertex3f(bounds[1], bounds[3], bounds[5]);
+    glVertex3f(bounds[1], bounds[2], bounds[5]);
+    
+    glVertex3f(bounds[1], bounds[2], bounds[5]);
+    glVertex3f(bounds[0], bounds[2], bounds[5]);
+    
+    glVertex3f(bounds[1], bounds[3], bounds[5]);
+    glVertex3f(bounds[0], bounds[3], bounds[5]);
+    
     glEnd();
-
+    
+    drawSingleNode(src->getLeft());
+    drawSingleNode(src->getRight());
 }
 
 void KDTree::draw(const VertexList vertices) {
