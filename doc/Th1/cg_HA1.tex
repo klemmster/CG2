@@ -56,29 +56,38 @@ $ #1 $
 
 \task{1}
 
-Um den Median in linearer Zeit zu bestimmen, kann der Quickselect-Algorithmus verwendet werden. Im folgenden ist der Algorithmus in Form von Pseudocode n‰her erl‰utert.
-
+Um den Median in linearer Zeit zu bestimmen, kann der Median of Medians Algorithmus verwendet werden. Im folgenden ist der Algorithmus in Form von Pseudocode n‰her erl‰utert.
+\\
 \begin{algorithmic}
-\Function{findMedian}{Array A, Nummer k}
+\Function{select}{L, k}
+\If {$L\ enth"alt\ 10\ oder\ weniger\ Elemente$}
+\State sort(L)
+\State \Return Element an $k$ter Stelle
+\EndIf
+
 \\
-\\ Nimm zuf‰llige Zahl $a$ aus $A$
-\\ Teile die Zahlen in $A$ in 2 Sets auf
-\\ S - alle Nummern kleiner als $a$
-\\ B - alle Nummern grˆﬂer als $a$
+\\ Teile L in Subsets $S[i]$ mit jeweils 5 Elementen auf \Comment{Es gibt n/5 Subsets}
 \\
-\If {$|S| = k - 1$}
-\State \Return {$a$}
-\ElsIf{$|S| \le k - 1$}
-\State $findMedian(B, k - |S| - 1)$
+\For {$i = 1 \to n/5$} 
+\State $X\ add\ select(S[i], 3)$ \Comment{Median von den Subsets}
+\EndFor
+\\
+\State $M = select(X[i], n/10)$
+\\
+\\ Teile L auf in L1 < M, L2 = M, L3 > M
+\If {$k \leq |L1|$}
+\State \Return {$select(L1, k)$}
+\ElsIf{$k > |L1| + |L2|$}
+\State $select(L3, k - |L1| - |L2|)$
 \Else
-\State $findMedian(S, k)$
+\State $return\ M$
 \EndIf
 \EndFunction
 \end{algorithmic}
 
 Beweis f"ur lineare Zeit:
-\\
-Test
+
+Wir werfen entweder $L3$ (Werte gr"oﬂer als $M$) oder $L1$ (Werte kleiner als $M$) weg. Angenommen wir werfen $L3$ weg. Unter den $n/5$ Werten von $X$ befinden sich $n/10$ gr"oﬂere Werte als $M$. Wenn ein Wert aus $X$ gr"oﬂer als $M$ ist, dann sind genau 2 Werte aus $S[i]$ ebenfalls gr"oﬂer als der Wert aus $X$. Daraus folgt, dass $L3$ mindestens 3 Elemente in jeder der $n/10$ Gruppen von $S[i]$ hat, woraus sich mindestens $3n/10$ Elemente ergeben. Das gleiche gilt f"ur $L1$, wodurch sich h"ochstens $7n/10$ Elemente ergeben ($T(7n/10)$).
 
 \task{2}
 
