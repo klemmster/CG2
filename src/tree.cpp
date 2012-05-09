@@ -10,6 +10,7 @@
 #include <GL/glut.h>
 #endif
 
+#include <float.h>
 KDTree::KDTree(const VertexList vertices){
 
     // Copy Input arrays for individual sorting
@@ -33,8 +34,8 @@ KDTree::KDTree(const VertexList vertices){
 
 
     //TODO: DELETE
-        findInRadius(vertices.at(0), 4);
-        //findKNearestNeighbours(vertices.at(0), 55);
+        //findInRadius(vertices.at(0), 4);
+        findKNearestNeighbours(vertices.at(0), 55);
     //END TODO DELETE
 };
 
@@ -115,12 +116,27 @@ VertexList KDTree::findKNearestNeighbours(const VertexPtr source,
 
 void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& results,
         const VertexPtr& target){
-    /*
-    Vertex tmp = (*src->getPosition()) - (*target);
-    float dist = norm(tmp);
-    results.push(VertexDistPair(src->getPosition(), dist));
 
-    HyperSphere sphere(target, std::get<1>(results.top()));
+    if(src->isLeaf()){
+        for(VertexPtr vrtx: src->getBucket()){
+            float dist = norm((*vrtx)-(*target));
+            results.push(VertexDistPair(vrtx, dist));
+        }
+        HyperSphere sphere(target, std::get<1>(results.top()));
+        //Required Number of points are found, sphere was completely in region,
+        //there can't be any closer results
+
+        if(results.full() && sphere.withinRegion(src->getBoundaries())){
+            return;
+        }
+    }
+    //Uncool, get sphere again
+    float dist = FLT_MAX;
+    if(!results.empty()){
+        dist = std::get<1>(results.top());
+    }
+    HyperSphere sphere(target, dist );
+
     if(src->getLeft()){
         if(sphere.intersectsRegion(src->getLeft()->getBoundaries())){
             findKNearestNeighbours(src->getLeft(), results, target);
@@ -131,17 +147,14 @@ void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& re
             findKNearestNeighbours(src->getRight(), results, target);
         }
     };
-    */
-
-}
-;
+};
 
 void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,
             VertexList& result) const{
 
     if(src->isLeaf()){
         for(VertexPtr vrtx : src->getBucket()){
-            if(sphere.inRegion(vrtx)){
+            if(sphere.contains(vrtx)){
                 result.push_back(vrtx);
             }
         }

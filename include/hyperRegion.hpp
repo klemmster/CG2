@@ -11,10 +11,10 @@ public:
     virtual ~HyperRegion ();
 
     /* Yields true if VertexPtr is within this region */
-    virtual bool inRegion(const VertexPtr srcVertex) const = 0;
+    virtual bool contains(const VertexPtr srcVertex) const = 0;
 
     /* Yields true if Region is within boundaries */
-    virtual bool intersectsRegion(const Boundaries boundaries) const = 0;
+    virtual bool intersectsRegion(const Boundaries& boundaries) const = 0;
 
 private:
     /* data */
