@@ -88,7 +88,15 @@ Um den Median in linearer Zeit zu bestimmen, kann der Median of Medians Algorith
 $ $\\
 \textbf{Aussage:} Der o.g. Algorithmus liefert den Median in $O(n)$.\\
 \\
-\textsc{Beweis:} Wir werfen entweder $L3$ (Werte größer als $M$) oder $L1$ (Werte kleiner als $M$) weg. Angenommen wir werfen $L3$ weg. Unter den $n/5$ Werten von $X$ befinden sich $n/10$ gr"oßere Werte als $M$. Wenn ein Wert aus $X$ gr"oßer als $M$ ist, dann sind genau 2 Werte aus $S[i]$ ebenfalls gr"oßer als der Wert aus $X$. Daraus folgt, dass $L3$ mindestens 3 Elemente in jeder der $n/10$ Gruppen von $S[i]$ hat, woraus sich mindestens $3n/10$ Elemente ergeben. Das gleiche gilt f"ur $L1$, wodurch sich h"ochstens $7n/10$ Elemente ergeben ($T(7n/10)$).
+\textsc{Beweis:} Wir werfen entweder $L3$ (Werte größer als $M$) oder $L1$ (Werte kleiner als $M$) weg. Angenommen wir werfen $L3$ weg. Unter den $n/5$ Werten von $X$ befinden sich $n/10$ gr"oßere Werte als $M$. Wenn ein Wert aus $X$ gr"oßer als $M$ ist, dann sind genau 2 Werte aus $S[i]$ ebenfalls gr"oßer als der Wert aus $X$. Daraus folgt, dass $L3$ mindestens 3 Elemente in jeder der $n/10$ Gruppen von $S[i]$ hat, woraus sich mindestens $3n/10$ Elemente ergeben. Das gleiche gilt f"ur $L1$, wodurch sich h"ochstens $7n/10$ Elemente ergeben ($T(7n/10)$).\\
+\\
+Da 20\% der Elemente der Liste Mediane sind folgt:\\
+\\
+$T(n) \leq T(n/5) + T(7n/10) + O(n)$\\
+\\
+Die Laufzeit $O(n)$ kommt durch das Partitionieren der einzelnen Listen zu Stande und die Laufzeit zur Auswahl der einzelnen Mediane aus diesen Listen betr"agt wiederum $O(1)$, woraus wiederum folgt:\\
+\\
+$T(n) \leq c * n * (1 + (9/10) + (9/10)^2 + ...) = O(n) \qed$
 
 \task{2}
 
