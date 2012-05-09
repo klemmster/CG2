@@ -17,8 +17,8 @@ public:
     KDTree ();
     KDTree (const VertexList vertices);
 
-    void draw();// { throw "NOT yet implemented"; };
-    void draw(const VertexList vertices);// { throw "NOT yet implemented";};
+    void draw();
+    void draw(const VertexList vertices);
 
     VertexList findKNearestNeighbours(const VertexPtr source, const size_t numNeighbours);
     VertexList findInRadius(const VertexPtr source, const size_t radius);
@@ -28,8 +28,8 @@ public:
 private:
 
     void drawSingleNode(const NodePtr& src);
-    
-    NodePtr makeTree(size_t depth, ListTriple t, Boundaries boundaries);
+
+    NodePtr makeTree(size_t depth, const size_t& cellSize, ListTriple t, Boundaries boundaries);
 
     ListPair splitListBy(const size_t index, const VertexList sourceList,
             const VertexPtr sourceVert);
