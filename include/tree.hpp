@@ -31,8 +31,8 @@ private:
 
     NodePtr makeTree(size_t depth, const size_t& cellSize, ListTriple& t, const Boundaries& boundaries);
 
-    ListPair splitListBy(const size_t index, const VertexList sourceList,
-            const VertexPtr sourceVert);
+    ListPair splitListBy(const size_t& index, const VertexList& sourceList,
+            const VertexPtr& sourceVert);
 
     void findInRadius(const NodePtr& src, const HyperSphere& sphere,
             VertexList& result) const;

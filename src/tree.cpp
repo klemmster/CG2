@@ -71,7 +71,7 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
     }
 
     size_t median = (int) (vertices.size()-1)/2;
-    VertexPtr posElement = vertices.at(median);
+    VertexPtr& posElement = vertices.at(median);
 
     ListPair xPair = splitListBy(k, std::get<0>(t), posElement);
     ListPair yPair = splitListBy(k, std::get<1>(t), posElement);
@@ -90,8 +90,8 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
 };
 
 
-ListPair KDTree::splitListBy(const size_t index, const VertexList sourceList,
-        const VertexPtr sourceVert){
+ListPair KDTree::splitListBy(const size_t& index, const VertexList& sourceList,
+        const VertexPtr& sourceVert){
     VertexList left;
     VertexList right;
 
