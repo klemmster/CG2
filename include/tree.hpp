@@ -29,7 +29,7 @@ private:
 
     void drawSingleNode(const NodePtr& src);
 
-    NodePtr makeTree(size_t depth, const size_t& cellSize, ListTriple t, Boundaries boundaries);
+    NodePtr makeTree(size_t depth, const size_t& cellSize, ListTriple& t, const Boundaries& boundaries);
 
     ListPair splitListBy(const size_t index, const VertexList sourceList,
             const VertexPtr sourceVert);

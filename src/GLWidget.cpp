@@ -11,6 +11,7 @@
 
 #include "GLWidget.hpp"
 #include "offLoader.hpp"
+#include "stopwatch.hpp"
 
 GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent){
@@ -37,8 +38,12 @@ void GLWidget::initializeGL() {
     glClearColor(0, 0, 0, 0);
 
     OffLoader loader;
+    Stopwatch readTimer("ParseFile");
     vertices = loader.readOff(m_fileName);
+    readTimer.stop();
+    Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices);
+    treeTimer.stop();
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -116,10 +121,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 }
 
 void GLWidget::showKDTree(bool show) {
-    
+
     showTree = show;
     updateGL();
-    
+
     //std::cout << "click " << show << std::endl;
 }
 

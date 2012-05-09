@@ -11,9 +11,11 @@
 #endif
 
 #include <float.h>
+#include "stopwatch.hpp"
 KDTree::KDTree(const VertexList vertices){
 
     // Copy Input arrays for individual sorting
+    Stopwatch taS("SortArrays");
     VertexList sortedX(vertices);
     VertexList sortedY(vertices);
     VertexList sortedZ(vertices);
@@ -21,6 +23,7 @@ KDTree::KDTree(const VertexList vertices){
     std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX );
     std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY );
     std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ );
+    taS.stop();
 
     float xMin = (*sortedX.front())[0];
     float xMax = (*sortedX.back())[0];
@@ -30,12 +33,16 @@ KDTree::KDTree(const VertexList vertices){
     float zMax = (*sortedZ.back())[2];
     ListTriple t = { {sortedX, sortedY, sortedZ} };
     Boundaries boundaries = {{ xMin, xMax, yMin, yMax, zMin, zMax }};
+    Stopwatch mkTreeS("maketree");
     m_root = makeTree(0, 251, t, boundaries);
+    mkTreeS.stop();
 
 
     //TODO: DELETE
         //findInRadius(vertices.at(0), 4);
+        Stopwatch findS("Search");
         findKNearestNeighbours(vertices.at(0), 55);
+        findS.stop();
     //END TODO DELETE
 };
 
@@ -47,8 +54,8 @@ KDTree::~KDTree(){
 
 };
 
-NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple t,
-        Boundaries boundaries){
+NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
+        const Boundaries& boundaries){
     /*
      * Tuple contains x, y, z  Dimensions Vertex list
      *
@@ -60,7 +67,6 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple t,
         return nullptr;
     }
     if(vertices.size() <= cellSize){
-        std::cout << "Create Leaf" << "\n";
         return NodePtr(new Node(vertices, boundaries));
     }
 
