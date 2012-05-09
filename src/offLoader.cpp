@@ -5,9 +5,7 @@
 #include <boost/lexical_cast.hpp>
 
 OffLoader::OffLoader():
-     m_NumVertices(0),
-     m_NumFaces(0),
-     m_NumEdges(0)
+     m_NumVertices(0)
     {}
 
 OffLoader::~OffLoader()
@@ -47,9 +45,7 @@ bool OffLoader::parseSecondLine(Tokens tokens)
      //There should be three tokens here
      assert(tokens.size() == 3);
      m_NumVertices = boost::lexical_cast<int>(tokens.at(0));
-     m_NumFaces = boost::lexical_cast<int>(tokens.at(1));
-     m_NumEdges = boost::lexical_cast<int>(tokens.at(2));
-     std::cout << boost::format("%s Vertices, %s Faces, %s Edges") % m_NumVertices % m_NumFaces % m_NumEdges << std::endl;
+     std::cout << boost::format("%s Vertices") % m_NumVertices << std::endl;
      return true;
 }
 
