@@ -146,25 +146,17 @@ void resetVertexColors(VertexList src){
 }
 
 void GLWidget::sigFindKNearest(){
-    auto result = tree.findKNearestNeighbours(vertices.at(vrtxID), kNearest);
     resetVertexColors(vertices);
-    for(auto elem :result){
-        elem->highlight();
-    }
+    auto result = tree.findKNearestNeighbours(vertices.at(vrtxID), kNearest);
     vertices.at(vrtxID)->highlight(highlightColor);
     updateGL();
 }
 
 void GLWidget::sigFindInRadius(){
-    auto result = tree.findInRadius(vertices.at(vrtxID), radius);
     resetVertexColors(vertices);
-    for(auto elem :result){
-        elem->highlight();
-    }
+    auto result = tree.findInRadius(vertices.at(vrtxID), radius);
     vertices.at(vrtxID)->highlight(highlightColor);
     updateGL();
-
-
 }
 
 void GLWidget::sigSetRadius(double r){
