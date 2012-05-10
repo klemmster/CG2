@@ -43,6 +43,7 @@ public:
     QCheckBox *checkBoxKdTree;
     QSpacerItem *verticalSpacer;
     QSpinBox *selectKValueBox;
+    QSpinBox *selectPixelID;
     QDoubleSpinBox *selectRadiusValueBox;
     QPushButton *findInRadiusButton;
     QStatusBar *statusbar;
@@ -108,7 +109,18 @@ public:
 
         gridLayout->addWidget(findInRadiusButton, 6, 1 , 1, 2);
 
-        gridLayout->addItem(verticalSpacer, 7, 2);
+        QLabel *selectVertexLabel = new QLabel("Select vertex:");
+        selectPixelID = new QSpinBox(centralwidget);
+        selectPixelID->setObjectName(QString::fromUtf8("selectPixelID"));
+        selectPixelID->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        selectPixelID->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+        selectPixelID->setMinimum(0);
+        selectPixelID->setMaximum(99999999);
+
+        gridLayout->addWidget(selectVertexLabel, 7, 1);
+        gridLayout->addWidget(selectPixelID, 7, 2);
+
+        gridLayout->addItem(verticalSpacer, 8, 1, 1, 2);
         horizontalLayout->addLayout(gridLayout);
 
         MainWindow->setCentralWidget(centralwidget);
@@ -121,6 +133,7 @@ public:
         QObject::connect(findKNearestButton, SIGNAL(clicked()), glWidget, SLOT(sigFindKNearest()));
         QObject::connect(selectKValueBox, SIGNAL(valueChanged(int)), glWidget, SLOT(sigSetKNearest(int)));
         QObject::connect(selectRadiusValueBox, SIGNAL(valueChanged(double)), glWidget, SLOT(sigSetRadius(double)));
+        QObject::connect(selectPixelID, SIGNAL(valueChanged(int)), glWidget, SLOT(sigSelectPixel(int)));
         QObject::connect(findInRadiusButton, SIGNAL(clicked()), glWidget, SLOT(sigFindInRadius()));
 
 

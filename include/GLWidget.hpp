@@ -23,6 +23,7 @@ public slots:
     void sigSetKNearest(int k);
     void sigFindKNearest();
 
+    void sigSelectPixel(int pxID);
 protected:
     void initializeGL();
     void resizeGL(int w, int h);

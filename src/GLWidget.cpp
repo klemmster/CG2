@@ -177,10 +177,18 @@ void GLWidget::sigSetRadius(double r){
 void GLWidget::sigSetKNearest(int k){
     if(k < 0)
         return;
-    if(k > vertices.size()){
+    if(k >= vertices.size()){
         kNearest = vertices.size()-1;
     }else{
         kNearest = k;
     }
 }
 
+void GLWidget::sigSelectPixel(int pxID){
+    if(pxID >=0 && pxID <vertices.size()){
+        vrtxID = pxID;
+    }
+    resetVertexColors(vertices);
+    vertices.at(vrtxID)->highlight(highlightColor);
+    updateGL();
+}
