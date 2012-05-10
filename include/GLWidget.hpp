@@ -18,7 +18,7 @@ public slots:
     void sigShowKDTree(bool show);
 
     void sigFindInRadius();
-    void sigSetRadius(int r);
+    void sigSetRadius(double r);
 
     void sigSetKNearest(int k);
     void sigFindKNearest();

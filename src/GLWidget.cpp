@@ -149,6 +149,7 @@ void GLWidget::sigFindKNearest(){
     for(auto elem :result){
         elem->highlight();
     }
+    updateGL();
 }
 
 void GLWidget::sigFindInRadius(){
@@ -157,13 +158,15 @@ void GLWidget::sigFindInRadius(){
     for(auto elem :result){
         elem->highlight();
     }
+    updateGL();
 
 
 }
 
-void GLWidget::sigSetRadius(int r){
+void GLWidget::sigSetRadius(double r){
     if(r>0){
-        radius = r;
+        radius = (float)r;
+        cout << "Set Radius to: " << radius << "\n";
     }
 }
 
