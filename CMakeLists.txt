@@ -12,6 +12,7 @@ file (GLOB_RECURSE headers *.hpp)
 find_package( OpenGL )
 find_package( GLUT )
 
+
 IF(GLUT_FOUND)
     MESSAGE(STATUS "Found glut")
 ELSE()

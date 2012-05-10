@@ -14,15 +14,20 @@
 #include "stopwatch.hpp"
 KDTree::KDTree(const VertexList vertices){
 
+
     // Copy Input arrays for individual sorting
     Stopwatch taS("SortArrays");
+
     VertexList sortedX(vertices);
     VertexList sortedY(vertices);
     VertexList sortedZ(vertices);
 
-    std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX );
-    std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY );
-    std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ );
+    std::thread xSorted([&] { std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX); });
+    std::thread ySorted([&] { std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY); });
+    std::thread zSorted([&] { std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ); });
+    xSorted.join();
+    ySorted.join();
+    zSorted.join();
     taS.stop();
 
     float xMin = (*sortedX.front())[0];
@@ -85,8 +90,18 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
     leftBounds.at(k*2+1) = (*posElement)[k];
     rightBounds.at(k*2) = (*posElement)[k];
 
-    return NodePtr(new Node(makeTree(depth+1, cellSize, left, leftBounds),
-            makeTree(depth+1, cellSize, right, rightBounds), boundaries));
+    NodePtr leftNode;
+    NodePtr rightNode;
+    if(depth < 2){
+    std::thread lT([&] { leftNode = makeTree(depth+1, cellSize, left, leftBounds); });
+    std::thread rT([&] { rightNode = makeTree(depth+1, cellSize, right, rightBounds); });
+    lT.join();
+    rT.join();
+    }else{
+        leftNode = makeTree(depth+1, cellSize, left, leftBounds);
+        rightNode = makeTree(depth+1, cellSize, right, rightBounds);
+    }
+    return NodePtr(new Node(leftNode, rightNode, boundaries));
 };
 
 

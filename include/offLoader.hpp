@@ -16,8 +16,7 @@ class OffLoader
     protected:
         bool parseFirstLine(Tokens tokens);
         bool parseSecondLine(Tokens tokens);
-        const VertexPtr parseVertex(Tokens tokens) const;
-
+        const VertexPtr parseVertex(const Tokens& tokens) const;
     private:
         unsigned int m_NumVertices;
 };

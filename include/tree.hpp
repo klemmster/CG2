@@ -8,6 +8,8 @@
 #include "hyperSphere.hpp"
 #include "limitedPriorityQueue.hpp"
 
+#include <future>
+#include <thread>
 
 typedef std::array<VertexList, 3> ListTriple;
 typedef std::pair<VertexList, VertexList> ListPair;
@@ -29,7 +31,8 @@ private:
 
     void drawSingleNode(const NodePtr& src);
 
-    NodePtr makeTree(size_t depth, const size_t& cellSize, ListTriple& t, const Boundaries& boundaries);
+    NodePtr makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
+            const Boundaries& boundaries);
 
     ListPair splitListBy(const size_t& index, const VertexList& sourceList,
             const VertexPtr& sourceVert);
@@ -43,6 +46,9 @@ private:
     NodePtr m_root;
 
 };
+
+typedef NodePtr(KDTree::*makeTreeFun)(size_t depth, const size_t& cellSize, ListTriple& t,
+            const Boundaries& boundaries);
 
 #endif /* end of include guard: TREE_HPP_HE0Q8ZRG */
 
