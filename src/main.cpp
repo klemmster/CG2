@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     QMainWindow *window = new QMainWindow;
     Ui::MainWindow ui;
     ui.setupUi(window);
-    
+
     std::string fileName;
     if(argc > 1){
         fileName = argv[1];
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     ui.glWidget->setFilename(fileName);
     window->show();
     //GLWidget window;
-    
+
     //window.resize(800,600);
     //window.show();
 

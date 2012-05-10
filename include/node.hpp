@@ -16,18 +16,22 @@ typedef std::array<float, 6> Boundaries;
 class Node
 {
 public:
-    Node (const VertexPtr position, const NodePtr left, const NodePtr right,
-            const Boundaries boundaries);
+    /*Create a Node */
+    Node(const NodePtr left, const NodePtr right, const Boundaries boundaries);
+    /*Implicitly create a leave */
+    Node(const VertexList bucket, const Boundaries boundaries);
+    virtual ~Node ();
+
     const Boundaries& getBoundaries();
-    const VertexPtr& getPosition() {return m_position;};
+    const VertexList getBucket() const;
     const NodePtr getLeft() { return m_left;};
     const NodePtr getRight() { return m_right;};
-    virtual ~Node ();
+    bool isLeaf() const;
 
 private:
 
     Node() {};
-    const VertexPtr m_position;
+    const VertexList m_Bucket;
     const NodePtr m_left;
     const NodePtr m_right;
     Boundaries m_boundaries;

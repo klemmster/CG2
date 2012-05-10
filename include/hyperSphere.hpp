@@ -10,8 +10,10 @@ public:
     HyperSphere (const VertexPtr& source, const float radius);
     virtual ~HyperSphere ();
 
-    virtual bool inRegion(const VertexPtr src) const;
-    virtual bool intersectsRegion(const Boundaries boundaries) const;
+    virtual bool contains(const VertexPtr src) const;
+    virtual bool intersectsRegion(const Boundaries& boundaries) const;
+    /* If sphere is completely within a given Region return true */
+    virtual bool withinRegion(const Boundaries& boundaries) const;
 
 private:
 

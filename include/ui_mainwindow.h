@@ -22,9 +22,13 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
+#include <QtGui/QDoubleSpinBox>
 #include <QtGui/QStatusBar>
 #include <QtGui/QWidget>
+#include <QtGui/QLabel>
 #include "GLWidget.hpp"
+
+#include <float.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -35,10 +39,13 @@ public:
     QHBoxLayout *horizontalLayout;
     GLWidget *glWidget;
     QGridLayout *gridLayout;
-    QPushButton *pushButton;
+    QPushButton *findKNearestButton;
     QCheckBox *checkBoxKdTree;
     QSpacerItem *verticalSpacer;
-    QSpinBox *spinBoxKdDepth;
+    QSpinBox *selectKValueBox;
+    QSpinBox *selectPixelID;
+    QDoubleSpinBox *selectRadiusValueBox;
+    QPushButton *findInRadiusButton;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -63,28 +70,57 @@ public:
 
         gridLayout = new QGridLayout();
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        pushButton = new QPushButton(centralwidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        findKNearestButton = new QPushButton(centralwidget);
+        findKNearestButton->setObjectName(QString::fromUtf8("findKNearestButton"));
 
-        gridLayout->addWidget(pushButton, 4, 1, 1, 1);
+        gridLayout->addWidget(findKNearestButton, 4, 1, 1, 2);
 
         checkBoxKdTree = new QCheckBox(centralwidget);
         checkBoxKdTree->setObjectName(QString::fromUtf8("checkBoxKdTree"));
 
-        gridLayout->addWidget(checkBoxKdTree, 0, 1, 1, 1);
+        gridLayout->addWidget(checkBoxKdTree, 0, 2);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        gridLayout->addItem(verticalSpacer, 5, 1, 1, 1);
 
-        spinBoxKdDepth = new QSpinBox(centralwidget);
-        spinBoxKdDepth->setObjectName(QString::fromUtf8("spinBoxKdDepth"));
-        spinBoxKdDepth->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-        spinBoxKdDepth->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+        QLabel *selectKValueLabel = new QLabel("KNearest:");
+        selectKValueBox = new QSpinBox(centralwidget);
+        selectKValueBox->setObjectName(QString::fromUtf8("selectKValueBox"));
+        selectKValueBox->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        selectKValueBox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+        selectKValueBox->setMaximum(99999999);
 
-        gridLayout->addWidget(spinBoxKdDepth, 1, 1, 1, 1);
+        gridLayout->addWidget(selectKValueLabel, 1, 1);
+        gridLayout->addWidget(selectKValueBox, 1, 2);
 
+        QLabel *selectRadiusLabel = new QLabel("Radius:");
+        selectRadiusValueBox = new QDoubleSpinBox(centralwidget);
+        selectRadiusValueBox->setObjectName(QString::fromUtf8("selectRadiusBox"));
+        selectRadiusValueBox->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        selectRadiusValueBox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+        selectRadiusValueBox->setMinimum(0.0);
+        selectRadiusValueBox->setMaximum(FLT_MAX);
 
+        gridLayout->addWidget(selectRadiusLabel, 5, 1);
+        gridLayout->addWidget(selectRadiusValueBox, 5, 2);
+
+        findInRadiusButton = new QPushButton(centralwidget);
+        findInRadiusButton->setObjectName(QString::fromUtf8("findInRadiusButton"));
+
+        gridLayout->addWidget(findInRadiusButton, 6, 1 , 1, 2);
+
+        QLabel *selectVertexLabel = new QLabel("Select vertex:");
+        selectPixelID = new QSpinBox(centralwidget);
+        selectPixelID->setObjectName(QString::fromUtf8("selectPixelID"));
+        selectPixelID->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        selectPixelID->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+        selectPixelID->setMinimum(0);
+        selectPixelID->setMaximum(99999999);
+
+        gridLayout->addWidget(selectVertexLabel, 7, 1);
+        gridLayout->addWidget(selectPixelID, 7, 2);
+
+        gridLayout->addItem(verticalSpacer, 8, 1, 1, 2);
         horizontalLayout->addLayout(gridLayout);
 
         MainWindow->setCentralWidget(centralwidget);
@@ -93,7 +129,13 @@ public:
         MainWindow->setStatusBar(statusbar);
 
         retranslateUi(MainWindow);
-        QObject::connect(checkBoxKdTree, SIGNAL(toggled(bool)), glWidget, SLOT(showKDTree(bool)));
+        QObject::connect(checkBoxKdTree, SIGNAL(toggled(bool)), glWidget, SLOT(sigShowKDTree(bool)));
+        QObject::connect(findKNearestButton, SIGNAL(clicked()), glWidget, SLOT(sigFindKNearest()));
+        QObject::connect(selectKValueBox, SIGNAL(valueChanged(int)), glWidget, SLOT(sigSetKNearest(int)));
+        QObject::connect(selectRadiusValueBox, SIGNAL(valueChanged(double)), glWidget, SLOT(sigSetRadius(double)));
+        QObject::connect(selectPixelID, SIGNAL(valueChanged(int)), glWidget, SLOT(sigSelectPixel(int)));
+        QObject::connect(findInRadiusButton, SIGNAL(clicked()), glWidget, SLOT(sigFindInRadius()));
+
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -101,9 +143,10 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CG2 - \303\234bung 1", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
+        findKNearestButton->setText(QApplication::translate("MainWindow", "Find K-Nearest Neigbours", 0, QApplication::UnicodeUTF8));
+        findInRadiusButton->setText(QApplication::translate("MainWindow", "Find in Radius", 0, QApplication::UnicodeUTF8));
         checkBoxKdTree->setText(QApplication::translate("MainWindow", "kd-tree", 0, QApplication::UnicodeUTF8));
-        spinBoxKdDepth->setSpecialValueText(QString());
+        selectKValueBox->setSpecialValueText(QString());
     } // retranslateUi
 
 };

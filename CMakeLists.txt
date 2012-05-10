@@ -12,6 +12,7 @@ file (GLOB_RECURSE headers *.hpp)
 find_package( OpenGL )
 find_package( GLUT )
 
+
 IF(GLUT_FOUND)
     MESSAGE(STATUS "Found glut")
 ELSE()
@@ -35,7 +36,8 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories ( ${Boost_LIBRARY_DIRS} )
 
 IF(UNIX AND NOT WIN32)
-    set(CMAKE_CXX_FLAGS "-g -Wall -O0 -march=native -std=c++0x")
+    set(CMAKE_CXX_FLAGS "-Wall -O3 -march=native -std=c++0x")
+    MESSAGE(STATUS "Use c++0x")
 ELSEIF(APPLE)
     set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
     set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")

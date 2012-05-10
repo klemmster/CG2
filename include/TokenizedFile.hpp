@@ -31,6 +31,8 @@ public:
 
 private:
     boost::filesystem::fstream m_File;
+    boost::char_separator<char> m_sep;
+    std::string m_Line;
 };
 
 #endif /* end of include guard: TOKENIZEDFILE_HPP_XSDLZF62 */

@@ -10,16 +10,25 @@
 #include <GL/glut.h>
 #endif
 
+#include <float.h>
+#include "stopwatch.hpp"
 KDTree::KDTree(const VertexList vertices){
 
+
     // Copy Input arrays for individual sorting
+    Stopwatch taS("SortArrays");
+
     VertexList sortedX(vertices);
     VertexList sortedY(vertices);
     VertexList sortedZ(vertices);
 
-    std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX );
-    std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY );
-    std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ );
+    std::thread xSorted([&] { std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX); });
+    std::thread ySorted([&] { std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY); });
+    std::thread zSorted([&] { std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ); });
+    xSorted.join();
+    ySorted.join();
+    zSorted.join();
+    taS.stop();
 
     float xMin = (*sortedX.front())[0];
     float xMax = (*sortedX.back())[0];
@@ -29,13 +38,11 @@ KDTree::KDTree(const VertexList vertices){
     float zMax = (*sortedZ.back())[2];
     ListTriple t = { {sortedX, sortedY, sortedZ} };
     Boundaries boundaries = {{ xMin, xMax, yMin, yMax, zMin, zMax }};
-    m_root = makeTree(0, t, boundaries);
+    Stopwatch mkTreeS("maketree");
+    m_root = makeTree(0, 251, t, boundaries);
+    mkTreeS.stop();
 
 
-    //TODO: DELETE
-        //findInRadius(vertices.at(0), 4);
-        findKNearestNeighbours(vertices.at(0), 55);
-    //END TODO DELETE
 };
 
 KDTree::KDTree(){
@@ -46,7 +53,8 @@ KDTree::~KDTree(){
 
 };
 
-NodePtr KDTree::makeTree(size_t depth, ListTriple t, Boundaries boundaries){
+NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
+        const Boundaries& boundaries){
     /*
      * Tuple contains x, y, z  Dimensions Vertex list
      *
@@ -57,14 +65,12 @@ NodePtr KDTree::makeTree(size_t depth, ListTriple t, Boundaries boundaries){
     if(vertices.size() == 0){
         return nullptr;
     }
-    if(vertices.size() == 1){
-        //IF there is just one point left, the boundaries are the point itself
-        VertexPtr vertex = vertices.at(0);
-        return NodePtr(new Node(vertices.at(0), nullptr, nullptr, boundaries));
+    if(vertices.size() <= cellSize){
+        return NodePtr(new Node(vertices, boundaries));
     }
 
     size_t median = (int) (vertices.size()-1)/2;
-    VertexPtr posElement = vertices.at(median);
+    VertexPtr& posElement = vertices.at(median);
 
     ListPair xPair = splitListBy(k, std::get<0>(t), posElement);
     ListPair yPair = splitListBy(k, std::get<1>(t), posElement);
@@ -78,23 +84,31 @@ NodePtr KDTree::makeTree(size_t depth, ListTriple t, Boundaries boundaries){
     leftBounds.at(k*2+1) = (*posElement)[k];
     rightBounds.at(k*2) = (*posElement)[k];
 
-    return NodePtr(new Node(posElement, makeTree(depth+1, left, leftBounds),
-            makeTree(depth+1, right, rightBounds), boundaries));
+    NodePtr leftNode;
+    NodePtr rightNode;
+    if(depth < 2){
+    std::thread lT([&] { leftNode = makeTree(depth+1, cellSize, left, leftBounds); });
+    std::thread rT([&] { rightNode = makeTree(depth+1, cellSize, right, rightBounds); });
+    lT.join();
+    rT.join();
+    }else{
+        leftNode = makeTree(depth+1, cellSize, left, leftBounds);
+        rightNode = makeTree(depth+1, cellSize, right, rightBounds);
+    }
+    return NodePtr(new Node(leftNode, rightNode, boundaries));
 };
 
 
-ListPair KDTree::splitListBy(const size_t index, const VertexList sourceList,
-        const VertexPtr sourceVert){
+ListPair KDTree::splitListBy(const size_t& index, const VertexList& sourceList,
+        const VertexPtr& sourceVert){
     VertexList left;
     VertexList right;
 
-    for(auto elem : sourceList){
-        if(elem != sourceVert){
-            if((*elem)[index] < (*sourceVert)[index]){
-                left.push_back(elem);
-            }else{
-                right.push_back(elem);
-            }
+    for(VertexPtr elem : sourceList){
+        if((*elem)[index] < (*sourceVert)[index]){
+            left.push_back(elem);
+        }else{
+            right.push_back(elem);
         }
     }
     return ListPair(left, right);
@@ -103,6 +117,7 @@ ListPair KDTree::splitListBy(const size_t index, const VertexList sourceList,
 VertexList KDTree::findKNearestNeighbours(const VertexPtr source,
         const size_t numNeighbours){
     VertexList result;
+    Stopwatch findS("NKSearch");
     LimitedPriorityQueue resultQueue(numNeighbours);
     findKNearestNeighbours(m_root, resultQueue, source);
     while(!resultQueue.empty()){
@@ -112,16 +127,33 @@ VertexList KDTree::findKNearestNeighbours(const VertexPtr source,
         vrtx->highlight();
         resultQueue.pop();
     }
+    findS.stop();
     return result;
 }
 
 void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& results,
         const VertexPtr& target){
-    Vertex tmp = (*src->getPosition()) - (*target);
-    float dist = norm(tmp);
-    results.push(VertexDistPair(src->getPosition(), dist));
 
-    HyperSphere sphere(target, std::get<1>(results.top()));
+    if(src->isLeaf()){
+        for(VertexPtr vrtx: src->getBucket()){
+            float dist = norm((*vrtx)-(*target));
+            results.push(VertexDistPair(vrtx, dist));
+        }
+        HyperSphere sphere(target, std::get<1>(results.top()));
+        //Required Number of points are found, sphere was completely in region,
+        //there can't be any closer results
+
+        if(results.full() && sphere.withinRegion(src->getBoundaries())){
+            return;
+        }
+    }
+    //Uncool, get sphere again
+    float dist = FLT_MAX;
+    if(!results.empty()){
+        dist = std::get<1>(results.top());
+    }
+    HyperSphere sphere(target, dist );
+
     if(src->getLeft()){
         if(sphere.intersectsRegion(src->getLeft()->getBoundaries())){
             findKNearestNeighbours(src->getLeft(), results, target);
@@ -131,14 +163,18 @@ void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& re
         if(sphere.intersectsRegion(src->getRight()->getBoundaries())){
             findKNearestNeighbours(src->getRight(), results, target);
         }
-    }
-}
+    };
+};
 
 void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,
             VertexList& result) const{
 
-    if(sphere.inRegion(src->getPosition())){
-        result.push_back(src->getPosition());
+    if(src->isLeaf()){
+        for(VertexPtr vrtx : src->getBucket()){
+            if(sphere.contains(vrtx)){
+                result.push_back(vrtx);
+            }
+        }
     }
     if(src->getLeft() != nullptr){
         if(sphere.intersectsRegion(src->getBoundaries())){
@@ -154,9 +190,10 @@ void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,
 
 VertexList KDTree::findInRadius(const VertexPtr source, const size_t radius){
     VertexList result;
+    Stopwatch findS("Radius - Search");
     HyperSphere hyperSphere(source, radius);
-
     findInRadius(m_root, hyperSphere, result);
+    findS.stop();
     for(VertexPtr ptr : result){
         ptr->highlight();
     }
@@ -168,7 +205,7 @@ void KDTree::draw() {
 
     glColor3f(0, 1, 0);
     drawSingleNode(m_root);
-   
+
 }
 
 void KDTree::drawSingleNode(const NodePtr &src) {
@@ -176,49 +213,49 @@ void KDTree::drawSingleNode(const NodePtr &src) {
     if (src == nullptr) {
         return;
     }
-    
+
     std::array<float, 6> bounds = src->getBoundaries();
-    
+
     glBegin(GL_LINES);
-    
+
     glVertex3f(bounds[0], bounds[2], bounds[4]);
     glVertex3f(bounds[0], bounds[2], bounds[5]);
-    
+
     glVertex3f(bounds[0], bounds[2], bounds[5]);
     glVertex3f(bounds[0], bounds[3], bounds[5]);
-    
+
     glVertex3f(bounds[0], bounds[3], bounds[5]);
     glVertex3f(bounds[0], bounds[3], bounds[4]);
-    
+
     glVertex3f(bounds[0], bounds[3], bounds[4]);
     glVertex3f(bounds[0], bounds[2], bounds[4]);
-    
+
     glVertex3f(bounds[0], bounds[2], bounds[4]);
     glVertex3f(bounds[1], bounds[2], bounds[4]);
-    
+
     glVertex3f(bounds[0], bounds[3], bounds[4]);
     glVertex3f(bounds[1], bounds[3], bounds[4]);
-    
+
     glVertex3f(bounds[1], bounds[3], bounds[4]);
     glVertex3f(bounds[1], bounds[2], bounds[4]);
-    
+
     glVertex3f(bounds[1], bounds[3], bounds[4]);
     glVertex3f(bounds[1], bounds[3], bounds[5]);
-    
+
     glVertex3f(bounds[1], bounds[2], bounds[4]);
     glVertex3f(bounds[1], bounds[2], bounds[5]);
-    
+
     glVertex3f(bounds[1], bounds[3], bounds[5]);
     glVertex3f(bounds[1], bounds[2], bounds[5]);
-    
+
     glVertex3f(bounds[1], bounds[2], bounds[5]);
     glVertex3f(bounds[0], bounds[2], bounds[5]);
-    
+
     glVertex3f(bounds[1], bounds[3], bounds[5]);
     glVertex3f(bounds[0], bounds[3], bounds[5]);
-    
+
     glEnd();
-    
+
     drawSingleNode(src->getLeft());
     drawSingleNode(src->getRight());
 }

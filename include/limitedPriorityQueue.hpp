@@ -25,7 +25,8 @@ class LimitedPriorityQueue
 public:
     LimitedPriorityQueue (const size_t maxSize);
     void push(VertexDistPair a);
-    bool empty(){ return m_queue.empty(); };
+    bool empty() const { return m_queue.empty(); };
+    bool full() const { return m_queue.size() >= m_size; };
     VertexDistPair top(){ return m_queue.top(); };
     void pop() { m_queue.pop(); };
     virtual ~LimitedPriorityQueue ();

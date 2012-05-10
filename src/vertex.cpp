@@ -13,13 +13,13 @@
 Vertex::Vertex(const vec3f pos):
     vec3f(pos)
 {
-    m_Color = vec3f(1.0, 1.0, 1.0);
+    m_Color = vec3f(.6, .6, .6);
 }
 
 Vertex::Vertex(const float x, const float y, const float z):
     vec3f(x, y, z)
 {
-    m_Color = vec3f(1.0, 1.0, 1.0);
+    m_Color = vec3f(.6, .6, .6);
 }
 
 Vertex::~Vertex()
@@ -32,10 +32,10 @@ void Vertex::draw() const{
     glVertex3fv(_v);
 }
 
-void Vertex::highlight(){
-    m_Color = vec3f(1.0, .0, .0);
+void Vertex::highlight(const vec3f color){
+    m_Color = color;
 }
 
 void Vertex::resetColor(){
-    m_Color = vec3f(1.0, 1.0, 1.0);
+    m_Color = vec3f(.6, .6, .6);
 }

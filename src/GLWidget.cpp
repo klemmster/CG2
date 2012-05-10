@@ -1,4 +1,5 @@
 #include <QtGui/QMouseEvent>
+#include <QtGui/QWheelEvent>
 
 #ifdef __APPLE__
   #include <GL/glew.h>
@@ -11,11 +12,13 @@
 
 #include "GLWidget.hpp"
 #include "offLoader.hpp"
+#include "stopwatch.hpp"
 
 GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent){
     setMouseTracking(true);
         showTree = 0;
+    setFocus();
 }
 
 void GLWidget::setFilename(const std::string& fileName) {
@@ -23,9 +26,14 @@ void GLWidget::setFilename(const std::string& fileName) {
 }
 
 QPoint lastPos;
-GLfloat rotationX;
-GLfloat rotationY;
-GLfloat rotationZ;
+GLfloat rotationX = 0.0f;
+GLfloat rotationY = 0.0f;
+GLfloat rotationZ = 0.0f;
+GLfloat positionZ = -30.0f;
+unsigned int kNearest = 50;
+float radius = 40;
+size_t vrtxID = 0;
+vec3f highlightColor(0.0, 1.0, 0.0);
 
 void GLWidget::initializeGL() {
     glDisable(GL_TEXTURE_2D);
@@ -37,8 +45,12 @@ void GLWidget::initializeGL() {
     glClearColor(0, 0, 0, 0);
 
     OffLoader loader;
+    Stopwatch readTimer("ParseFile");
     vertices = loader.readOff(m_fileName);
+    readTimer.stop();
+    Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices);
+    treeTimer.stop();
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -62,7 +74,7 @@ void GLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1,0,0);
     glLoadIdentity();
-    glTranslatef(0, 0, -30);
+    glTranslatef(0, 0, positionZ);
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
@@ -89,6 +101,7 @@ void GLWidget::paintGL() {
 void GLWidget::mousePressEvent(QMouseEvent *event) {
     lastPos = event->pos();
 }
+
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     //printf("%d, %d\n", event->x(), event->y());
 
@@ -104,7 +117,13 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     lastPos = event->pos();
 }
 
+void GLWidget::wheelEvent(QWheelEvent* event){
+    positionZ += event->delta()/10.0;
+    updateGL();
+}
+
 void GLWidget::keyPressEvent(QKeyEvent* event) {
+    std::cout << "Pressed key: " << event->key() << "\n";
     switch(event->key()) {
     case Qt::Key_Escape:
         close();
@@ -115,11 +134,53 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
     }
 }
 
-void GLWidget::showKDTree(bool show) {
-    
+void GLWidget::sigShowKDTree(bool show) {
     showTree = show;
     updateGL();
-    
-    //std::cout << "click " << show << std::endl;
 }
 
+void resetVertexColors(VertexList src){
+    for(auto elem: src){
+        elem->resetColor();
+    }
+}
+
+void GLWidget::sigFindKNearest(){
+    resetVertexColors(vertices);
+    auto result = tree.findKNearestNeighbours(vertices.at(vrtxID), kNearest);
+    vertices.at(vrtxID)->highlight(highlightColor);
+    updateGL();
+}
+
+void GLWidget::sigFindInRadius(){
+    resetVertexColors(vertices);
+    auto result = tree.findInRadius(vertices.at(vrtxID), radius);
+    vertices.at(vrtxID)->highlight(highlightColor);
+    updateGL();
+}
+
+void GLWidget::sigSetRadius(double r){
+    if(r>0){
+        radius = (float)r;
+        cout << "Set Radius to: " << radius << "\n";
+    }
+}
+
+void GLWidget::sigSetKNearest(int k){
+    if(k < 0)
+        return;
+    if(k >= vertices.size()){
+        kNearest = vertices.size()-1;
+    }else{
+        kNearest = k;
+    }
+}
+
+void GLWidget::sigSelectPixel(int pxID){
+    if(pxID >=0 && pxID <vertices.size()){
+        vrtxID = pxID;
+    }
+    resetVertexColors(vertices);
+    vertices.at(vrtxID)->highlight(highlightColor);
+    updateGL();
+}

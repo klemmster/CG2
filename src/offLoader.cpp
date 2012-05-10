@@ -2,12 +2,11 @@
 
 #include <iostream>
 #include <boost/format.hpp>
+#include <stdlib.h>
 #include <boost/lexical_cast.hpp>
 
 OffLoader::OffLoader():
-     m_NumVertices(0),
-     m_NumFaces(0),
-     m_NumEdges(0)
+     m_NumVertices(0)
     {}
 
 OffLoader::~OffLoader()
@@ -46,19 +45,22 @@ bool OffLoader::parseSecondLine(Tokens tokens)
 {
      //There should be three tokens here
      assert(tokens.size() == 3);
-     m_NumVertices = boost::lexical_cast<int>(tokens.at(0));
-     m_NumFaces = boost::lexical_cast<int>(tokens.at(1));
-     m_NumEdges = boost::lexical_cast<int>(tokens.at(2));
-     std::cout << boost::format("%s Vertices, %s Faces, %s Edges") % m_NumVertices % m_NumFaces % m_NumEdges << std::endl;
+     m_NumVertices = std::atoi(tokens.at(0).c_str());
+     std::cout << boost::format("%s Vertices") % m_NumVertices << std::endl;
      return true;
 }
 
-const VertexPtr OffLoader::parseVertex(Tokens tokens) const
+const VertexPtr OffLoader::parseVertex(const Tokens& tokens) const
 {
      assert(tokens.size() == 3);
-     float x = boost::lexical_cast< float >(tokens.at(0));
-     float y = boost::lexical_cast< float >(tokens.at(1));
-     float z = boost::lexical_cast< float >(tokens.at(2));
+     /*
+     float x = std::atof(tokens.at(0).c_str());
+     float y = std::atof(tokens.at(1).c_str());
+     float z = std::atof(tokens.at(2).c_str());
+     */
+     float x = boost::lexical_cast<float>(tokens.at(0));
+     float y = boost::lexical_cast<float>(tokens.at(1));
+     float z = boost::lexical_cast<float>(tokens.at(2));
      return VertexPtr(new Vertex(x, y, z));
 }
 

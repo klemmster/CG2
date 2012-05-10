@@ -8,6 +8,8 @@
 #include "hyperSphere.hpp"
 #include "limitedPriorityQueue.hpp"
 
+#include <future>
+#include <thread>
 
 typedef std::array<VertexList, 3> ListTriple;
 typedef std::pair<VertexList, VertexList> ListPair;
@@ -17,8 +19,8 @@ public:
     KDTree ();
     KDTree (const VertexList vertices);
 
-    void draw();// { throw "NOT yet implemented"; };
-    void draw(const VertexList vertices);// { throw "NOT yet implemented";};
+    void draw();
+    void draw(const VertexList vertices);
 
     VertexList findKNearestNeighbours(const VertexPtr source, const size_t numNeighbours);
     VertexList findInRadius(const VertexPtr source, const size_t radius);
@@ -28,11 +30,12 @@ public:
 private:
 
     void drawSingleNode(const NodePtr& src);
-    
-    NodePtr makeTree(size_t depth, ListTriple t, Boundaries boundaries);
 
-    ListPair splitListBy(const size_t index, const VertexList sourceList,
-            const VertexPtr sourceVert);
+    NodePtr makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
+            const Boundaries& boundaries);
+
+    ListPair splitListBy(const size_t& index, const VertexList& sourceList,
+            const VertexPtr& sourceVert);
 
     void findInRadius(const NodePtr& src, const HyperSphere& sphere,
             VertexList& result) const;
@@ -43,6 +46,9 @@ private:
     NodePtr m_root;
 
 };
+
+typedef NodePtr(KDTree::*makeTreeFun)(size_t depth, const size_t& cellSize, ListTriple& t,
+            const Boundaries& boundaries);
 
 #endif /* end of include guard: TREE_HPP_HE0Q8ZRG */
 
