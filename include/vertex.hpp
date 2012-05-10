@@ -19,7 +19,7 @@ class Vertex: public vec3f
         Vertex(const float x, const float y, const float z);
 
         void draw() const;
-        void highlight();
+        void highlight(const vec3f color = vec3f(1.0, 0.0, 0.0));
         void resetColor();
 
         static bool sortX(const VertexPtr a, const VertexPtr b) { return ((*a)[0] < (*b)[0]); };

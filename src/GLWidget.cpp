@@ -32,6 +32,8 @@ GLfloat rotationZ = 0.0f;
 GLfloat positionZ = -30.0f;
 unsigned int kNearest = 50;
 float radius = 40;
+size_t vrtxID = 0;
+vec3f highlightColor(0.0, 1.0, 0.0);
 
 void GLWidget::initializeGL() {
     glDisable(GL_TEXTURE_2D);
@@ -144,20 +146,22 @@ void resetVertexColors(VertexList src){
 }
 
 void GLWidget::sigFindKNearest(){
-    auto result = tree.findKNearestNeighbours(vertices.at(kNearest), kNearest);
+    auto result = tree.findKNearestNeighbours(vertices.at(vrtxID), kNearest);
     resetVertexColors(vertices);
     for(auto elem :result){
         elem->highlight();
     }
+    vertices.at(vrtxID)->highlight(highlightColor);
     updateGL();
 }
 
 void GLWidget::sigFindInRadius(){
-    auto result = tree.findInRadius(vertices.at(kNearest), radius);
+    auto result = tree.findInRadius(vertices.at(vrtxID), radius);
     resetVertexColors(vertices);
     for(auto elem :result){
         elem->highlight();
     }
+    vertices.at(vrtxID)->highlight(highlightColor);
     updateGL();
 
 
@@ -179,3 +183,4 @@ void GLWidget::sigSetKNearest(int k){
         kNearest = k;
     }
 }
+
