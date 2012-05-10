@@ -3,6 +3,7 @@
 #include <iostream>
 #include <boost/format.hpp>
 #include <stdlib.h>
+#include <boost/lexical_cast.hpp>
 
 OffLoader::OffLoader():
      m_NumVertices(0)
@@ -52,9 +53,14 @@ bool OffLoader::parseSecondLine(Tokens tokens)
 const VertexPtr OffLoader::parseVertex(const Tokens& tokens) const
 {
      assert(tokens.size() == 3);
+     /*
      float x = std::atof(tokens.at(0).c_str());
      float y = std::atof(tokens.at(1).c_str());
      float z = std::atof(tokens.at(2).c_str());
+     */
+     float x = boost::lexical_cast<float>(tokens.at(0));
+     float y = boost::lexical_cast<float>(tokens.at(1));
+     float z = boost::lexical_cast<float>(tokens.at(2));
      return VertexPtr(new Vertex(x, y, z));
 }
 
