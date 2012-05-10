@@ -30,6 +30,12 @@ GLfloat rotationX = 0.0f;
 GLfloat rotationY = 0.0f;
 GLfloat rotationZ = 0.0f;
 GLfloat positionZ = -30.0f;
+GLfloat positionY = 0.0f;
+GLfloat positionX = 0.0f;
+GLfloat modelOffsetX = 0.0f;
+GLfloat modelOffsetY = 0.0f;
+GLfloat modelOffsetZ = 0.0f;
+
 unsigned int kNearest = 50;
 float radius = 40;
 size_t vrtxID = 0;
@@ -57,7 +63,7 @@ void GLWidget::resizeGL(int w, int h) {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, w, 0, h); // set origin to bottom left corner
+    //gluOrtho2D(0, w, 0, h); // set origin to bottom left corner
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -74,11 +80,13 @@ void GLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1,0,0);
     glLoadIdentity();
-    glTranslatef(0, 0, positionZ);
+
+    gluLookAt(positionX, positionY, positionZ, 0, 0, 0, 0, 1, 0);
+
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
-
+    glTranslatef(modelOffsetX, modelOffsetY, modelOffsetZ);
     if (showTree)
     {
         tree.draw();
@@ -100,6 +108,7 @@ void GLWidget::paintGL() {
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
     lastPos = event->pos();
+    setFocus();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
@@ -123,10 +132,48 @@ void GLWidget::wheelEvent(QWheelEvent* event){
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* event) {
-    std::cout << "Pressed key: " << event->key() << "\n";
     switch(event->key()) {
     case Qt::Key_Escape:
-        close();
+        break;
+    case Qt::Key_Left:
+        positionX -= 1.0;
+        updateGL();
+        break;
+    case Qt::Key_Right:
+        positionX += 1.0;
+        updateGL();
+        break;
+    case Qt::Key_Up:
+        positionY += 1.0;
+        updateGL();
+        break;
+    case Qt::Key_Down:
+        positionY -= 1.0;
+        updateGL();
+        break;
+    case Qt::Key_W:
+        modelOffsetY += 1.0;
+        updateGL();
+        break;
+    case Qt::Key_S:
+        modelOffsetY -= 1.0;
+        updateGL();
+        break;
+    case Qt::Key_A:
+        modelOffsetX -= 1.0;
+        updateGL();
+        break;
+    case Qt::Key_D:
+        modelOffsetX += 1.0;
+        updateGL();
+        break;
+    case Qt::Key_Q:
+        modelOffsetZ -= 1.0;
+        updateGL();
+        break;
+    case Qt::Key_E:
+        modelOffsetZ += 1.0;
+        updateGL();
         break;
     default:
         event->ignore();
@@ -169,7 +216,7 @@ void GLWidget::sigSetRadius(double r){
 void GLWidget::sigSetKNearest(int k){
     if(k < 0)
         return;
-    if(k >= vertices.size()){
+    if(k >= (int)vertices.size()){
         kNearest = vertices.size()-1;
     }else{
         kNearest = k;
@@ -177,7 +224,7 @@ void GLWidget::sigSetKNearest(int k){
 }
 
 void GLWidget::sigSelectPixel(int pxID){
-    if(pxID >=0 && pxID <vertices.size()){
+    if(pxID >=0 && pxID < (int)vertices.size()){
         vrtxID = pxID;
     }
     resetVertexColors(vertices);
