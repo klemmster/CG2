@@ -13,7 +13,7 @@ class GLWidget : public QGLWidget {
 public:
     GLWidget(QWidget *parent = NULL);
     void setFilename(const std::string& fileName);
-    
+
 public slots:
     void showKDTree(bool show);
 
@@ -23,11 +23,12 @@ protected:
     void paintGL();
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *event);
     std::string m_fileName;
     VertexList vertices;
     KDTree tree;
-    
+
 private:
     bool showTree;
 };

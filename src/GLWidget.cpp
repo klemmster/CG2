@@ -1,4 +1,5 @@
 #include <QtGui/QMouseEvent>
+#include <QtGui/QWheelEvent>
 
 #ifdef __APPLE__
   #include <GL/glew.h>
@@ -24,9 +25,10 @@ void GLWidget::setFilename(const std::string& fileName) {
 }
 
 QPoint lastPos;
-GLfloat rotationX;
-GLfloat rotationY;
-GLfloat rotationZ;
+GLfloat rotationX = 0.0f;
+GLfloat rotationY = 0.0f;
+GLfloat rotationZ = 0.0f;
+GLfloat positionZ = -30.0f;
 
 void GLWidget::initializeGL() {
     glDisable(GL_TEXTURE_2D);
@@ -67,7 +69,7 @@ void GLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1,0,0);
     glLoadIdentity();
-    glTranslatef(0, 0, -30);
+    glTranslatef(0, 0, positionZ);
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
@@ -94,6 +96,7 @@ void GLWidget::paintGL() {
 void GLWidget::mousePressEvent(QMouseEvent *event) {
     lastPos = event->pos();
 }
+
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     //printf("%d, %d\n", event->x(), event->y());
 
@@ -107,6 +110,11 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     }
 
     lastPos = event->pos();
+}
+
+void GLWidget::wheelEvent(QWheelEvent* event){
+    positionZ += event->delta()/10.0;
+    updateGL();
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* event) {
