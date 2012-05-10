@@ -15,7 +15,13 @@ public:
     void setFilename(const std::string& fileName);
 
 public slots:
-    void showKDTree(bool show);
+    void sigShowKDTree(bool show);
+
+    void sigFindInRadius();
+    void sigSetRadius(int r);
+
+    void sigSetKNearest(int k);
+    void sigFindKNearest();
 
 protected:
     void initializeGL();

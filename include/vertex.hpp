@@ -36,3 +36,4 @@ class Vertex: public vec3f
 
 
 #endif // VERTEX_H
+

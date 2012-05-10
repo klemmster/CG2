@@ -18,6 +18,7 @@ GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent){
     setMouseTracking(true);
         showTree = 0;
+    setFocus();
 }
 
 void GLWidget::setFilename(const std::string& fileName) {
@@ -29,6 +30,8 @@ GLfloat rotationX = 0.0f;
 GLfloat rotationY = 0.0f;
 GLfloat rotationZ = 0.0f;
 GLfloat positionZ = -30.0f;
+unsigned int kNearest = 50;
+float radius = 40;
 
 void GLWidget::initializeGL() {
     glDisable(GL_TEXTURE_2D);
@@ -118,6 +121,7 @@ void GLWidget::wheelEvent(QWheelEvent* event){
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* event) {
+    std::cout << "Pressed key: " << event->key() << "\n";
     switch(event->key()) {
     case Qt::Key_Escape:
         close();
@@ -128,11 +132,47 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
     }
 }
 
-void GLWidget::showKDTree(bool show) {
-
+void GLWidget::sigShowKDTree(bool show) {
     showTree = show;
     updateGL();
-
-    //std::cout << "click " << show << std::endl;
 }
 
+void resetVertexColors(VertexList src){
+    for(auto elem: src){
+        elem->resetColor();
+    }
+}
+
+void GLWidget::sigFindKNearest(){
+    auto result = tree.findKNearestNeighbours(vertices.at(kNearest), kNearest);
+    resetVertexColors(vertices);
+    for(auto elem :result){
+        elem->highlight();
+    }
+}
+
+void GLWidget::sigFindInRadius(){
+    auto result = tree.findInRadius(vertices.at(kNearest), radius);
+    resetVertexColors(vertices);
+    for(auto elem :result){
+        elem->highlight();
+    }
+
+
+}
+
+void GLWidget::sigSetRadius(int r){
+    if(r>0){
+        radius = r;
+    }
+}
+
+void GLWidget::sigSetKNearest(int k){
+    if(k < 0)
+        return;
+    if(k > vertices.size()){
+        kNearest = vertices.size()-1;
+    }else{
+        kNearest = k;
+    }
+}

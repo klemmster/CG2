@@ -38,7 +38,7 @@ public:
     QPushButton *pushButton;
     QCheckBox *checkBoxKdTree;
     QSpacerItem *verticalSpacer;
-    QSpinBox *spinBoxKdDepth;
+    QSpinBox *selectKValueBox;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -77,12 +77,13 @@ public:
 
         gridLayout->addItem(verticalSpacer, 5, 1, 1, 1);
 
-        spinBoxKdDepth = new QSpinBox(centralwidget);
-        spinBoxKdDepth->setObjectName(QString::fromUtf8("spinBoxKdDepth"));
-        spinBoxKdDepth->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-        spinBoxKdDepth->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+        selectKValueBox = new QSpinBox(centralwidget);
+        selectKValueBox->setObjectName(QString::fromUtf8("selectKValueBox"));
+        selectKValueBox->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        selectKValueBox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+        selectKValueBox->setMaximum(99999999);
 
-        gridLayout->addWidget(spinBoxKdDepth, 1, 1, 1, 1);
+        gridLayout->addWidget(selectKValueBox, 1, 1, 1, 1);
 
 
         horizontalLayout->addLayout(gridLayout);
@@ -93,7 +94,10 @@ public:
         MainWindow->setStatusBar(statusbar);
 
         retranslateUi(MainWindow);
-        QObject::connect(checkBoxKdTree, SIGNAL(toggled(bool)), glWidget, SLOT(showKDTree(bool)));
+        QObject::connect(checkBoxKdTree, SIGNAL(toggled(bool)), glWidget, SLOT(sigShowKDTree(bool)));
+        QObject::connect(pushButton, SIGNAL(clicked()), glWidget, SLOT(sigFindKNearest()));
+        QObject::connect(selectKValueBox, SIGNAL(valueChanged(int)), glWidget, SLOT(sigSetKNearest(int)));
+
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -103,7 +107,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CG2 - \303\234bung 1", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "PushButton", 0, QApplication::UnicodeUTF8));
         checkBoxKdTree->setText(QApplication::translate("MainWindow", "kd-tree", 0, QApplication::UnicodeUTF8));
-        spinBoxKdDepth->setSpecialValueText(QString());
+        selectKValueBox->setSpecialValueText(QString());
     } // retranslateUi
 
 };
