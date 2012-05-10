@@ -117,10 +117,17 @@ Auch hier wird das Prisma mit der letztgenannten Translation vorher um 180° um d
 
 \task{4}
 
-{\centering\image{0.1}{images/bspline.jpg}}
-Die Kontrollpunkte werden linear interpoliert.
+Sei $n$ der Grad.\\
+$ $\\
 
-Ein B-Spline ist nicht stetig, wenn mehr als $n$ Knots aufeinander liegen.
+{\centering\image{0.1}{images/bspline.jpg}}
+Die Kontrollpunkte werden linear interpoliert. Die Basis dazu sieht folgendermaßen aus:
+{\centering\image{0.3}{images/normalKnots.jpg}}
+
+Ein B-Spline ist nicht stetig, wenn in der Basis mehr als $n$ Knots aufeinander liegen:
+{\centering\image{0.3}{images/shiftKnots.jpg}}
+In der Kurve entstehen unstetige Sprünge:
+{\centering\image{0.1}{images/bspline2.jpg}}
 
 \task{5}
 
