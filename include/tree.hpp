@@ -29,6 +29,8 @@ public:
 
     VertexList findKNearestNeighbours(const VertexPtr source, const size_t numNeighbours);
     VertexList findInRadius(const VertexPtr source, const size_t radius);
+    const VertexList& getMinVertices() const;
+    const VertexList& getMaxVertices() const;
 
     virtual ~KDTree ();
 
@@ -48,8 +50,10 @@ private:
     void findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& results,
             const VertexPtr& target);
 
-    NodePtr m_root;
 
+    NodePtr m_root;
+    VertexList m_MinVertices;
+    VertexList m_MaxVertices;
 };
 
 typedef NodePtr(KDTree::*makeTreeFun)(size_t depth, const size_t& cellSize, ListTriple& t,

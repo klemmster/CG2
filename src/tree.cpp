@@ -34,7 +34,14 @@ KDTree::KDTree(const VertexList vertices){
     xSorted.join();
     ySorted.join();
     zSorted.join();
+    m_MinVertices.push_back(sortedX.front());
+    m_MinVertices.push_back(sortedY.front());
+    m_MinVertices.push_back(sortedZ.front());
+    m_MaxVertices.push_back(sortedX.back());
+    m_MaxVertices.push_back(sortedY.back());
+    m_MaxVertices.push_back(sortedZ.back());
     taS.stop();
+
 
     float xMin = (*sortedX.front())[0];
     float xMax = (*sortedX.back())[0];
@@ -269,3 +276,12 @@ void KDTree::drawSingleNode(const NodePtr &src) {
 void KDTree::draw(const VertexList vertices) {
 
 }
+
+const VertexList& KDTree::getMinVertices() const{
+    return m_MinVertices;
+}
+
+const VertexList& KDTree::getMaxVertices() const{
+    return m_MaxVertices;
+}
+

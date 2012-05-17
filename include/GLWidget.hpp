@@ -5,6 +5,7 @@
 #include <QtOpenGL/QGLWidget>
 #include "vertex.hpp"
 #include "tree.hpp"
+#include "Grid.hpp"
 
 class GLWidget : public QGLWidget {
 
@@ -35,6 +36,7 @@ protected:
     std::string m_fileName;
     VertexList vertices;
     KDTree tree;
+    Grid grid;
 
 private:
     bool showTree;
