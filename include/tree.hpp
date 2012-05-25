@@ -22,13 +22,13 @@ class KDTree
 {
 public:
     KDTree ();
-    KDTree (const VertexList vertices);
+    KDTree (const VertexList vertices, const size_t dimensions);
 
     void draw();
     void draw(const VertexList vertices);
 
     VertexList findKNearestNeighbours(const VertexPtr source, const size_t numNeighbours);
-    VertexList findInRadius(const VertexPtr source, const size_t radius);
+    VertexList findInRadius(const VertexPtr source, const double radius);
     const VertexList& getMinVertices() const;
     const VertexList& getMaxVertices() const;
 
@@ -54,6 +54,7 @@ private:
     NodePtr m_root;
     VertexList m_MinVertices;
     VertexList m_MaxVertices;
+    size_t m_K;
 };
 
 typedef NodePtr(KDTree::*makeTreeFun)(size_t depth, const size_t& cellSize, ListTriple& t,

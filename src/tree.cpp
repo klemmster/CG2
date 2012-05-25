@@ -18,7 +18,9 @@ using namespace std;
 
 #include <float.h>
 #include "stopwatch.hpp"
-KDTree::KDTree(const VertexList vertices){
+KDTree::KDTree(const VertexList vertices, const size_t dimensions):
+    m_K(dimensions)
+{
 
 
     // Copy Input arrays for individual sorting
@@ -58,7 +60,9 @@ KDTree::KDTree(const VertexList vertices){
 
 };
 
-KDTree::KDTree(){
+KDTree::KDTree():
+    m_K(3)
+{
 
 }
 
@@ -201,7 +205,7 @@ void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,
     }
 }
 
-VertexList KDTree::findInRadius(const VertexPtr source, const size_t radius){
+VertexList KDTree::findInRadius(const VertexPtr source, const double radius){
     VertexList result;
     Stopwatch findS("Radius - Search");
     HyperSphere hyperSphere(source, radius);

@@ -37,8 +37,6 @@ Grid::Grid (const VertexList& minVertices, const VertexList& maxVertices,
             yPos += yStep;
             xPos = m_MinX;
     }
-
-
 }
 
 void Grid::draw(){
