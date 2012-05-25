@@ -18,15 +18,11 @@ class Vertex: public vec3f
         Vertex(const vec3f pos);
         Vertex(const float x, const float y, const float z);
         Vertex(const float x, const float y, const float z, const vec3f color);
+        virtual ~Vertex();
 
         void draw() const;
         void highlight(const vec3f color = vec3f(1.0, 0.0, 0.0));
         void resetColor();
-
-        static bool sortX(const VertexPtr a, const VertexPtr b) { return ((*a)[0] < (*b)[0]); };
-        static bool sortY(const VertexPtr a, const VertexPtr b) { return ((*a)[1] < (*b)[1]); };
-        static bool sortZ(const VertexPtr a, const VertexPtr b) { return ((*a)[2] < (*b)[2]); };
-        virtual ~Vertex();
 
     protected:
     private:
@@ -35,6 +31,18 @@ class Vertex: public vec3f
         vec3f m_Color;
 };
 
+class SortVertex
+{
+public:
+    SortVertex (const size_t dim):m_dim(dim){};
+    virtual ~SortVertex (){};
+
+    bool operator() (const VertexPtr a, const VertexPtr b){
+            return ((*a)[m_dim] < (*b)[m_dim]);
+            };
+private:
+    const size_t m_dim;
+};
 
 #endif // VERTEX_H
 

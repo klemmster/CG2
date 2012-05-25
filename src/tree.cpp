@@ -30,9 +30,13 @@ KDTree::KDTree(const VertexList vertices, const size_t dimensions):
     VertexList sortedY(vertices);
     VertexList sortedZ(vertices);
 
-    thread xSorted([&] { std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX); });
-    thread ySorted([&] { std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY); });
-    thread zSorted([&] { std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ); });
+    SortVertex sortX(0);
+    SortVertex sortY(1);
+    SortVertex sortZ(2);
+
+    thread xSorted([&] { std::sort(sortedX.begin(), sortedX.end(), sortX); });
+    thread ySorted([&] { std::sort(sortedY.begin(), sortedY.end(), sortY); });
+    thread zSorted([&] { std::sort(sortedZ.begin(), sortedZ.end(), sortZ); });
     xSorted.join();
     ySorted.join();
     zSorted.join();
