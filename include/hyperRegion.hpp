@@ -3,6 +3,7 @@
 
 #include "vertex.hpp"
 #include "node.hpp"
+#include "domain.hpp"
 
 class HyperRegion
 {
@@ -14,7 +15,7 @@ public:
     virtual bool contains(const VertexPtr srcVertex) const = 0;
 
     /* Yields true if Region is within boundaries */
-    virtual bool intersectsRegion(const Boundaries& boundaries) const = 0;
+    virtual bool intersectsRegion(const Domain& domain) const = 0;
 
 private:
     /* data */

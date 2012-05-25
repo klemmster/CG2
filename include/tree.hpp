@@ -40,7 +40,7 @@ private:
     void drawSingleNode(const NodePtr& src);
 
     NodePtr makeTree(size_t depth, const size_t& cellSize, VertexLists& t,
-            const Boundaries& boundaries);
+            const Domain& domain);
 
     ListPair splitListBy(const size_t& index, const VertexList& sourceList,
             const VertexPtr& sourceVert);
@@ -59,7 +59,7 @@ private:
 };
 
 typedef NodePtr(KDTree::*makeTreeFun)(size_t depth, const size_t& cellSize, VertexLists& t,
-            const Boundaries& boundaries);
+            const Domain& domain);
 
 #endif /* end of include guard: TREE_HPP_HE0Q8ZRG */
 

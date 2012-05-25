@@ -4,25 +4,25 @@
 #include <array>
 
 #include "vertex.hpp"
+#include "domain.hpp"
 
 
 using namespace std;
 
 class Node;
 typedef shared_ptr< Node > NodePtr;
-// xlow, xhigh, ylow, yhigh, zlow, zHigh
-typedef std::array<float, 6> Boundaries;
+
 
 class Node
 {
 public:
     /*Create a Node */
-    Node(const NodePtr left, const NodePtr right, const Boundaries boundaries);
+    Node(const NodePtr left, const NodePtr right, const Domain domain);
     /*Implicitly create a leave */
-    Node(const VertexList bucket, const Boundaries boundaries);
+    Node(const VertexList bucket, const Domain domain);
     virtual ~Node ();
 
-    const Boundaries& getBoundaries();
+    const Domain& getDomain();
     const VertexList getBucket() const;
     const NodePtr getLeft() { return m_left;};
     const NodePtr getRight() { return m_right;};
@@ -34,7 +34,7 @@ private:
     const VertexList m_Bucket;
     const NodePtr m_left;
     const NodePtr m_right;
-    Boundaries m_boundaries;
+    Domain m_domain;
 };
 
 #endif /* end of include guard: NODE_HPP_QAN5IUDG */

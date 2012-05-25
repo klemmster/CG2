@@ -64,16 +64,18 @@ KDTree::KDTree(const VertexList vertices, const size_t dimensions):
 
     taS.stop();
 
-    float xMin = (*m_MinVertices.at(0))[0];
-    float xMax = (*m_MaxVertices.at(0))[0];
-    float yMin = (*m_MinVertices.at(1))[1];
-    float yMax = (*m_MaxVertices.at(1))[1];
-    float zMin = (*m_MinVertices.at(2))[2];
-    float zMax = (*m_MaxVertices.at(2))[2];
+    vector<float> domainMins;
+    vector<float> domainMaxs;
+    domainMins.push_back((*m_MinVertices.at(0))[0]);
+    domainMins.push_back((*m_MinVertices.at(1))[1]);
+    domainMins.push_back((*m_MinVertices.at(2))[2]);
+    domainMaxs.push_back((*m_MaxVertices.at(0))[0]);
+    domainMaxs.push_back((*m_MaxVertices.at(1))[1]);
+    domainMaxs.push_back((*m_MaxVertices.at(2))[2]);
 
-    Boundaries boundaries = {{ xMin, xMax, yMin, yMax, zMin, zMax }};
+    Domain domain( domainMins, domainMaxs);
     Stopwatch mkTreeS("maketree");
-    m_root = makeTree(0, 251, lists, boundaries);
+    m_root = makeTree(0, 251, lists, domain);
     mkTreeS.stop();
 };
 
@@ -88,7 +90,7 @@ KDTree::~KDTree(){
 };
 
 NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, VertexLists& t,
-        const Boundaries& boundaries){
+        const Domain& domain){
     /*
      * Tuple contains x, y, z  Dimensions Vertex list
      *
@@ -100,7 +102,7 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, VertexLists& t,
         return nullptr;
     }
     if(vertices.size() <= cellSize){
-        return NodePtr(new Node(vertices, boundaries));
+        return NodePtr(new Node(vertices, domain));
     }
 
     size_t median = (int) (vertices.size()-1)/2;
@@ -119,10 +121,10 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, VertexLists& t,
         right.push_back(std::get<1>(pair));
     }
 
-    Boundaries leftBounds = boundaries;
-    Boundaries rightBounds = boundaries;
-    leftBounds.at(k*2+1) = (*posElement)[k];
-    rightBounds.at(k*2) = (*posElement)[k];
+    Domain leftBounds = domain;
+    Domain rightBounds = domain;
+    leftBounds.updateMax((*posElement)[k], k);
+    rightBounds.updateMin((*posElement)[k], k);
 
     NodePtr leftNode;
     NodePtr rightNode;
@@ -135,7 +137,7 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, VertexLists& t,
         leftNode = makeTree(depth+1, cellSize, left, leftBounds);
         rightNode = makeTree(depth+1, cellSize, right, rightBounds);
     }
-    return NodePtr(new Node(leftNode, rightNode, boundaries));
+    return NodePtr(new Node(leftNode, rightNode, domain));
 };
 
 
@@ -183,7 +185,7 @@ void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& re
         //Required Number of points are found, sphere was completely in region,
         //there can't be any closer results
 
-        if(results.full() && sphere.withinRegion(src->getBoundaries())){
+        if(results.full() && sphere.withinRegion(src->getDomain())){
             return;
         }
     }
@@ -195,12 +197,12 @@ void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& re
     HyperSphere sphere(target, dist );
 
     if(src->getLeft()){
-        if(sphere.intersectsRegion(src->getLeft()->getBoundaries())){
+        if(sphere.intersectsRegion(src->getLeft()->getDomain())){
             findKNearestNeighbours(src->getLeft(), results, target);
         }
     }
     if(src->getRight()){
-        if(sphere.intersectsRegion(src->getRight()->getBoundaries())){
+        if(sphere.intersectsRegion(src->getRight()->getDomain())){
             findKNearestNeighbours(src->getRight(), results, target);
         }
     };
@@ -217,12 +219,12 @@ void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,
         }
     }
     if(src->getLeft() != nullptr){
-        if(sphere.intersectsRegion(src->getBoundaries())){
+        if(sphere.intersectsRegion(src->getDomain())){
             findInRadius(src->getLeft(), sphere, result);
         }
     }
     if(src->getRight() != nullptr){
-        if(sphere.intersectsRegion(src->getBoundaries())){
+        if(sphere.intersectsRegion(src->getDomain())){
             findInRadius(src->getRight(), sphere, result);
         }
     }
@@ -254,46 +256,49 @@ void KDTree::drawSingleNode(const NodePtr &src) {
         return;
     }
 
-    Boundaries bounds = src->getBoundaries();
+    Domain domain = src->getDomain();
+    domain.draw();
 
     glBegin(GL_LINES);
 
-    glVertex3f(bounds[0], bounds[2], bounds[4]);
-    glVertex3f(bounds[0], bounds[2], bounds[5]);
+    /*
+    glVertex3f(domain.getMin(0], bounds[2], bounds[4]);
+    glVertex3f(domain.getMin(0], bounds[2], bounds[5]);
 
-    glVertex3f(bounds[0], bounds[2], bounds[5]);
-    glVertex3f(bounds[0], bounds[3], bounds[5]);
+    glVertex3f(domain.getMin(0], bounds[2], bounds[5]);
+    glVertex3f(domain.getMin(0], bounds[3], bounds[5]);
 
-    glVertex3f(bounds[0], bounds[3], bounds[5]);
-    glVertex3f(bounds[0], bounds[3], bounds[4]);
+    glVertex3f(domain.getMin(0], bounds[3], bounds[5]);
+    glVertex3f(domain.getMin(0], bounds[3], bounds[4]);
 
-    glVertex3f(bounds[0], bounds[3], bounds[4]);
-    glVertex3f(bounds[0], bounds[2], bounds[4]);
+    glVertex3f(domain.getMin(0], bounds[3], bounds[4]);
+    glVertex3f(domain.getMin(0], bounds[2], bounds[4]);
 
-    glVertex3f(bounds[0], bounds[2], bounds[4]);
-    glVertex3f(bounds[1], bounds[2], bounds[4]);
+    glVertex3f(domain.getMin(0], bounds[2], bounds[4]);
+    glVertex3f(domain[1], bounds[2], bounds[4]);
 
-    glVertex3f(bounds[0], bounds[3], bounds[4]);
-    glVertex3f(bounds[1], bounds[3], bounds[4]);
+    glVertex3f(domain.getMin(0], bounds[3], bounds[4]);
+    glVertex3f(domain[1], bounds[3], bounds[4]);
 
-    glVertex3f(bounds[1], bounds[3], bounds[4]);
-    glVertex3f(bounds[1], bounds[2], bounds[4]);
+    glVertex3f(domain[1], bounds[3], bounds[4]);
+    glVertex3f(domain[1], bounds[2], bounds[4]);
 
-    glVertex3f(bounds[1], bounds[3], bounds[4]);
-    glVertex3f(bounds[1], bounds[3], bounds[5]);
+    glVertex3f(domain[1], bounds[3], bounds[4]);
+    glVertex3f(domain[1], bounds[3], bounds[5]);
 
-    glVertex3f(bounds[1], bounds[2], bounds[4]);
-    glVertex3f(bounds[1], bounds[2], bounds[5]);
+    glVertex3f(domain[1], bounds[2], bounds[4]);
+    glVertex3f(domain[1], bounds[2], bounds[5]);
 
-    glVertex3f(bounds[1], bounds[3], bounds[5]);
-    glVertex3f(bounds[1], bounds[2], bounds[5]);
+    glVertex3f(domain[1], bounds[3], bounds[5]);
+    glVertex3f(domain[1], bounds[2], bounds[5]);
 
-    glVertex3f(bounds[1], bounds[2], bounds[5]);
-    glVertex3f(bounds[0], bounds[2], bounds[5]);
+    glVertex3f(domain[1], bounds[2], bounds[5]);
+    glVertex3f(domain.getMin(0], bounds[2], bounds[5]);
 
-    glVertex3f(bounds[1], bounds[3], bounds[5]);
-    glVertex3f(bounds[0], bounds[3], bounds[5]);
+    glVertex3f(domain[1], bounds[3], bounds[5]);
+    glVertex3f(domain.getMin(0], bounds[3], bounds[5]);
 
+    */
     glEnd();
 
     drawSingleNode(src->getLeft());

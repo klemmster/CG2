@@ -11,9 +11,9 @@ public:
     virtual ~HyperSphere ();
 
     virtual bool contains(const VertexPtr src) const;
-    virtual bool intersectsRegion(const Boundaries& boundaries) const;
+    virtual bool intersectsRegion(const Domain& domain) const;
     /* If sphere is completely within a given Region return true */
-    virtual bool withinRegion(const Boundaries& boundaries) const;
+    virtual bool withinRegion(const Domain& domain) const;
 
 private:
 

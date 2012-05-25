@@ -18,7 +18,7 @@ bool HyperSphere::contains(const VertexPtr src) const{
     return (dist < m_radius);
 }
 
-bool HyperSphere::intersectsRegion(const Boundaries& boundaries) const{
+bool HyperSphere::intersectsRegion(const Domain& domain) const{
     float dmin = 0;
     for( size_t i; i<3; i++){
         if( (*m_source)[i] < m_min[i]){
@@ -30,10 +30,10 @@ bool HyperSphere::intersectsRegion(const Boundaries& boundaries) const{
     return dmin <= m_radius_sqr;
 }
 
-bool HyperSphere::withinRegion(const Boundaries& boundaries) const{
-    if(m_min[0] > boundaries[0] && m_max[0] < boundaries[1] &&
-       m_min[1] > boundaries[2] && m_max[1] < boundaries[3] &&
-       m_min[2] > boundaries[4] && m_max[2] < boundaries[5]){
+bool HyperSphere::withinRegion(const Domain& domain) const{
+    if(m_min[0] > domain.getMin(0) && m_max[0] < domain.getMax(0) &&
+       m_min[1] > domain.getMin(1) && m_max[1] < domain.getMax(1) &&
+       m_min[2] > domain.getMin(2) && m_max[2] < domain.getMax(2)){
         return true;
     }
     return false;
