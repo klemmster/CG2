@@ -1,6 +1,7 @@
 #include "tree.hpp"
 
 #include <algorithm>
+#include <vector>
 
 #ifdef __APPLE__
 #include <GL/glew.h>
@@ -13,6 +14,7 @@ using namespace boost;
 #include <GL/glut.h>
 
 using namespace std;
+typedef shared_ptr< thread > threadPtr;
 
 #endif
 
@@ -22,46 +24,57 @@ KDTree::KDTree(const VertexList vertices, const size_t dimensions):
     m_K(dimensions)
 {
 
-
+    VertexLists lists;
+    lists.reserve(m_K);
     // Copy Input arrays for individual sorting
     Stopwatch taS("SortArrays");
 
-    VertexList sortedX(vertices);
-    VertexList sortedY(vertices);
-    VertexList sortedZ(vertices);
+    //Create Lists
+    for(size_t i = 0; i<m_K; ++i){
+        lists.push_back(VertexList(vertices));
+    }
 
-    SortVertex sortX(0);
-    SortVertex sortY(1);
-    SortVertex sortZ(2);
+    for(size_t i = 0; i<m_K; ++i){
+        SortVertex sortByDim(i);
+       sort(lists.at(i).begin(), lists.at(i).end(), sortByDim );
+    }
 
-    thread xSorted([&] { std::sort(sortedX.begin(), sortedX.end(), sortX); });
-    thread ySorted([&] { std::sort(sortedY.begin(), sortedY.end(), sortY); });
-    thread zSorted([&] { std::sort(sortedZ.begin(), sortedZ.end(), sortZ); });
-    xSorted.join();
-    ySorted.join();
-    zSorted.join();
-    m_MinVertices.push_back(sortedX.front());
-    m_MinVertices.push_back(sortedY.front());
-    m_MinVertices.push_back(sortedZ.front());
-    m_MaxVertices.push_back(sortedX.back());
-    m_MaxVertices.push_back(sortedY.back());
-    m_MaxVertices.push_back(sortedZ.back());
+    /*
+    vector< threadPtr > sortThreads;
+    //Sort Lists threaded
+    for(size_t i = 0; i<m_K; ++i){
+        SortVertex sortByDim(i);
+        threadPtr sortListTh(new thread([&] { sort(lists.at(i).begin(), lists.at(i).end(), sortByDim ); }));
+        sortThreads.push_back(sortListTh);
+    }
+    */
+
+    /*
+    //Wait for sorting to complete
+    for(threadPtr th : sortThreads){
+        th->join();
+    }
+    */
+
+    //Extract minimum and maximum values
+    for(VertexList list : lists){
+        m_MinVertices.push_back(list.front());
+        m_MaxVertices.push_back(list.back());
+    }
+
     taS.stop();
 
+    float xMin = (*m_MinVertices.at(0))[0];
+    float xMax = (*m_MaxVertices.at(0))[0];
+    float yMin = (*m_MinVertices.at(1))[1];
+    float yMax = (*m_MaxVertices.at(1))[1];
+    float zMin = (*m_MinVertices.at(2))[2];
+    float zMax = (*m_MaxVertices.at(2))[2];
 
-    float xMin = (*sortedX.front())[0];
-    float xMax = (*sortedX.back())[0];
-    float yMin = (*sortedY.front())[1];
-    float yMax = (*sortedY.back())[1];
-    float zMin = (*sortedZ.front())[2];
-    float zMax = (*sortedZ.back())[2];
-    ListTriple t = { {sortedX, sortedY, sortedZ} };
     Boundaries boundaries = {{ xMin, xMax, yMin, yMax, zMin, zMax }};
     Stopwatch mkTreeS("maketree");
-    m_root = makeTree(0, 251, t, boundaries);
+    m_root = makeTree(0, 251, lists, boundaries);
     mkTreeS.stop();
-
-
 };
 
 KDTree::KDTree():
@@ -74,13 +87,13 @@ KDTree::~KDTree(){
 
 };
 
-NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
+NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, VertexLists& t,
         const Boundaries& boundaries){
     /*
      * Tuple contains x, y, z  Dimensions Vertex list
      *
     */
-    const size_t k = depth % 3;
+    const size_t k = depth % m_K;
     VertexList vertices = t.at(k);
 
     if(vertices.size() == 0){
@@ -93,12 +106,18 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
     size_t median = (int) (vertices.size()-1)/2;
     VertexPtr& posElement = vertices.at(median);
 
-    ListPair xPair = splitListBy(k, std::get<0>(t), posElement);
-    ListPair yPair = splitListBy(k, std::get<1>(t), posElement);
-    ListPair zPair = splitListBy(k, std::get<2>(t), posElement);
+    //Split lists by median element
+    std::vector< ListPair > pairs;
+    for(size_t i=0; i<m_K; ++i){
+        pairs.push_back(splitListBy(k, t.at(i), posElement));
+    }
 
-    ListTriple left = { {std::get<0>(xPair), std::get<0>(yPair), std::get<0>(zPair)} };
-    ListTriple right = { {std::get<1>(xPair), std::get<1>(yPair), std::get<1>(zPair)} };
+    VertexLists left;
+    VertexLists right;
+    for(ListPair pair: pairs){
+        left.push_back(std::get<0>(pair));
+        right.push_back(std::get<1>(pair));
+    }
 
     Boundaries leftBounds = boundaries;
     Boundaries rightBounds = boundaries;

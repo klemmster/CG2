@@ -16,8 +16,9 @@
 #include <thread>
 #endif
 
-typedef std::array<VertexList, 3> ListTriple;
+typedef std::vector< VertexList > VertexLists;
 typedef std::pair<VertexList, VertexList> ListPair;
+
 class KDTree
 {
 public:
@@ -38,7 +39,7 @@ private:
 
     void drawSingleNode(const NodePtr& src);
 
-    NodePtr makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
+    NodePtr makeTree(size_t depth, const size_t& cellSize, VertexLists& t,
             const Boundaries& boundaries);
 
     ListPair splitListBy(const size_t& index, const VertexList& sourceList,
@@ -57,7 +58,7 @@ private:
     size_t m_K;
 };
 
-typedef NodePtr(KDTree::*makeTreeFun)(size_t depth, const size_t& cellSize, ListTriple& t,
+typedef NodePtr(KDTree::*makeTreeFun)(size_t depth, const size_t& cellSize, VertexLists& t,
             const Boundaries& boundaries);
 
 #endif /* end of include guard: TREE_HPP_HE0Q8ZRG */

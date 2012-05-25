@@ -37,6 +37,7 @@ link_directories ( ${Boost_LIBRARY_DIRS} )
 
 IF(UNIX AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "-Wall -O3 -march=native -std=c++0x")
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -O0 -g -march=native -std=c++0x")
     MESSAGE(STATUS "Use c++0x")
 ELSEIF(APPLE)
     set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
