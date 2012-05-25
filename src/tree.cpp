@@ -254,7 +254,7 @@ void KDTree::drawSingleNode(const NodePtr &src) {
         return;
     }
 
-    std::array<float, 6> bounds = src->getBoundaries();
+    Boundaries bounds = src->getBoundaries();
 
     glBegin(GL_LINES);
 
