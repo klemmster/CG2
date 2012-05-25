@@ -17,6 +17,7 @@ class Vertex: public vec3f
         /** Default constructor */
         Vertex(const vec3f pos);
         Vertex(const float x, const float y, const float z);
+        Vertex(const float x, const float y, const float z, const vec3f color);
 
         void draw() const;
         void highlight(const vec3f color = vec3f(1.0, 0.0, 0.0));

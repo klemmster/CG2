@@ -22,6 +22,13 @@ Vertex::Vertex(const float x, const float y, const float z):
     m_Color = vec3f(.6, .6, .6);
 }
 
+Vertex::Vertex(const float x, const float y, const float z, const vec3f color):
+    vec3f(x, y, z),
+    m_Color(color)
+{
+
+}
+
 Vertex::~Vertex()
 {
      //dtor

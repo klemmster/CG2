@@ -7,7 +7,8 @@ class Grid
 {
 public:
     Grid () {};
-    Grid (const VertexList& minVertices, const VertexList& maxVertices);
+    Grid (const VertexList& minVertices, const VertexList& maxVertices,
+            const size_t dim_x, const size_t dim_y);
     virtual ~Grid () {};
 
     void draw();
@@ -20,6 +21,8 @@ private:
     float m_MaxX;
     float m_MaxY;
     float m_MaxZ;
+
+    VertexList vertices;
 
 };
 

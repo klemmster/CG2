@@ -57,7 +57,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices);
     treeTimer.stop();
-    grid = Grid(tree.getMinVertices(), tree.getMaxVertices());
+    grid = Grid(tree.getMinVertices(), tree.getMaxVertices(), 16, 16);
 }
 
 void GLWidget::resizeGL(int w, int h) {
