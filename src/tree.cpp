@@ -24,17 +24,20 @@ KDTree::KDTree(const VertexList vertices, const size_t dimensions):
     m_K(dimensions)
 {
 
+    //We need third dimensino for grid, thus, if lesser than 3, have still all values
+    //sorted
+    size_t kLocal = m_K < 3 ? 3 : m_K;
     VertexLists lists;
-    lists.reserve(m_K);
+    lists.reserve(kLocal);
     // Copy Input arrays for individual sorting
     Stopwatch taS("SortArrays");
 
     //Create Lists
-    for(size_t i = 0; i<m_K; ++i){
+    for(size_t i = 0; i<kLocal; ++i){
         lists.push_back(VertexList(vertices));
     }
 
-    for(size_t i = 0; i<m_K; ++i){
+    for(size_t i = 0; i<kLocal; ++i){
         SortVertex sortByDim(i);
        sort(lists.at(i).begin(), lists.at(i).end(), sortByDim );
     }
@@ -66,12 +69,10 @@ KDTree::KDTree(const VertexList vertices, const size_t dimensions):
 
     vector<float> domainMins;
     vector<float> domainMaxs;
-    domainMins.push_back((*m_MinVertices.at(0))[0]);
-    domainMins.push_back((*m_MinVertices.at(1))[1]);
-    domainMins.push_back((*m_MinVertices.at(2))[2]);
-    domainMaxs.push_back((*m_MaxVertices.at(0))[0]);
-    domainMaxs.push_back((*m_MaxVertices.at(1))[1]);
-    domainMaxs.push_back((*m_MaxVertices.at(2))[2]);
+    for(size_t i = 0; i<m_K; ++i){
+        domainMins.push_back((*m_MinVertices.at(i))[i]);
+        domainMaxs.push_back((*m_MaxVertices.at(i))[i]);
+    }
 
     Domain domain( domainMins, domainMaxs);
     Stopwatch mkTreeS("maketree");
@@ -181,7 +182,7 @@ void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& re
             float dist = norm((*vrtx)-(*target));
             results.push(VertexDistPair(vrtx, dist));
         }
-        HyperSphere sphere(target, std::get<1>(results.top()));
+        HyperSphere sphere(target, std::get<1>(results.top()), m_K);
         //Required Number of points are found, sphere was completely in region,
         //there can't be any closer results
 
@@ -194,7 +195,7 @@ void KDTree::findKNearestNeighbours(const NodePtr& src, LimitedPriorityQueue& re
     if(!results.empty()){
         dist = std::get<1>(results.top());
     }
-    HyperSphere sphere(target, dist );
+    HyperSphere sphere(target, dist, m_K );
 
     if(src->getLeft()){
         if(sphere.intersectsRegion(src->getLeft()->getDomain())){
@@ -233,7 +234,7 @@ void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,
 VertexList KDTree::findInRadius(const VertexPtr source, const double radius){
     VertexList result;
     Stopwatch findS("Radius - Search");
-    HyperSphere hyperSphere(source, radius);
+    HyperSphere hyperSphere(source, radius, m_K);
     findInRadius(m_root, hyperSphere, result);
     findS.stop();
     for(VertexPtr ptr : result){
