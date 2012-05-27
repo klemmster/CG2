@@ -10,16 +10,18 @@
 #include "vertex.hpp"
 
 
-Grid::Grid (const VertexList& minVertices, const VertexList& maxVertices,
-        const size_t dim_x, const size_t dim_y){
+Grid::Grid (const KDTree tree, const size_t dim_x, const size_t dim_y){
 
-    m_MinX = (*minVertices.at(0))[0];
-    m_MinY = (*minVertices.at(1))[1];
-    m_MinZ = (*minVertices.at(2))[2];
+    const VertexList& minm_vertices = tree.getMinVertices();
+    const VertexList& maxm_vertices = tree.getMaxVertices();
 
-    m_MaxX = (*maxVertices.at(0))[0];
-    m_MaxY = (*maxVertices.at(1))[1];
-    m_MaxZ = (*maxVertices.at(2))[2];
+    m_MinX = (*minm_vertices.at(0))[0];
+    m_MinY = (*minm_vertices.at(1))[1];
+    m_MinZ = (*minm_vertices.at(2))[2];
+
+    m_MaxX = (*maxm_vertices.at(0))[0];
+    m_MaxY = (*maxm_vertices.at(1))[1];
+    m_MaxZ = (*maxm_vertices.at(2))[2];
 
     float xStep = (abs(m_MaxX) - abs(m_MinX)) / dim_x;
     float yStep = (abs(m_MaxY) - abs(m_MinY)) / dim_y;
@@ -31,7 +33,7 @@ Grid::Grid (const VertexList& minVertices, const VertexList& maxVertices,
 
     for(size_t y = 0; y < dim_y; ++y){
         for(size_t x = 0; x < dim_x; ++x){
-            vertices.push_back(VertexPtr(new Vertex(xPos, yPos, m_MaxZ, color)));
+            m_vertices.push_back(VertexPtr(new Vertex(xPos, yPos, m_MaxZ, color)));
             xPos += xStep;
         }
             yPos += yStep;
@@ -50,7 +52,7 @@ void Grid::draw(){
     glEnd();
 
     glBegin(GL_POINTS);
-    for(VertexPtr vrtx: vertices){
+    for(VertexPtr vrtx: m_vertices){
         vrtx->draw();
     }
     glEnd();

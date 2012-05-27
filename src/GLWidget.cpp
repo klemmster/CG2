@@ -57,7 +57,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid(tree.getMinVertices(), tree.getMaxVertices(), 16, 16);
+    grid = Grid(tree, 16, 16);
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -129,7 +129,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event){
-    positionZ += event->delta()/10.0;
+    positionZ += event->delta()/100.0;
     updateGL();
 }
 

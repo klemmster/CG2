@@ -1,14 +1,13 @@
 #ifndef GRID_HPP_FY7TIIFJ
 #define GRID_HPP_FY7TIIFJ
 
-#include "vertex.hpp"
+#include "tree.hpp"
 
 class Grid
 {
 public:
     Grid () {};
-    Grid (const VertexList& minVertices, const VertexList& maxVertices,
-            const size_t dim_x, const size_t dim_y);
+    Grid ( const KDTree tree, const size_t dim_x, const size_t dim_y);
     virtual ~Grid () {};
 
     void draw();
@@ -22,7 +21,7 @@ private:
     float m_MaxY;
     float m_MaxZ;
 
-    VertexList vertices;
+    VertexList m_vertices;
 
 };
 
