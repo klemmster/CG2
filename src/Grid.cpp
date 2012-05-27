@@ -9,8 +9,15 @@
 #include "Grid.hpp"
 #include "vertex.hpp"
 
+#include <Eigen/Core>
+#include <Eigen/Dense>
 
-Grid::Grid (const KDTree tree, const size_t dim_x, const size_t dim_y){
+using namespace Eigen;
+
+
+Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
+    m_tree(tree)
+{
 
     const VertexList& minm_vertices = tree.getMinVertices();
     const VertexList& maxm_vertices = tree.getMaxVertices();
@@ -38,6 +45,45 @@ Grid::Grid (const KDTree tree, const size_t dim_x, const size_t dim_y){
         }
             yPos += yStep;
             xPos = m_MinX;
+    }
+    approximateLS();
+}
+
+void Grid::approximateLS(){
+    MatrixXf bDimsMatSum(6,6);
+    VectorXf bDimsVecSum(6);
+
+    VertexPtr midPoint(new Vertex(0.0, 0.0, 0.0));
+    VertexList list = m_tree.findInRadius(midPoint, 40000);
+
+    for(VertexPtr point : list){
+        VectorXf b(6);
+        float x = (*point)[0];
+        float y = (*point)[1];
+        float z = (*point)[2];
+        std::cout << "X, Y, Z: " << x << " " << y << " " << z << "\n";
+        b << 1, x, y, x*x, x*y, y*y;
+        std::cout << "B:\n" << b << "\n";
+        MatrixXf bDims(6,6);
+        bDims = b*b.transpose();
+        bDimsMatSum += bDims;
+        bDimsVecSum += (b*z);
+    }
+
+    VectorXf c(6);
+    c = bDimsMatSum.inverse() * bDimsVecSum;
+
+    std::cout << "Matsum: \n" << bDimsMatSum << "\n";
+    std::cout << "INverse: \n" << bDimsMatSum.inverse() << "\n";
+    std::cout << "VecSums: \n" << bDimsVecSum << "\n";
+    std::cout << "C: \n" << c << "\n";
+
+    for(VertexPtr point : m_vertices){
+        VectorXf b(6);
+        float x = (*point)[0];
+        float y = (*point)[1];
+        b << 1, x, y, x*x, x*y, y*y;
+        (*point)[2] = b.dot(c);
     }
 }
 

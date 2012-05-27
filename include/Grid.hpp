@@ -7,9 +7,10 @@ class Grid
 {
 public:
     Grid () {};
-    Grid ( const KDTree tree, const size_t dim_x, const size_t dim_y);
+    Grid (KDTree tree, const size_t dim_x, const size_t dim_y);
     virtual ~Grid () {};
 
+    void approximateLS();
     void draw();
 
 private:
@@ -22,6 +23,7 @@ private:
     float m_MaxZ;
 
     VertexList m_vertices;
+    KDTree m_tree;
 
 };
 
