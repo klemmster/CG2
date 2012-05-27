@@ -99,17 +99,33 @@ void Grid::draw(){
 
     //std::cout << "Dim X: " << m_dimX << " Dim Y: " << m_dimY << std::endl;
     
-    glBegin(GL_TRIANGLE_STRIP);
+    glBegin(GL_TRIANGLES);
     glColor3f(0, 0, 1);
 
-    for(size_t i = 0; i < m_vertices.size() - m_dimX - m_dimY; i++)
+    for(size_t i = 0; i < m_vertices.size() - m_dimX - 1; i++)
     {
-        glVertex3fv(m_vertices.at(i + 0)->_v);                  // 0    // 2
-        glVertex3fv(m_vertices.at(i + 1)->_v);                  // 1    // 3
-        glVertex3fv(m_vertices.at(i + m_dimX + 0)->_v);         // 16   // 18
-        glVertex3fv(m_vertices.at(i + m_dimX + 1)->_v);         // 17   // 19
+        VertexPtr vec1 = m_vertices.at(i + 0);
+        VertexPtr vec2 = m_vertices.at(i + 1);
+        VertexPtr vec3 = m_vertices.at(i + m_dimX + 0);
+        VertexPtr vec4 = m_vertices.at(i + m_dimX + 1);
         
-        //m_vertices.at(i)->draw();
+        vec3f v1(vec1->_v[0], vec1->_v[1], vec1->_v[2]);
+        vec3f v2(vec2->_v[0], vec2->_v[1], vec2->_v[2]);
+        vec3f v3(vec3->_v[0], vec3->_v[1], vec3->_v[2]);
+        vec3f v4(vec4->_v[0], vec4->_v[1], vec4->_v[2]);
+        
+        vec3f normal_v1_v2 = normalize(cross(v1, v2));
+        vec3f normal_v3_v2 = normalize(cross(v3, v2));
+        
+        glVertex3fv(vec1->_v);                  // 0    // 2
+        glVertex3fv(vec2->_v);                  // 1    // 3
+        glVertex3fv(vec3->_v);                  // 16   // 18
+        //glNormal3fv(normal_v1_v2._v);
+   
+        glVertex3fv(vec3->_v);     
+        glVertex3fv(vec2->_v);
+        glVertex3fv(vec4->_v);
+        //glNormal3fv(normal_v3_v2._v);
     }
     glEnd();
 }
