@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6)
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
 project (PointMesh)
 
 #add_subdirectory(shader)
@@ -11,6 +11,7 @@ file (GLOB_RECURSE headers *.hpp)
 
 find_package( OpenGL )
 find_package( GLUT )
+find_package( Eigen3 )
 
 
 IF(GLUT_FOUND)
@@ -18,6 +19,12 @@ IF(GLUT_FOUND)
 ELSE()
     MESSAGE(STATUS "ERROR, no glut")
 ENDIF(GLUT_FOUND)
+
+IF(EIGEN3_FOUND)
+    include_directories(${EIGEN3_INCLUDE_DIR})
+ELSE()
+    MESSAGE(STATUS "ERROR, Eigen3 not found")
+ENDIF(EIGEN3_FOUND)
 
 find_package( Qt4 REQUIRED QtCore QtGui QtOpenGL )
 IF(QT4_FOUND)
