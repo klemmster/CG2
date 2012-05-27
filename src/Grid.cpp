@@ -23,8 +23,8 @@ Grid::Grid (const KDTree tree, const size_t dim_x, const size_t dim_y){
     m_MaxY = (*maxm_vertices.at(1))[1];
     m_MaxZ = (*maxm_vertices.at(2))[2];
 
-    float xStep = (abs(m_MaxX) - abs(m_MinX)) / dim_x;
-    float yStep = (abs(m_MaxY) - abs(m_MinY)) / dim_y;
+    float xStep = abs(m_MaxX - m_MinX) / dim_x;
+    float yStep = abs(m_MaxY - m_MinY) / dim_y;
 
     float xPos = m_MinX;
     float yPos = m_MinY;
