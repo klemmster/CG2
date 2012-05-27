@@ -24,6 +24,8 @@ private:
 
     VertexList m_vertices;
     KDTree m_tree;
+    size_t m_dimX;
+    size_t m_dimY;
 
 };
 

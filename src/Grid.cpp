@@ -16,7 +16,7 @@ using namespace Eigen;
 
 
 Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
-    m_tree(tree)
+    m_tree(tree), m_dimX(dim_x), m_dimY(dim_y)
 {
 
     const VertexList& minm_vertices = tree.getMinVertices();
@@ -97,9 +97,19 @@ void Grid::draw(){
         glVertex3f(m_MinX, m_MinY, m_MinZ);
     glEnd();
 
-    glBegin(GL_POINTS);
-    for(VertexPtr vrtx: m_vertices){
-        vrtx->draw();
+    //std::cout << "Dim X: " << m_dimX << " Dim Y: " << m_dimY << std::endl;
+    
+    glBegin(GL_TRIANGLE_STRIP);
+    glColor3f(0, 0, 1);
+
+    for(size_t i = 0; i < m_vertices.size() - m_dimX - m_dimY; i++)
+    {
+        glVertex3fv(m_vertices.at(i + 0)->_v);                  // 0    // 2
+        glVertex3fv(m_vertices.at(i + 1)->_v);                  // 1    // 3
+        glVertex3fv(m_vertices.at(i + m_dimX + 0)->_v);         // 16   // 18
+        glVertex3fv(m_vertices.at(i + m_dimX + 1)->_v);         // 17   // 19
+        
+        //m_vertices.at(i)->draw();
     }
     glEnd();
 }
