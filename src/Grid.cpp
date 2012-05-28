@@ -97,13 +97,13 @@ void Grid::draw(){
         glVertex3f(m_MinX, m_MinY, m_MinZ);
     glEnd();
 
-    //std::cout << "Dim X: " << m_dimX << " Dim Y: " << m_dimY << std::endl;
-    
-
-    
-
     for(size_t i = 0; i < m_vertices.size() - m_dimX - 1; i++)
     {
+        if ((i + 1) % m_dimX == 0)
+        {
+            continue;
+        }
+        
         VertexPtr vec1 = m_vertices.at(i + 0);
         VertexPtr vec2 = m_vertices.at(i + 1);
         VertexPtr vec3 = m_vertices.at(i + m_dimX + 0);
@@ -114,40 +114,48 @@ void Grid::draw(){
         vec3f v3(vec3->_v[0], vec3->_v[1], vec3->_v[2]);
         vec3f v4(vec4->_v[0], vec4->_v[1], vec4->_v[2]);
         
-        vec3f normal_v1_v2 = normalize(cross(v1, v2));
-        vec3f normal_v3_v2 = normalize(cross(v3, v2));
+        vec3f normal_v1_v2 = normalize(cross(v2, v1));
+        vec3f normal_v3_v2 = normalize(cross(v2, v3));
+        
+        //float colorBlue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+        //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorBlue);
         
         glColor3f(0, 0, 1);
         glBegin(GL_TRIANGLES);
             glVertex3fv(vec1->_v);                  // 0    // 2
+            glNormal3fv(normal_v1_v2._v);
             glVertex3fv(vec2->_v);                  // 1    // 3
+            glNormal3fv(normal_v1_v2._v);
             glVertex3fv(vec3->_v);                  // 16   // 18
-        
+            glNormal3fv(normal_v1_v2._v);
+
             glVertex3fv(vec3->_v);     
+            glNormal3fv(normal_v3_v2._v);
             glVertex3fv(vec2->_v);
+            glNormal3fv(normal_v3_v2._v);
             glVertex3fv(vec4->_v);
+            glNormal3fv(normal_v3_v2._v);
+        
         glEnd();
         
         glColor3f(0, 1, 0);
         glBegin(GL_LINES);
         
-        glVertex3fv(vec1->_v);
-        glVertex3fv(((v1 + (normal_v1_v2 / 10)))._v);
-        glVertex3fv(vec2->_v);
-        glVertex3fv(((v2 + (normal_v1_v2 / 10)))._v);
-        glVertex3fv(vec3->_v);
-        glVertex3fv(((v3 + (normal_v1_v2 / 10)))._v);
-        
-        glVertex3fv(vec3->_v);
-        glVertex3fv(((v3 + (normal_v3_v2 / 10)))._v);
-        glVertex3fv(vec2->_v);
-        glVertex3fv(((v2 + (normal_v3_v2 / 10)))._v);
-        glVertex3fv(vec4->_v);
-        glVertex3fv(((v4 + (normal_v3_v2 / 10)))._v);
+            glVertex3fv(vec1->_v);
+            glVertex3fv(((v1 + (normal_v1_v2 / 10)))._v);
+            glVertex3fv(vec2->_v);
+            glVertex3fv(((v2 + (normal_v1_v2 / 10)))._v);
+            glVertex3fv(vec3->_v);
+            glVertex3fv(((v3 + (normal_v1_v2 / 10)))._v);
+            
+            glVertex3fv(vec3->_v);
+            glVertex3fv(((v3 + (normal_v3_v2 / 10)))._v);
+            glVertex3fv(vec2->_v);
+            glVertex3fv(((v2 + (normal_v3_v2 / 10)))._v);
+            glVertex3fv(vec4->_v);
+            glVertex3fv(((v4 + (normal_v3_v2 / 10)))._v);
         
         glEnd();
-        //glNormal3fv(normal_v1_v2._v);
-        //glNormal3fv(normal_v3_v2._v);
     }
     glEnd();
 }
