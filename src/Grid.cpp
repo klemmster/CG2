@@ -99,8 +99,8 @@ void Grid::draw(){
 
     //std::cout << "Dim X: " << m_dimX << " Dim Y: " << m_dimY << std::endl;
     
-    glBegin(GL_TRIANGLES);
-    glColor3f(0, 0, 1);
+
+    
 
     for(size_t i = 0; i < m_vertices.size() - m_dimX - 1; i++)
     {
@@ -117,14 +117,36 @@ void Grid::draw(){
         vec3f normal_v1_v2 = normalize(cross(v1, v2));
         vec3f normal_v3_v2 = normalize(cross(v3, v2));
         
-        glVertex3fv(vec1->_v);                  // 0    // 2
-        glVertex3fv(vec2->_v);                  // 1    // 3
-        glVertex3fv(vec3->_v);                  // 16   // 18
-        //glNormal3fv(normal_v1_v2._v);
-   
-        glVertex3fv(vec3->_v);     
+        glColor3f(0, 0, 1);
+        glBegin(GL_TRIANGLES);
+            glVertex3fv(vec1->_v);                  // 0    // 2
+            glVertex3fv(vec2->_v);                  // 1    // 3
+            glVertex3fv(vec3->_v);                  // 16   // 18
+        
+            glVertex3fv(vec3->_v);     
+            glVertex3fv(vec2->_v);
+            glVertex3fv(vec4->_v);
+        glEnd();
+        
+        glColor3f(0, 1, 0);
+        glBegin(GL_LINES);
+        
+        glVertex3fv(vec1->_v);
+        glVertex3fv(((v1 + (normal_v1_v2 / 10)))._v);
         glVertex3fv(vec2->_v);
+        glVertex3fv(((v2 + (normal_v1_v2 / 10)))._v);
+        glVertex3fv(vec3->_v);
+        glVertex3fv(((v3 + (normal_v1_v2 / 10)))._v);
+        
+        glVertex3fv(vec3->_v);
+        glVertex3fv(((v3 + (normal_v3_v2 / 10)))._v);
+        glVertex3fv(vec2->_v);
+        glVertex3fv(((v2 + (normal_v3_v2 / 10)))._v);
         glVertex3fv(vec4->_v);
+        glVertex3fv(((v4 + (normal_v3_v2 / 10)))._v);
+        
+        glEnd();
+        //glNormal3fv(normal_v1_v2._v);
         //glNormal3fv(normal_v3_v2._v);
     }
     glEnd();
