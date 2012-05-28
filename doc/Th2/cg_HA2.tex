@@ -1,0 +1,69 @@
+\documentclass[a4paper,oneside,12pt]{scrartcl}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amssymb,graphicx,latexsym,stmaryrd,dsfont,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{ngerman,url,booktabs,scrpage2}
+\usepackage{color}
+\usepackage{algpseudocode}
+
+\newcommand{\heading}[1]{\item{\textbf{#1}}$ $\\}
+\newcommand{\formel}[1]{\begin{center}#1\end{center}}
+\newcommand{\eqs}[1]{
+$\begin{array}{rcll}
+$ #1 $
+\end{array}$}
+\newcommand{\image}[2]{
+\begin{center}
+\includegraphics[scale = #1]{#2}
+\end{center}
+}
+
+\newcounter{counter}
+\stepcounter{counter}
+
+\definecolor{gray}{gray}{.5}
+\newcommand{\comment}[1]{\textcolor{gray}{\textit{// #1}}}
+\newcommand{\task}[1]{
+\section*{Aufgabe #1}
+\stepcounter{counter}
+}
+\newcommand{\subtask}[1]{\subsection*{#1}}
+\newcommand{\subsubtask}[1]{#1$ $\\}
+\newcommand{\mathsum}[3]{\underset{#1}{\overset{#2}{\sum}}#3}
+\newcommand{\isum}[1]{\mathsum{i=0}{n}{#1}}
+
+\newcommand{\twovector}[2]{\left(\begin{array}{c} #1 \\ #2 \end{array}\right)}
+\newcommand{\threevector}[3]{\left(\begin{array}{c} #1 \\ #2 \\ #3 \end{array}\right)}
+\newcommand{\fourmatrix}[4]{\left(\begin{array}{cc} #1 & #2 \\ #3 & #4 \end{array}\right)}
+\newcommand{\ninematrix}[9]{\left(\begin{array}{ccc} #1 & #2 & #3 \\ #4 & #5 & #6 \\ #7 & #8 & #9 \end{array}\right)}
+\newcommand{\nvector}[2]{\left(\begin{array}{c} #1 \\ \vdots \\ #2 \end{array}\right)}
+\newcommand{\nmatrix}[4]{\left(\begin{array}{ccc} #1 & \ldots & #2 \\ \vdots & \ddots & \vdots \\ #3 & \ldots & #4 \end{array}\right)}
+\newcommand{\eq}{&=&}
+\newcommand{\eqbreak}{\\[0.5cm]}
+\newcommand{\eqsmbreak}{\\[0.35cm]}
+\newcommand{\eqtbreak}{\\[0.12cm]}
+\newcommand{\eqbreakp}{\\[0.8cm]}
+\newcommand{\eqsmbreakp}{\\[0.65cm]}
+\newcommand{\eqtbreakp}{\\[0.32cm]}
+\newcommand{\rc}{r^c}
+\newcommand{\vvec}{\vec v}
+
+\parindent 0pt
+
+\begin{document}
+
+\stepcounter{counter}
+
+\task{1}
+
+\task{2}
+
+\task{3}
+
+Das Kreuzprodukt zweier Vektoren liefert den Flächeninhalt des durch die Vektoren aufgespannten Parallelograms:
+\formel{$A_p = \vec{v}_1 \times \vec{v}_2$}
+Werden für diese Vektoren die Tangentialvektoren einer Fläche am Punkt $(x,y)$ eingesetzt, erhält man die Flächenverzerrung am selbigen Punkt. Um nun den Gesamtflächeninhalt $A$ zu erhalten, muss innerhalb der Grenzen der Fläche über die Flächenverzerrung integriert werden:
+\formel{$A = \int_a^b\int_c^d \frac{\partial p(x,y)}{\partial x} \times \frac{\partial p(x,y)}{\partial y}$ $dx$ $dy$}
+
+\end{document}
