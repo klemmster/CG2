@@ -43,28 +43,28 @@ vec3f highlightColor(0.0, 1.0, 0.0);
 
 void GLWidget::initializeGL() {
     glDisable(GL_TEXTURE_2D);
-    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glDisable(GL_COLOR_MATERIAL);
     glEnable(GL_BLEND);
     glEnable(GL_POLYGON_SMOOTH);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0, 0, 0, 0);
-    
+
 //    // Somewhere in the initialization part of your programâ¦
-//    glEnable(GL_LIGHTING);
-//    glEnable(GL_LIGHT0);
-//    
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+//
 //    // Create light components
-//    GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-//    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
-//    GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-//    GLfloat position[] = { -1.5f, 1.0f, -4.0f, 1.0f };
-//    
+    GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
+    GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    GLfloat position[] = { -1.5f, 1.0f, -4.0f, 1.0f };
+//
 //    // Assign created components to GL_LIGHT0
-//    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-//    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-//    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-//    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
@@ -94,7 +94,7 @@ void GLWidget::resizeGL(int w, int h) {
 
 void GLWidget::paintGL() {
 
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3f(1,0,0);
     glLoadIdentity();
 

@@ -160,7 +160,7 @@ ListPair KDTree::splitListBy(const size_t& index, const VertexList& sourceList,
 VertexList KDTree::findKNearestNeighbours(const VertexPtr source,
         const size_t numNeighbours){
     VertexList result;
-    Stopwatch findS("NKSearch");
+    //Stopwatch findS("NKSearch");
     LimitedPriorityQueue resultQueue(numNeighbours);
     findKNearestNeighbours(m_root, resultQueue, source);
     while(!resultQueue.empty()){
@@ -170,7 +170,7 @@ VertexList KDTree::findKNearestNeighbours(const VertexPtr source,
         vrtx->highlight();
         resultQueue.pop();
     }
-    findS.stop();
+    //findS.stop();
     return result;
 }
 
@@ -233,10 +233,10 @@ void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,
 
 VertexList KDTree::findInRadius(const VertexPtr source, const double radius){
     VertexList result;
-    Stopwatch findS("Radius - Search");
+    //Stopwatch findS("Radius - Search");
     HyperSphere hyperSphere(source, radius, m_K);
     findInRadius(m_root, hyperSphere, result);
-    findS.stop();
+    //findS.stop();
     for(VertexPtr ptr : result){
         ptr->highlight();
     }

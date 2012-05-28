@@ -8,6 +8,7 @@
 
 #include "Grid.hpp"
 #include "vertex.hpp"
+#include <math.h>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -46,7 +47,7 @@ Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
             yPos += yStep;
             xPos = m_MinX;
     }
-    approximateLS();
+    approximateWLS();
 }
 
 void Grid::approximateLS(){
@@ -61,9 +62,7 @@ void Grid::approximateLS(){
         float x = (*point)[0];
         float y = (*point)[1];
         float z = (*point)[2];
-        std::cout << "X, Y, Z: " << x << " " << y << " " << z << "\n";
         b << 1, x, y, x*x, x*y, y*y;
-        std::cout << "B:\n" << b << "\n";
         MatrixXf bDims(6,6);
         bDims = b*b.transpose();
         bDimsMatSum += bDims;
@@ -73,11 +72,6 @@ void Grid::approximateLS(){
     VectorXf c(6);
     c = bDimsMatSum.inverse() * bDimsVecSum;
 
-    std::cout << "Matsum: \n" << bDimsMatSum << "\n";
-    std::cout << "INverse: \n" << bDimsMatSum.inverse() << "\n";
-    std::cout << "VecSums: \n" << bDimsVecSum << "\n";
-    std::cout << "C: \n" << c << "\n";
-
     for(VertexPtr point : m_vertices){
         VectorXf b(6);
         float x = (*point)[0];
@@ -86,6 +80,52 @@ void Grid::approximateLS(){
         (*point)[2] = b.dot(c);
     }
 }
+
+void Grid::approximateWLS(){
+
+    //Single Approximation for every Grid point
+    for(VertexPtr pointDesired: m_vertices){
+        //Get Points used for this approximation
+        //TODO: Should be a good automatic? radius -- maybe gridsize related
+        VertexList list = m_tree.findInRadius(pointDesired, .3);
+        MatrixXf bDimsMatSum(6,6);
+        VectorXf bDimsVecSum(6);
+        for(VertexPtr point : list){
+            VectorXf b(6);
+            float x = (*point)[0];
+            float y = (*point)[1];
+            float z = (*point)[2];
+            b << 1, x, y, x*x, x*y, y*y;
+            MatrixXf bDims(6,6);
+            bDims = b*b.transpose();
+            vec3f distVec = (*pointDesired) - (*point);
+            float dist = norm(distVec);
+            //float wendFac = getWendland(dist);
+            float wendFac = 1.0/50.0;
+            bDimsMatSum += (wendFac * bDims);
+            bDimsVecSum += (wendFac * b*z);
+        }
+       VectorXf b(6);
+       float x = (*pointDesired)[0];
+       float y = (*pointDesired)[1];
+       b << 1, x, y, x*x, x*y, y*y;
+
+       VectorXf c(6);
+       c = bDimsMatSum.inverse() * bDimsVecSum;
+       (*pointDesired)[2] = b.dot(c);
+    }
+}
+
+float Grid::getWendland(const float distance) const{
+    //(1 - d/h)^4 * (4d/h +1)
+    // term1      *   term2
+    float h = 0.02f;
+    float term1Part = (1.0f - distance/h);
+    float term1 = std::pow(term1Part, 4);
+    float term2 = (4*distance/h)+1;
+    return term1 * term2;
+}
+
 
 void Grid::draw(){
 
@@ -99,27 +139,28 @@ void Grid::draw(){
 
     for(size_t i = 0; i < m_vertices.size() - m_dimX - 1; i++)
     {
+
         if ((i + 1) % m_dimX == 0)
         {
             continue;
         }
-        
+
         VertexPtr vec1 = m_vertices.at(i + 0);
         VertexPtr vec2 = m_vertices.at(i + 1);
         VertexPtr vec3 = m_vertices.at(i + m_dimX + 0);
         VertexPtr vec4 = m_vertices.at(i + m_dimX + 1);
-        
+
         vec3f v1(vec1->_v[0], vec1->_v[1], vec1->_v[2]);
         vec3f v2(vec2->_v[0], vec2->_v[1], vec2->_v[2]);
         vec3f v3(vec3->_v[0], vec3->_v[1], vec3->_v[2]);
         vec3f v4(vec4->_v[0], vec4->_v[1], vec4->_v[2]);
-        
+
         vec3f normal_v1_v2 = normalize(cross(v2, v1));
         vec3f normal_v3_v2 = normalize(cross(v2, v3));
-        
+
         //float colorBlue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
         //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorBlue);
-        
+
         glColor3f(0, 0, 1);
         glBegin(GL_TRIANGLES);
             glVertex3fv(vec1->_v);                  // 0    // 2
@@ -129,33 +170,41 @@ void Grid::draw(){
             glVertex3fv(vec3->_v);                  // 16   // 18
             glNormal3fv(normal_v1_v2._v);
 
-            glVertex3fv(vec3->_v);     
+            glVertex3fv(vec3->_v);
             glNormal3fv(normal_v3_v2._v);
             glVertex3fv(vec2->_v);
             glNormal3fv(normal_v3_v2._v);
             glVertex3fv(vec4->_v);
             glNormal3fv(normal_v3_v2._v);
-        
+
         glEnd();
-        
+
         glColor3f(0, 1, 0);
         glBegin(GL_LINES);
-        
+
             glVertex3fv(vec1->_v);
             glVertex3fv(((v1 + (normal_v1_v2 / 10)))._v);
             glVertex3fv(vec2->_v);
             glVertex3fv(((v2 + (normal_v1_v2 / 10)))._v);
             glVertex3fv(vec3->_v);
             glVertex3fv(((v3 + (normal_v1_v2 / 10)))._v);
-            
+
             glVertex3fv(vec3->_v);
             glVertex3fv(((v3 + (normal_v3_v2 / 10)))._v);
             glVertex3fv(vec2->_v);
             glVertex3fv(((v2 + (normal_v3_v2 / 10)))._v);
             glVertex3fv(vec4->_v);
             glVertex3fv(((v4 + (normal_v3_v2 / 10)))._v);
-        
+
         glEnd();
+
+    }
+    glEnd();
+
+    glColor3f(0, 1, 0);
+    glBegin(GL_POINTS);
+    for(VertexPtr vrtx: m_vertices){
+        vrtx->draw();
     }
     glEnd();
 }

@@ -11,10 +11,12 @@ public:
     virtual ~Grid () {};
 
     void approximateLS();
+    void approximateWLS();
     void draw();
 
 private:
 
+    float getWendland(const float distance) const;
     float m_MinX;
     float m_MinY;
     float m_MinZ;
