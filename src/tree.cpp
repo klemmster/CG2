@@ -5,9 +5,15 @@
 #ifdef __APPLE__
 #include <GL/glew.h>
 #include <GLUT/glut.h>
+
+using namespace boost;
+
 #else
 #include <GL/glew.h>
 #include <GL/glut.h>
+
+using namespace std;
+
 #endif
 
 #include <float.h>
@@ -22,9 +28,9 @@ KDTree::KDTree(const VertexList vertices){
     VertexList sortedY(vertices);
     VertexList sortedZ(vertices);
 
-    std::thread xSorted([&] { std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX); });
-    std::thread ySorted([&] { std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY); });
-    std::thread zSorted([&] { std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ); });
+    thread xSorted([&] { std::sort(sortedX.begin(), sortedX.end(), Vertex::sortX); });
+    thread ySorted([&] { std::sort(sortedY.begin(), sortedY.end(), Vertex::sortY); });
+    thread zSorted([&] { std::sort(sortedZ.begin(), sortedZ.end(), Vertex::sortZ); });
     xSorted.join();
     ySorted.join();
     zSorted.join();
@@ -87,8 +93,8 @@ NodePtr KDTree::makeTree(size_t depth, const size_t& cellSize, ListTriple& t,
     NodePtr leftNode;
     NodePtr rightNode;
     if(depth < 2){
-    std::thread lT([&] { leftNode = makeTree(depth+1, cellSize, left, leftBounds); });
-    std::thread rT([&] { rightNode = makeTree(depth+1, cellSize, right, rightBounds); });
+    thread lT([&] { leftNode = makeTree(depth+1, cellSize, left, leftBounds); });
+    thread rT([&] { rightNode = makeTree(depth+1, cellSize, right, rightBounds); });
     lT.join();
     rT.join();
     }else{

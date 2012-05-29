@@ -31,7 +31,7 @@ ELSE()
     MESSAGE(STATUS "ERROR, NO QT4")
 ENDIF(QT4_FOUND)
 
-find_package(Boost COMPONENTS system filesystem REQUIRED)
+find_package(Boost COMPONENTS system filesystem thread REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories ( ${Boost_LIBRARY_DIRS} )
 

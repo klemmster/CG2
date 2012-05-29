@@ -8,8 +8,13 @@
 #include "hyperSphere.hpp"
 #include "limitedPriorityQueue.hpp"
 
+#ifdef __APPLE__
+#include <boost/thread/future.hpp>
+#include <boost/thread/thread.hpp>
+#else
 #include <future>
 #include <thread>
+#endif
 
 typedef std::array<VertexList, 3> ListTriple;
 typedef std::pair<VertexList, VertexList> ListPair;
