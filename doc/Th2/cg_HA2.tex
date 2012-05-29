@@ -48,6 +48,8 @@ $ #1 $
 \newcommand{\eqtbreakp}{\\[0.32cm]}
 \newcommand{\rc}{r^c}
 \newcommand{\vvec}{\vec v}
+\newcommand{\pnt}[1]{\textbf{#1}}
+\newcommand{\ppnt}{\pnt{p}}
 
 \parindent 0pt
 
@@ -57,7 +59,40 @@ $ #1 $
 
 \task{1}
 
+Sei $t$ die Stelle, an der die Kurve geteilt und an dem der Punkt ausgewertet wird.\\
+\\
+Der Algorithmus von Casteljau funktioniert über die folgende Rekursionsformel:\\\\
+\eqs{$
+\pnt{b}_i^0(t) \eq \pnt{b}_i\\
+\pnt{b}_i^r(t) \eq t\cdot \pnt{b}_{i+1}^{r-1}(t) + (1-t)\cdot \pnt{b}_i^{r-1}(t)
+$}$ $\\\\
+Das letzte Segment im Algorithmus von Casteljau entspricht dem Verbindungsvektor der Punkte der vorletzten Rekursionsstufe, d.h. der Differenz aus $\pnt{b}_1^{n-1}$ und $\pnt{b}_0^{n-1}$:
+\formel{$\vec s = \pnt{b}_1^{n-1}(t) - \pnt{b}_0^{n-1}(t)$}
+$ $\\
+Die erste Ableitung ist gegeben durch:
+\formel{$\pnt{p}'(t) = n(\pnt{b}_1^{n-1}(t) - \pnt{b}_0^{n-1}(t))$}
+Somit gilt:
+\formel{$\vec{s}(t) = n \pnt{p}'(t)$}
+D.h. das letzte Segment und die Ableitung unterscheiden sich nur in dem Faktor $n$, womit diese linear abhängig sind. Somit ist das letzte Segment eine Tangente der Kurve im ausgewerteten Punkt.
+
 \task{2}
+
+Nein.\\
+Gegeben seien zwei lineare Basen:\\\\
+\eqs{$
+A(x) \eq (1,x)\\
+B(y) \eq (1,y)
+$}$ $\\\\
+Seien die Koeffizienten beliebig. Das Tensorprodukt ist dann:\\\\
+\eqs{$
+z(x,y) \eq \mathsum{i = 0}{1}{\mathsum{j = 0}{1}{c_{ij}\cdot A_i(x)B_j(y)}}\\
+ 			 \eq c_{00}\cdot 1 + c_{10}\cdot x + c_{01}\cdot y + c_{11}\cdot xy
+$}$ $\\\\
+Dies lässt sich umstellen nach $c_{00}$:
+\formel{$c_{10} x + c_{01}\cdot y + z + c_{11} xy = c_{00}$ $(1)$}
+Ebenengleichung im 3-dimensionalen Raum ist jedoch:
+\formel{$ax + by + cz = d$}
+(1) lässt sich wegen dem Summanden $c_{11} xy$ nicht in die Ebenengleichung überführen. Daher ist die Fläche im Allgemeinen (d.h. wenn $c_{11} \neq 0$) keine ebene Fläche.
 
 \task{3}
 
