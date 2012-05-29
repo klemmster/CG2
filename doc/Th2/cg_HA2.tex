@@ -55,6 +55,16 @@ $ #1 $
 
 \begin{document}
 
+\begin{center}
+\normalsize Computer Graphics 2\\[0.3cm]
+\huge \textbf{Hausaufgabe 2} \normalsize\\[0.8cm]
+\begin{tabular}{rl}
+\texttt{343635} & Richard Klemm\\
+\texttt{319716} & Andreas Fender\\
+\texttt{315744} & Christopher Sierigk\\
+\end{tabular}
+\end{center}
+
 \stepcounter{counter}
 
 \task{1}
@@ -100,5 +110,33 @@ Das Kreuzprodukt zweier Vektoren liefert den Flächeninhalt des durch die Vektore
 \formel{$A_p = \vec{v}_1 \times \vec{v}_2$}
 Werden für diese Vektoren die Tangentialvektoren einer Fläche am Punkt $(x,y)$ eingesetzt, erhält man die Flächenverzerrung am selbigen Punkt. Um nun den Gesamtflächeninhalt $A$ zu erhalten, muss innerhalb der Grenzen der Fläche über die Flächenverzerrung integriert werden:
 \formel{$A = \int_a^b\int_c^d \frac{\partial p(x,y)}{\partial x} \times \frac{\partial p(x,y)}{\partial y}$ $dx$ $dy$}
+
+\task{4}
+
+\textbf{a)}
+
+
+
+\textbf{b)}
+
+Gegeben sei die folgende reguläre \pnt{q}(u,v):
+\formel{$\pnt{q}(u,v) = \threevector{0.5u}{v}{1}$}
+Die Tangenten sind:
+\begin{center}
+\eqs{$\frac{\partial q}{\partial u} \eq \threevector{0.5}{0}{0}$}
+\eqs{$\frac{\partial q}{\partial v} \eq \threevector{0}{1}{0}$}
+\end{center}
+Die Tangenten sind offensichtlich linear unabhängig, aber nicht orthonormal. Eine entsprechende Umparametrisierung sieht wie folgt aus:
+\formel{$\pnt{q}(u,v) = \threevector{u}{v}{1}$}
+Die Tangenten sind:
+\begin{center}
+\eqs{$\frac{\partial q}{\partial u} \eq \threevector{1}{0}{0}$}
+\eqs{$\frac{\partial q}{\partial v} \eq \threevector{0}{1}{0}$}
+\end{center}
+Die Parametrisierung erzeugt die gleiche Fläche, allerdings sind die Tangenten orthonormal.
+
+\task{5}
+
+
 
 \end{document}
