@@ -157,8 +157,8 @@ void Grid::draw(){
         vec3f normal_v1_v2 = normalize(cross(v2, v1));
         vec3f normal_v3_v2 = normalize(cross(v2, v3));
 
-        //float colorBlue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
-        //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorBlue);
+        float colorBlue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorBlue);
 
         glColor3f(0, 0, 1);
         glBegin(GL_TRIANGLES);
@@ -177,8 +177,10 @@ void Grid::draw(){
             glNormal3fv(normal_v3_v2._v);
 
         glEnd();
-
-        glColor3f(0, 1, 0);
+        
+        float colorGreen[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGreen);
+//        glColor3f(0, 1, 0);
         glBegin(GL_LINES);
 
             glVertex3fv(vec1->_v);
@@ -200,7 +202,9 @@ void Grid::draw(){
     }
     glEnd();
 
-    glColor3f(0, 1, 0);
+    float colorRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorRed);
+    //glColor3f(0, 1, 0);
     glBegin(GL_POINTS);
     for(VertexPtr vrtx: m_vertices){
         vrtx->draw();
