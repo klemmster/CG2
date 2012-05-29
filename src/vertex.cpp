@@ -35,7 +35,7 @@ Vertex::~Vertex()
 }
 
 void Vertex::draw() const{
-    glColor3fv(m_Color._v);
+    //glColor3fv(m_Color._v);
     glVertex3fv(_v);
 }
 

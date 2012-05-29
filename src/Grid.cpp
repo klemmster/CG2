@@ -167,66 +167,60 @@ void Grid::draw(){
         VertexPtr vec3 = m_vertices.at(i + m_dimX + 0);
         VertexPtr vec4 = m_vertices.at(i + m_dimX + 1);
 
-        vec3f v1(vec1->_v[0], vec1->_v[1], vec1->_v[2]);
-        vec3f v2(vec2->_v[0], vec2->_v[1], vec2->_v[2]);
-        vec3f v3(vec3->_v[0], vec3->_v[1], vec3->_v[2]);
-        vec3f v4(vec4->_v[0], vec4->_v[1], vec4->_v[2]);
+        vec3f normal_v1_v2 = normalize(cross((*vec1) - (*vec3), (*vec2) - (*vec1)));
+        vec3f normal_v3_v2 = normalize(cross((*vec3) - (*vec4), (*vec2) - (*vec3)));
 
-        vec3f normal_v1_v2 = normalize(cross(v2, v1));
-        vec3f normal_v3_v2 = normalize(cross(v2, v3));
+        float colorGrey[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
 
-        float colorBlue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorBlue);
-
-        glColor3f(0, 0, 1);
         glBegin(GL_TRIANGLES);
-            glVertex3fv(vec1->_v);                  // 0    // 2
             glNormal3fv(normal_v1_v2._v);
-            glVertex3fv(vec2->_v);                  // 1    // 3
+            glVertex3fv(vec1->_v);
             glNormal3fv(normal_v1_v2._v);
-            glVertex3fv(vec3->_v);                  // 16   // 18
+            glVertex3fv(vec2->_v);
             glNormal3fv(normal_v1_v2._v);
+            glVertex3fv(vec3->_v);
 
+            glNormal3fv(normal_v3_v2._v);
             glVertex3fv(vec3->_v);
             glNormal3fv(normal_v3_v2._v);
             glVertex3fv(vec2->_v);
             glNormal3fv(normal_v3_v2._v);
             glVertex3fv(vec4->_v);
-            glNormal3fv(normal_v3_v2._v);
 
         glEnd();
 
-        float colorGreen[] = { 0.0f, 1.0f, 0.0f, 1.0f };
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGreen);
-//        glColor3f(0, 1, 0);
+        glDisable(GL_LIGHTING);
+
+        //float colorGreen[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+        //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGreen);
+        glColor3f(0, 1, 0);
         glBegin(GL_LINES);
 
-            glVertex3fv(vec1->_v);
-            glVertex3fv(((v1 + (normal_v1_v2 / 10)))._v);
-            glVertex3fv(vec2->_v);
-            glVertex3fv(((v2 + (normal_v1_v2 / 10)))._v);
-            glVertex3fv(vec3->_v);
-            glVertex3fv(((v3 + (normal_v1_v2 / 10)))._v);
+            glVertex3fv((( (( (*vec1) + (*vec2) + (*vec3) ) / 3)))._v);
+            glVertex3fv((( (( (*vec1) + (*vec2) + (*vec3) ) / 3) + (normal_v1_v2 / 10)))._v);
 
-            glVertex3fv(vec3->_v);
-            glVertex3fv(((v3 + (normal_v3_v2 / 10)))._v);
-            glVertex3fv(vec2->_v);
-            glVertex3fv(((v2 + (normal_v3_v2 / 10)))._v);
-            glVertex3fv(vec4->_v);
-            glVertex3fv(((v4 + (normal_v3_v2 / 10)))._v);
+            glVertex3fv((( (( (*vec3) + (*vec2) + (*vec4) ) / 3)))._v);
+            glVertex3fv((( (( (*vec3) + (*vec2) + (*vec4) ) / 3) + (normal_v3_v2 / 10)))._v);
 
         glEnd();
+        
+        glEnable(GL_LIGHTING);
+
 
     }
-    glEnd();
 
-    float colorRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorRed);
-    //glColor3f(0, 1, 0);
+    glDisable(GL_LIGHTING);
+
+   // float colorRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
+    //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorRed);
+    glColor3f(1, 1, 0);
     glBegin(GL_POINTS);
     for(VertexPtr vrtx: m_vertices){
         vrtx->draw();
     }
     glEnd();
+    glEnable(GL_LIGHTING);
+
 }
 

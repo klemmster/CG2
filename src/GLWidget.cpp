@@ -57,13 +57,13 @@ void GLWidget::initializeGL() {
 //    // Create light components
     GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
     GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
-    GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    GLfloat position[] = { -1.5f, 1.0f, -4.0f, 1.0f };
+   // GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    GLfloat position[] = { 1.5f, 10.0f, -4.0f, 0.0f };
 //
 //    // Assign created components to GL_LIGHT0
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+   // glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
     glLightfv(GL_LIGHT0, GL_POSITION, position);
 
     OffLoader loader;
@@ -110,6 +110,9 @@ void GLWidget::paintGL() {
     }
     grid.draw();
     //glScalef(20, 20, 20);
+    
+    glDisable(GL_LIGHTING);
+    glColor3f(1.0f, 0.0f, 0.0f);
     glPointSize(3);
     glBegin(GL_POINTS);
 
@@ -117,11 +120,10 @@ void GLWidget::paintGL() {
     {
         vertex->draw();
     }
-    //glBegin(GL_POLYGON);
-    //glVertex2f(0,0);
-    //glVertex2f(100,500);
-    //glVertex2f(500,100);
+
     glEnd();
+    glEnable(GL_LIGHTING);
+
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
@@ -130,7 +132,6 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
-    //printf("%d, %d\n", event->x(), event->y());
 
     GLfloat dx = (GLfloat)(event->x() - lastPos.x()) / width();
     GLfloat dy = (GLfloat)(event->y() - lastPos.y()) / height();
