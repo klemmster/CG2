@@ -47,12 +47,22 @@ Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
             yPos += yStep;
             xPos = m_MinX;
     }
-    approximateWLS();
+    approximateLS();
 }
 
 void Grid::approximateLS(){
     MatrixXf bDimsMatSum(6,6);
     VectorXf bDimsVecSum(6);
+
+    bDimsMatSum <<  0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0;
+    bDimsVecSum << 0, 0, 0, 0, 0, 0;
+
+
 
     VertexPtr midPoint(new Vertex(0.0, 0.0, 0.0));
     VertexList list = m_tree.findInRadius(midPoint, 40000);
@@ -89,7 +99,15 @@ void Grid::approximateWLS(){
         //TODO: Should be a good automatic? radius -- maybe gridsize related
         VertexList list = m_tree.findInRadius(pointDesired, .3);
         MatrixXf bDimsMatSum(6,6);
-        VectorXf bDimsVecSum(6);
+       VectorXf bDimsVecSum(6);
+     bDimsMatSum <<  0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0;
+    bDimsVecSum << 0, 0, 0, 0, 0, 0;
+
         for(VertexPtr point : list){
             VectorXf b(6);
             float x = (*point)[0];
@@ -177,7 +195,7 @@ void Grid::draw(){
             glNormal3fv(normal_v3_v2._v);
 
         glEnd();
-        
+
         float colorGreen[] = { 0.0f, 1.0f, 0.0f, 1.0f };
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGreen);
 //        glColor3f(0, 1, 0);
