@@ -100,8 +100,7 @@ void Grid::approximateWLS(){
             bDims = b*b.transpose();
             vec3f distVec = (*pointDesired) - (*point);
             float dist = norm(distVec);
-            //float wendFac = getWendland(dist);
-            float wendFac = 1.0/50.0;
+            float wendFac = getWendland(dist);
             bDimsMatSum += (wendFac * bDims);
             bDimsVecSum += (wendFac * b*z);
         }
@@ -119,7 +118,7 @@ void Grid::approximateWLS(){
 float Grid::getWendland(const float distance) const{
     //(1 - d/h)^4 * (4d/h +1)
     // term1      *   term2
-    float h = 0.02f;
+    float h = 0.01f;
     float term1Part = (1.0f - distance/h);
     float term1 = std::pow(term1Part, 4);
     float term2 = (4*distance/h)+1;
