@@ -10,14 +10,12 @@
 #include "vertex.hpp"
 #include <math.h>
 
-#include <Eigen/Core>
-#include <Eigen/Dense>
 
 using namespace Eigen;
 
 
 Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
-    m_tree(tree), m_dimX(dim_x), m_dimY(dim_y)
+    m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_showQuads(false)
 {
 
     const VertexList& minm_vertices = tree.getMinVertices();
@@ -47,10 +45,16 @@ Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
             yPos += yStep;
             xPos = m_MinX;
     }
-    approximateLS();
+    //TODO Use GUI
+    repeatedApproximation(2);
+    toggleQuads();
 }
 
-void Grid::approximateLS(){
+void Grid::toggleQuads(){
+    m_showQuads =  !m_showQuads;
+}
+
+void Grid::approximateLS(VertexList & resultList){
     MatrixXf bDimsMatSum(6,6);
     VectorXf bDimsVecSum(6);
 
@@ -82,7 +86,7 @@ void Grid::approximateLS(){
     VectorXf c(6);
     c = bDimsMatSum.inverse() * bDimsVecSum;
 
-    for(VertexPtr point : m_vertices){
+    for(VertexPtr point : resultList){
         VectorXf b(6);
         float x = (*point)[0];
         float y = (*point)[1];
@@ -91,22 +95,21 @@ void Grid::approximateLS(){
     }
 }
 
-void Grid::approximateWLS(){
-
+void Grid::approximateWLS(VertexList& resultList){
     //Single Approximation for every Grid point
-    for(VertexPtr pointDesired: m_vertices){
+    for(VertexPtr pointDesired: resultList){
         //Get Points used for this approximation
         //TODO: Should be a good automatic? radius -- maybe gridsize related
         VertexList list = m_tree.findInRadius(pointDesired, .3);
         MatrixXf bDimsMatSum(6,6);
-       VectorXf bDimsVecSum(6);
-     bDimsMatSum <<  0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0, 0;
-    bDimsVecSum << 0, 0, 0, 0, 0, 0;
+        VectorXf bDimsVecSum(6);
+        bDimsMatSum <<  0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0;
+        bDimsVecSum << 0, 0, 0, 0, 0, 0;
 
         for(VertexPtr point : list){
             VectorXf b(6);
@@ -130,7 +133,47 @@ void Grid::approximateWLS(){
        VectorXf c(6);
        c = bDimsMatSum.inverse() * bDimsVecSum;
        (*pointDesired)[2] = b.dot(c);
+       m_coefficients.push_back(c);
     }
+}
+
+void Grid::approximateTensor(const size_t k){
+
+    m_k = k;
+}
+
+void Grid::repeatedApproximation(const size_t k){
+
+    m_k = k;
+    const VertexList& minm_vertices = m_tree.getMinVertices();
+    const VertexList& maxm_vertices = m_tree.getMaxVertices();
+
+    m_MinX = (*minm_vertices.at(0))[0];
+    m_MinY = (*minm_vertices.at(1))[1];
+    m_MinZ = (*minm_vertices.at(2))[2];
+
+    m_MaxX = (*maxm_vertices.at(0))[0];
+    m_MaxY = (*maxm_vertices.at(1))[1];
+    m_MaxZ = (*maxm_vertices.at(2))[2];
+
+    float xStep = abs(m_MaxX - m_MinX) / (m_dimX * k);
+    float yStep = abs(m_MaxY - m_MinY) / (m_dimY * k);
+
+    float xPos = m_MinX;
+    float yPos = m_MinY;
+
+    vec3f color(0.2, 0.8, 0.5);
+
+    for(size_t y = 0; y < m_dimY*k; ++y){
+        for(size_t x = 0; x < m_dimX*k; ++x){
+            m_interpolVertices.push_back(VertexPtr(new Vertex(xPos, yPos, m_MaxZ, color)));
+            xPos += xStep;
+        }
+            yPos += yStep;
+            xPos = m_MinX;
+    }
+
+    approximateWLS(m_interpolVertices);
 }
 
 float Grid::getWendland(const float distance) const{
@@ -143,9 +186,40 @@ float Grid::getWendland(const float distance) const{
     return term1 * term2;
 }
 
-
 void Grid::draw(){
+    if(m_showQuads){
+        drawQuads();
+    }else{
+        drawTriangles();
+    }
+}
 
+void Grid::drawQuads(){
+    glBegin(GL_QUADS);
+        size_t width = m_dimX * m_k;
+        for(size_t x=0; x<width-1; ++x){
+            for(size_t y=0; y<(m_dimY*m_k)-1; ++y){
+                size_t topLeft = (y*width)+x;
+                size_t topRight = (y*width)+x +1;
+                size_t bottomLeft = ((y+1)*width) + x;
+                size_t bottomRight = ((y+1)*width) + x + 1;
+                VertexPtr ltVrtx = m_interpolVertices.at(topLeft);
+                VertexPtr rtVrtx = m_interpolVertices.at(topRight);
+                VertexPtr lbVrtx = m_interpolVertices.at(bottomLeft);
+                VertexPtr rbVrtx = m_interpolVertices.at(bottomRight);
+
+                glVertex3fv((*ltVrtx)._v);
+                glVertex3fv((*rtVrtx)._v);
+                glVertex3fv((*rbVrtx)._v);
+                glVertex3fv((*lbVrtx)._v);
+
+                //TODO Normals
+            }
+        }
+    glEnd();
+}
+
+void Grid::drawTriangles(){
     glBegin(GL_LINE_STRIP);
         glVertex3f(m_MinX, m_MinY, m_MinZ);
         glVertex3f(m_MaxX, m_MinY, m_MinZ);
@@ -204,7 +278,7 @@ void Grid::draw(){
             glVertex3fv((( (( (*vec3) + (*vec2) + (*vec4) ) / 3) + (normal_v3_v2 / 10)))._v);
 
         glEnd();
-        
+
         glEnable(GL_LIGHTING);
 
 
