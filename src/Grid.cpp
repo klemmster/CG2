@@ -197,27 +197,65 @@ void Grid::draw(){
 void Grid::drawQuads(){
     glBegin(GL_QUADS);
         size_t width = m_dimX * m_k;
-        for(size_t x=0; x<width-1; ++x){
-            for(size_t y=0; y<(m_dimY*m_k)-1; ++y){
-                size_t topLeft = (y*width)+x;
-                size_t topRight = (y*width)+x +1;
-                size_t bottomLeft = ((y+1)*width) + x;
-                size_t bottomRight = ((y+1)*width) + x + 1;
+        size_t height = m_dimY * m_k;
+        size_t i = 0;
+    
+        std::cout << " Initialize Vector " << std::endl;
+        m_quadNormals = std::vector<vec3f>(width * height, vec3f());
+    
+        std::cout << " Compute Normals " << std::endl;
+        for (size_t x = 0; x < width - 1; ++x)
+        {
+            for (size_t y = 0; y < height - 1; ++y)
+            {
+                size_t topLeft = (y * width) + x;
+                size_t topRight = (y * width) + x + 1;
+                size_t bottomLeft = ( (y + 1) * width) + x;
+                size_t bottomRight = ( (y + 1) * width) + x + 1;
                 
                 VertexPtr ltVrtx = m_interpolVertices.at(topLeft);
                 VertexPtr rtVrtx = m_interpolVertices.at(topRight);
                 VertexPtr lbVrtx = m_interpolVertices.at(bottomLeft);
                 VertexPtr rbVrtx = m_interpolVertices.at(bottomRight);
                 
-                vec3f normal = normalize( cross( (*rtVrtx) - (*ltVrtx), (*ltVrtx) - (*lbVrtx) ) );
+                vec3f normal = cross( (*rtVrtx) - (*ltVrtx), (*ltVrtx) - (*lbVrtx) );
                 
-                glNormal3fv(normal._v);
+                m_quadNormals.at(topLeft) = m_quadNormals.at(topLeft) + normal;
+                m_quadNormals.at(topRight) = m_quadNormals.at(topRight) + normal;
+                m_quadNormals.at(bottomLeft) = m_quadNormals.at(bottomLeft) + normal;
+                m_quadNormals.at(bottomRight) = m_quadNormals.at(bottomRight) + normal;
+            }
+        }
+    
+        std::cout << " Draw Surface " << std::endl;
+        for (size_t x = 0; x < width - 1; ++x)
+        {
+            for (size_t y = 0; y < height - 1; ++y)
+            {
+                size_t topLeft = (y * width) + x;
+                size_t topRight = (y * width) + x + 1;
+                size_t bottomLeft = ( (y + 1) * width) + x;
+                size_t bottomRight = ( (y + 1) * width) + x + 1;
+                
+                VertexPtr ltVrtx = m_interpolVertices.at(topLeft);
+                VertexPtr rtVrtx = m_interpolVertices.at(topRight);
+                VertexPtr lbVrtx = m_interpolVertices.at(bottomLeft);
+                VertexPtr rbVrtx = m_interpolVertices.at(bottomRight);
+                
+                
+                vec3f ltNormal = normalize(m_quadNormals.at(topLeft));
+                vec3f rtNormal = normalize(m_quadNormals.at(topRight));
+                vec3f lbNormal = normalize(m_quadNormals.at(bottomLeft));
+                vec3f rbNormal = normalize(m_quadNormals.at(bottomRight));
+                
+
+                glNormal3fv(ltNormal._v);
                 glVertex3fv((*ltVrtx)._v);
-                glNormal3fv(normal._v);
+                glNormal3fv(rtNormal._v);
                 glVertex3fv((*rtVrtx)._v);
-                glNormal3fv(normal._v);
+                glNormal3fv(rbNormal._v);
                 glVertex3fv((*rbVrtx)._v);
-                glNormal3fv(normal._v);
+                glNormal3fv(lbNormal._v);
                 glVertex3fv((*lbVrtx)._v);
 
                 //TODO Normals

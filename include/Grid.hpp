@@ -35,6 +35,7 @@ private:
     VertexList m_vertices;
     VertexList m_interpolVertices;
     std::vector<Eigen::VectorXf> m_coefficients;
+    std::vector<vec3f> m_quadNormals;
 
     KDTree m_tree;
     size_t m_dimX;
