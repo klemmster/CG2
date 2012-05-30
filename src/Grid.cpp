@@ -200,10 +200,10 @@ void Grid::drawQuads(){
         size_t height = m_dimY * m_k;
         size_t i = 0;
     
-        std::cout << " Initialize Vector " << std::endl;
+        //std::cout << " Initialize Vector " << std::endl;
         m_quadNormals = std::vector<vec3f>(width * height, vec3f());
     
-        std::cout << " Compute Normals " << std::endl;
+        //std::cout << " Compute Normals " << std::endl;
         for (size_t x = 0; x < width - 1; ++x)
         {
             for (size_t y = 0; y < height - 1; ++y)
@@ -227,7 +227,7 @@ void Grid::drawQuads(){
             }
         }
     
-        std::cout << " Draw Surface " << std::endl;
+        //std::cout << " Draw Surface " << std::endl;
         for (size_t x = 0; x < width - 1; ++x)
         {
             for (size_t y = 0; y < height - 1; ++y)
@@ -257,8 +257,6 @@ void Grid::drawQuads(){
                 glVertex3fv((*rbVrtx)._v);
                 glNormal3fv(lbNormal._v);
                 glVertex3fv((*lbVrtx)._v);
-
-                //TODO Normals
             }
         }
     glEnd();
