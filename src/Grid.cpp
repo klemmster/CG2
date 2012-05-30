@@ -203,14 +203,21 @@ void Grid::drawQuads(){
                 size_t topRight = (y*width)+x +1;
                 size_t bottomLeft = ((y+1)*width) + x;
                 size_t bottomRight = ((y+1)*width) + x + 1;
+                
                 VertexPtr ltVrtx = m_interpolVertices.at(topLeft);
                 VertexPtr rtVrtx = m_interpolVertices.at(topRight);
                 VertexPtr lbVrtx = m_interpolVertices.at(bottomLeft);
                 VertexPtr rbVrtx = m_interpolVertices.at(bottomRight);
-
+                
+                vec3f normal = normalize( cross( (*rtVrtx) - (*ltVrtx), (*ltVrtx) - (*lbVrtx) ) );
+                
+                glNormal3fv(normal._v);
                 glVertex3fv((*ltVrtx)._v);
+                glNormal3fv(normal._v);
                 glVertex3fv((*rtVrtx)._v);
+                glNormal3fv(normal._v);
                 glVertex3fv((*rbVrtx)._v);
+                glNormal3fv(normal._v);
                 glVertex3fv((*lbVrtx)._v);
 
                 //TODO Normals
