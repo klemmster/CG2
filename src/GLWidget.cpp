@@ -205,6 +205,14 @@ void GLWidget::sigShowKDTree(bool show) {
     updateGL();
 }
 
+void GLWidget::sigShowWLS(bool show) {
+    
+}
+
+void GLWidget::sigShowBezier(bool show) {
+    
+}
+
 void resetVertexColors(VertexList src){
     for(auto elem: src){
         elem->resetColor();
@@ -229,6 +237,19 @@ void GLWidget::sigSetRadius(double r){
     if(r>0){
         radius = (float)r;
         cout << "Set Radius to: " << radius << "\n";
+    }
+}
+
+void GLWidget::sigSetH(double h) {
+    if (h > 0){
+        //radius = (float)h;
+        cout << "Set H to: " << h << "\n";
+    }
+}
+
+void GLWidget::sigSetK(int k) {
+    if (k > 0){
+        cout << "Set K to: " << k << "\n";
     }
 }
 

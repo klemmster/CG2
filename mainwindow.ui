@@ -50,7 +50,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="WLSBox">
            <property name="text">
             <string>WLS</string>
            </property>
@@ -66,7 +66,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+            <widget class="QDoubleSpinBox" name="radiusBox"/>
            </item>
           </layout>
          </item>
@@ -80,7 +80,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+            <widget class="QDoubleSpinBox" name="hBox"/>
            </item>
           </layout>
          </item>
@@ -94,7 +94,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QCheckBox" name="checkBox_2">
+          <widget class="QCheckBox" name="bezierBox">
            <property name="text">
             <string>Bezier</string>
            </property>
@@ -110,7 +110,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="spinBox"/>
+            <widget class="QSpinBox" name="kBox"/>
            </item>
           </layout>
          </item>
@@ -142,7 +142,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>checkBox</sender>
+   <sender>WLSBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>glWidget</receiver>
    <slot>sigShowWLS(bool)</slot>
@@ -158,7 +158,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>doubleSpinBox_2</sender>
+   <sender>radiusBox</sender>
    <signal>valueChanged(double)</signal>
    <receiver>glWidget</receiver>
    <slot>sigSetRadius(double)</slot>
@@ -174,7 +174,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>doubleSpinBox</sender>
+   <sender>hBox</sender>
    <signal>valueChanged(double)</signal>
    <receiver>glWidget</receiver>
    <slot>sigSetH(double)</slot>
@@ -190,7 +190,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkBox_2</sender>
+   <sender>bezierBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>glWidget</receiver>
    <slot>sigShowBezier(bool)</slot>
@@ -206,7 +206,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>spinBox</sender>
+   <sender>kBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>glWidget</receiver>
    <slot>sigSetK(int)</slot>

@@ -17,9 +17,13 @@ public:
 
 public slots:
     void sigShowKDTree(bool show);
-
+    void sigShowWLS(bool show);
+    void sigShowBezier(bool show);
+    
     void sigFindInRadius();
     void sigSetRadius(double r);
+    void sigSetH(double h);
+    void sigSetK(int k);
 
     void sigSetKNearest(int k);
     void sigFindKNearest();

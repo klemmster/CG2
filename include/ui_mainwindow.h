@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun May 6 17:47:25 2012
+** Created: Wed May 30 20:46:29 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -15,20 +15,19 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
+#include <QtGui/QDoubleSpinBox>
 #include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
 #include <QtGui/QMainWindow>
-#include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
-#include <QtGui/QDoubleSpinBox>
 #include <QtGui/QStatusBar>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
-#include <QtGui/QLabel>
 #include "GLWidget.hpp"
-
-#include <float.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -39,20 +38,29 @@ public:
     QHBoxLayout *horizontalLayout;
     GLWidget *glWidget;
     QGridLayout *gridLayout;
-    QPushButton *findKNearestButton;
-    QCheckBox *checkBoxKdTree;
     QSpacerItem *verticalSpacer;
-    QSpinBox *selectKValueBox;
-    QSpinBox *selectPixelID;
-    QDoubleSpinBox *selectRadiusValueBox;
-    QPushButton *findInRadiusButton;
+    QGroupBox *groupBox;
+    QVBoxLayout *verticalLayout;
+    QCheckBox *WLSBox;
+    QHBoxLayout *horizontalLayout_4;
+    QLabel *label;
+    QDoubleSpinBox *radiusBox;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_2;
+    QDoubleSpinBox *hBox;
+    QGroupBox *groupBox_2;
+    QVBoxLayout *verticalLayout_2;
+    QCheckBox *bezierBox;
+    QHBoxLayout *horizontalLayout_3;
+    QLabel *label_3;
+    QSpinBox *kBox;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(703, 609);
+        MainWindow->resize(1280, 752);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         horizontalLayout = new QHBoxLayout(centralwidget);
@@ -70,57 +78,80 @@ public:
 
         gridLayout = new QGridLayout();
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        findKNearestButton = new QPushButton(centralwidget);
-        findKNearestButton->setObjectName(QString::fromUtf8("findKNearestButton"));
-
-        gridLayout->addWidget(findKNearestButton, 4, 1, 1, 2);
-
-        checkBoxKdTree = new QCheckBox(centralwidget);
-        checkBoxKdTree->setObjectName(QString::fromUtf8("checkBoxKdTree"));
-
-        gridLayout->addWidget(checkBoxKdTree, 0, 2);
-
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
+        gridLayout->addItem(verticalSpacer, 2, 1, 1, 1);
 
-        QLabel *selectKValueLabel = new QLabel("KNearest:");
-        selectKValueBox = new QSpinBox(centralwidget);
-        selectKValueBox->setObjectName(QString::fromUtf8("selectKValueBox"));
-        selectKValueBox->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-        selectKValueBox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
-        selectKValueBox->setMaximum(99999999);
+        groupBox = new QGroupBox(centralwidget);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        verticalLayout = new QVBoxLayout(groupBox);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        WLSBox = new QCheckBox(groupBox);
+        WLSBox->setObjectName(QString::fromUtf8("WLSBox"));
 
-        gridLayout->addWidget(selectKValueLabel, 1, 1);
-        gridLayout->addWidget(selectKValueBox, 1, 2);
+        verticalLayout->addWidget(WLSBox);
 
-        QLabel *selectRadiusLabel = new QLabel("Radius:");
-        selectRadiusValueBox = new QDoubleSpinBox(centralwidget);
-        selectRadiusValueBox->setObjectName(QString::fromUtf8("selectRadiusBox"));
-        selectRadiusValueBox->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-        selectRadiusValueBox->setButtonSymbols(QAbstractSpinBox::PlusMinus);
-        selectRadiusValueBox->setMinimum(0.0);
-        selectRadiusValueBox->setMaximum(FLT_MAX);
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        label = new QLabel(groupBox);
+        label->setObjectName(QString::fromUtf8("label"));
 
-        gridLayout->addWidget(selectRadiusLabel, 5, 1);
-        gridLayout->addWidget(selectRadiusValueBox, 5, 2);
+        horizontalLayout_4->addWidget(label);
 
-        findInRadiusButton = new QPushButton(centralwidget);
-        findInRadiusButton->setObjectName(QString::fromUtf8("findInRadiusButton"));
+        radiusBox = new QDoubleSpinBox(groupBox);
+        radiusBox->setObjectName(QString::fromUtf8("radiusBox"));
 
-        gridLayout->addWidget(findInRadiusButton, 6, 1 , 1, 2);
+        horizontalLayout_4->addWidget(radiusBox);
 
-        QLabel *selectVertexLabel = new QLabel("Select vertex:");
-        selectPixelID = new QSpinBox(centralwidget);
-        selectPixelID->setObjectName(QString::fromUtf8("selectPixelID"));
-        selectPixelID->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-        selectPixelID->setButtonSymbols(QAbstractSpinBox::PlusMinus);
-        selectPixelID->setMinimum(0);
-        selectPixelID->setMaximum(99999999);
 
-        gridLayout->addWidget(selectVertexLabel, 7, 1);
-        gridLayout->addWidget(selectPixelID, 7, 2);
+        verticalLayout->addLayout(horizontalLayout_4);
 
-        gridLayout->addItem(verticalSpacer, 8, 1, 1, 2);
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        label_2 = new QLabel(groupBox);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        horizontalLayout_2->addWidget(label_2);
+
+        hBox = new QDoubleSpinBox(groupBox);
+        hBox->setObjectName(QString::fromUtf8("hBox"));
+
+        horizontalLayout_2->addWidget(hBox);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
+
+        gridLayout->addWidget(groupBox, 0, 1, 1, 1);
+
+        groupBox_2 = new QGroupBox(centralwidget);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        verticalLayout_2 = new QVBoxLayout(groupBox_2);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        bezierBox = new QCheckBox(groupBox_2);
+        bezierBox->setObjectName(QString::fromUtf8("bezierBox"));
+
+        verticalLayout_2->addWidget(bezierBox);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
+        label_3 = new QLabel(groupBox_2);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        horizontalLayout_3->addWidget(label_3);
+
+        kBox = new QSpinBox(groupBox_2);
+        kBox->setObjectName(QString::fromUtf8("kBox"));
+
+        horizontalLayout_3->addWidget(kBox);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_3);
+
+
+        gridLayout->addWidget(groupBox_2, 1, 1, 1, 1);
+
+
         horizontalLayout->addLayout(gridLayout);
 
         MainWindow->setCentralWidget(centralwidget);
@@ -129,13 +160,11 @@ public:
         MainWindow->setStatusBar(statusbar);
 
         retranslateUi(MainWindow);
-        QObject::connect(checkBoxKdTree, SIGNAL(toggled(bool)), glWidget, SLOT(sigShowKDTree(bool)));
-        QObject::connect(findKNearestButton, SIGNAL(clicked()), glWidget, SLOT(sigFindKNearest()));
-        QObject::connect(selectKValueBox, SIGNAL(valueChanged(int)), glWidget, SLOT(sigSetKNearest(int)));
-        QObject::connect(selectRadiusValueBox, SIGNAL(valueChanged(double)), glWidget, SLOT(sigSetRadius(double)));
-        QObject::connect(selectPixelID, SIGNAL(valueChanged(int)), glWidget, SLOT(sigSelectPixel(int)));
-        QObject::connect(findInRadiusButton, SIGNAL(clicked()), glWidget, SLOT(sigFindInRadius()));
-
+        QObject::connect(WLSBox, SIGNAL(toggled(bool)), glWidget, SLOT(sigShowWLS(bool)));
+        QObject::connect(radiusBox, SIGNAL(valueChanged(double)), glWidget, SLOT(sigSetRadius(double)));
+        QObject::connect(hBox, SIGNAL(valueChanged(double)), glWidget, SLOT(sigSetH(double)));
+        QObject::connect(bezierBox, SIGNAL(toggled(bool)), glWidget, SLOT(sigShowBezier(bool)));
+        QObject::connect(kBox, SIGNAL(valueChanged(int)), glWidget, SLOT(sigSetK(int)));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -143,10 +172,13 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CG2 - \303\234bung 1", 0, QApplication::UnicodeUTF8));
-        findKNearestButton->setText(QApplication::translate("MainWindow", "Find K-Nearest Neigbours", 0, QApplication::UnicodeUTF8));
-        findInRadiusButton->setText(QApplication::translate("MainWindow", "Find in Radius", 0, QApplication::UnicodeUTF8));
-        checkBoxKdTree->setText(QApplication::translate("MainWindow", "kd-tree", 0, QApplication::UnicodeUTF8));
-        selectKValueBox->setSpecialValueText(QString());
+        groupBox->setTitle(QApplication::translate("MainWindow", "WLS", 0, QApplication::UnicodeUTF8));
+        WLSBox->setText(QApplication::translate("MainWindow", "WLS", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWindow", "Radius:", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "h:", 0, QApplication::UnicodeUTF8));
+        groupBox_2->setTitle(QApplication::translate("MainWindow", "Bezier", 0, QApplication::UnicodeUTF8));
+        bezierBox->setText(QApplication::translate("MainWindow", "Bezier", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "k:", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
