@@ -46,7 +46,9 @@ Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
             xPos = m_MinX;
     }
     //TODO Use GUI
-    repeatedApproximation(2);
+    //repeatedApproximation(2);
+    approximateWLS(m_vertices);
+    //approximateTensor(1);
     toggleQuads();
 }
 
@@ -140,6 +142,17 @@ void Grid::approximateWLS(VertexList& resultList){
 void Grid::approximateTensor(const size_t k){
 
     m_k = k;
+    approximateWLS(m_vertices);
+    /*
+    VertexList testList;
+    for(size_t x = 0; x< m_dimX; ++x){
+        size_t index = (m_dimY - 1) * m_dimX + x;
+        testList.push_back(m_vertices.at(index));
+    }
+    VertexPtr result = getByDeCasteljau(0.5, testList.size()-1, 0, testList);
+    std::cout << "result: " << (*result) << "\n";
+    */
+
 }
 
 void Grid::repeatedApproximation(const size_t k){
@@ -186,6 +199,20 @@ float Grid::getWendland(const float distance) const{
     return term1 * term2;
 }
 
+VertexPtr Grid::getByDeCasteljau(const float weight, const size_t iteration,
+        const size_t pointNum, const VertexList srcList){
+    if(iteration == 0){
+        VertexPtr result = srcList.at(pointNum);
+        (*result) = (*result) * weight;
+        return result;
+    }else{
+        VertexPtr a = getByDeCasteljau(1.0-weight, iteration-1, pointNum, srcList);
+        VertexPtr b = getByDeCasteljau(weight, iteration-1, pointNum+1, srcList);
+        VertexPtr result(new Vertex((*a) + (*b)));
+        return result;
+    }
+}
+
 void Grid::draw(){
     if(m_showQuads){
         drawQuads();
@@ -195,14 +222,16 @@ void Grid::draw(){
 }
 
 void Grid::drawQuads(){
+    if(m_interpolVertices.size() > 0){
     glBegin(GL_QUADS);
         size_t width = m_dimX * m_k;
         size_t height = m_dimY * m_k;
         size_t i = 0;
-    
+
+
         //std::cout << " Initialize Vector " << std::endl;
         m_quadNormals = std::vector<vec3f>(width * height, vec3f());
-    
+
         //std::cout << " Compute Normals " << std::endl;
         for (size_t x = 0; x < width - 1; ++x)
         {
@@ -212,22 +241,24 @@ void Grid::drawQuads(){
                 size_t topRight = (y * width) + x + 1;
                 size_t bottomLeft = ( (y + 1) * width) + x;
                 size_t bottomRight = ( (y + 1) * width) + x + 1;
-                
+
                 VertexPtr ltVrtx = m_interpolVertices.at(topLeft);
                 VertexPtr rtVrtx = m_interpolVertices.at(topRight);
                 VertexPtr lbVrtx = m_interpolVertices.at(bottomLeft);
                 VertexPtr rbVrtx = m_interpolVertices.at(bottomRight);
-                
+
                 vec3f normal = cross( (*rtVrtx) - (*ltVrtx), (*ltVrtx) - (*lbVrtx) );
-                
+
                 m_quadNormals.at(topLeft) = m_quadNormals.at(topLeft) + normal;
                 m_quadNormals.at(topRight) = m_quadNormals.at(topRight) + normal;
                 m_quadNormals.at(bottomLeft) = m_quadNormals.at(bottomLeft) + normal;
                 m_quadNormals.at(bottomRight) = m_quadNormals.at(bottomRight) + normal;
             }
         }
-    
+
         //std::cout << " Draw Surface " << std::endl;
+        float colorGrey[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
         for (size_t x = 0; x < width - 1; ++x)
         {
             for (size_t y = 0; y < height - 1; ++y)
@@ -236,18 +267,16 @@ void Grid::drawQuads(){
                 size_t topRight = (y * width) + x + 1;
                 size_t bottomLeft = ( (y + 1) * width) + x;
                 size_t bottomRight = ( (y + 1) * width) + x + 1;
-                
+
                 VertexPtr ltVrtx = m_interpolVertices.at(topLeft);
                 VertexPtr rtVrtx = m_interpolVertices.at(topRight);
                 VertexPtr lbVrtx = m_interpolVertices.at(bottomLeft);
                 VertexPtr rbVrtx = m_interpolVertices.at(bottomRight);
-                
-                
+
                 vec3f ltNormal = normalize(m_quadNormals.at(topLeft));
                 vec3f rtNormal = normalize(m_quadNormals.at(topRight));
                 vec3f lbNormal = normalize(m_quadNormals.at(bottomLeft));
                 vec3f rbNormal = normalize(m_quadNormals.at(bottomRight));
-                
 
                 glNormal3fv(ltNormal._v);
                 glVertex3fv((*ltVrtx)._v);
@@ -260,6 +289,7 @@ void Grid::drawQuads(){
             }
         }
     glEnd();
+    }
 }
 
 void Grid::drawTriangles(){
@@ -287,7 +317,7 @@ void Grid::drawTriangles(){
         vec3f normal_v1_v2 = normalize(cross((*vec1) - (*vec3), (*vec2) - (*vec1)));
         vec3f normal_v3_v2 = normalize(cross((*vec3) - (*vec4), (*vec2) - (*vec3)));
 
-        float colorGrey[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+        float colorGrey[] = { 0.0f, 0.9f, 0.9f, 1.0f };
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
 
         glBegin(GL_TRIANGLES);

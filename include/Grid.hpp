@@ -21,6 +21,8 @@ public:
 
 private:
 
+    VertexPtr getByDeCasteljau(const float weight,const size_t iteration,
+            const size_t pointNum, const VertexList srcList);
     void drawTriangles();
     void drawQuads();
 
