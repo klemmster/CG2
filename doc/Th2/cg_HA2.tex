@@ -115,7 +115,15 @@ Werden für diese Vektoren die Tangentialvektoren einer Fläche am Punkt $(x,y)$ e
 
 \textbf{a)}
 
-
+Betrachte die folgende Parametrisierung:
+\formel{$\pnt{p}(u,v) = \threevector{u}{v}{uv}$}
+Die partiellen Ableitungen, bzw die Tangenten sind:\\\\
+\eqs{$\frac{\partial p}{\partial u} = \threevector{1}{0}{v}$}
+\eqs{$\frac{\partial p}{\partial v} = \threevector{0}{1}{u}$}$ $\\\\
+$\pnt{p}$ ist differenzierbar und die Tangenten sind linear unabhängig. Damit ist $\pnt{p}$ regulär. Allerdings sind die Tangenten nur in $\pnt{p}(0,0)$ orthonormal. Für alle anderen Punkte gilt:\\\\
+\eqs{$|\frac{\partial p}{\partial u}| \neq 1$}
+\eqs{$|\frac{\partial p}{\partial v}| \neq 1$}$ $\\\\
+Es gibt auch keine Umparametrisierung, die die Tangenten in allen Punkten orthonormal werden lässt.\\
 
 \textbf{b)}
 
@@ -136,6 +144,7 @@ Die Tangenten sind:
 Die Parametrisierung erzeugt die gleiche Fläche, allerdings sind die Tangenten orthonormal.
 
 \task{5}
+
 
 
 
