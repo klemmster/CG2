@@ -73,7 +73,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid(tree, 16, 16);
+    grid = Grid(tree, 10,10);
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -110,7 +110,7 @@ void GLWidget::paintGL() {
     }
     grid.draw();
     //glScalef(20, 20, 20);
-    
+
     glDisable(GL_LIGHTING);
     glColor3f(1.0f, 0.0f, 0.0f);
     glPointSize(3);
@@ -206,11 +206,11 @@ void GLWidget::sigShowKDTree(bool show) {
 }
 
 void GLWidget::sigShowWLS(bool show) {
-    
+
 }
 
 void GLWidget::sigShowBezier(bool show) {
-    
+
 }
 
 void resetVertexColors(VertexList src){

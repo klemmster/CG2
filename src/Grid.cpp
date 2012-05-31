@@ -47,8 +47,8 @@ Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
     }
     //TODO Use GUI
     //repeatedApproximation(2);
-    approximateWLS(m_vertices);
-    //approximateTensor(1);
+    //approximateWLS(m_vertices);
+    approximateTensor(4);
     toggleQuads();
 }
 
@@ -140,19 +140,54 @@ void Grid::approximateWLS(VertexList& resultList){
 }
 
 void Grid::approximateTensor(const size_t k){
-
     m_k = k;
     approximateWLS(m_vertices);
-    /*
-    VertexList testList;
-    for(size_t x = 0; x< m_dimX; ++x){
-        size_t index = (m_dimY - 1) * m_dimX + x;
-        testList.push_back(m_vertices.at(index));
-    }
-    VertexPtr result = getByDeCasteljau(0.5, testList.size()-1, 0, testList);
-    std::cout << "result: " << (*result) << "\n";
-    */
+    m_interpolVertices.clear();
 
+    size_t newDimX = m_dimX *k;
+    size_t newDimY = m_dimY *k;
+    float xStep = 1.0/ newDimX;
+    float yStep = 1.0 / newDimY;
+
+    VertexListPtrVector rows;
+    for(size_t y=0; y < m_dimY; ++y){
+        VertexList::const_iterator first = m_vertices.begin() + y*m_dimX;
+        VertexList::const_iterator last = m_vertices.begin() + (y*m_dimX)+m_dimX;
+        VertexListPtr row(new VertexList(first, last));
+        rows.push_back(row);
+    }
+
+    VertexListPtrVector columns;
+    size_t index = 0;
+    while(index < newDimX){
+        columns.push_back(VertexListPtr( new VertexList()));
+        index++;
+    }
+
+    //Create columns by interpolating rows
+    float curvePos = 0.0;
+    index = 0;
+    while(index < newDimX){
+        for(size_t i=0; i<rows.size(); ++i){
+            VertexListPtr rowSource = rows.at(i);
+            VertexPtr ptr = getByDeCasteljau(curvePos, rowSource->size()-1, 0, (*rowSource));
+            columns.at(index)->push_back(ptr);
+        }
+        ++index;
+        curvePos += xStep;
+    }
+
+    curvePos = 0.0;
+    index = 0;
+    while(index < newDimY){
+        for(size_t i=0; i<columns.size(); ++i){
+        VertexListPtr column = columns.at(i);
+        VertexPtr ptr = getByDeCasteljau(curvePos, column->size()-1, 0, (*column));
+        m_interpolVertices.push_back(ptr);
+        }
+        curvePos += yStep;
+        ++index;
+    }
 }
 
 void Grid::repeatedApproximation(const size_t k){
@@ -202,13 +237,12 @@ float Grid::getWendland(const float distance) const{
 VertexPtr Grid::getByDeCasteljau(const float weight, const size_t iteration,
         const size_t pointNum, const VertexList srcList){
     if(iteration == 0){
-        VertexPtr result = srcList.at(pointNum);
-        (*result) = (*result) * weight;
+        VertexPtr result(new  Vertex((*srcList.at(pointNum))));
         return result;
     }else{
-        VertexPtr a = getByDeCasteljau(1.0-weight, iteration-1, pointNum, srcList);
+        VertexPtr a = getByDeCasteljau(weight, iteration-1, pointNum, srcList);
         VertexPtr b = getByDeCasteljau(weight, iteration-1, pointNum+1, srcList);
-        VertexPtr result(new Vertex((*a) + (*b)));
+        VertexPtr result(new Vertex((1.0-weight)*(*a) + (*b)*weight));
         return result;
     }
 }
