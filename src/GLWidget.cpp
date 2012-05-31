@@ -206,11 +206,14 @@ void GLWidget::sigShowKDTree(bool show) {
 }
 
 void GLWidget::sigShowWLS(bool show) {
-
+    grid.disableQuads();
+    updateGL();
 }
 
 void GLWidget::sigShowBezier(bool show) {
-
+    grid.enableQuads();
+    grid.approximateTensor(grid.m_k);
+    updateGL();
 }
 
 void resetVertexColors(VertexList src){
@@ -237,20 +240,30 @@ void GLWidget::sigSetRadius(double r){
     if(r>0){
         radius = (float)r;
         cout << "Set Radius to: " << radius << "\n";
+        grid.setRadius(radius);
     }
+    
+    grid.reapproximateWLS();
+    updateGL();
 }
 
 void GLWidget::sigSetH(double h) {
     if (h > 0){
         //radius = (float)h;
         cout << "Set H to: " << h << "\n";
+        grid.setH( (float) h );
     }
+    
+    grid.reapproximateWLS();
+    updateGL();
 }
 
 void GLWidget::sigSetK(int k) {
     if (k > 0){
         cout << "Set K to: " << k << "\n";
+        grid.setK(k);
     }
+    updateGL();
 }
 
 void GLWidget::sigSetKNearest(int k){

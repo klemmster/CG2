@@ -47,13 +47,9 @@ Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
     }
     //TODO Use GUI
     //repeatedApproximation(2);
-    //approximateWLS(m_vertices);
-    approximateTensor(4);
-    toggleQuads();
-}
-
-void Grid::toggleQuads(){
-    m_showQuads =  !m_showQuads;
+    approximateWLS(m_vertices);
+    //approximateTensor(4);
+    //toggleQuads();
 }
 
 void Grid::approximateLS(VertexList & resultList){
@@ -348,8 +344,8 @@ void Grid::drawTriangles(){
         VertexPtr vec3 = m_vertices.at(i + m_dimX + 0);
         VertexPtr vec4 = m_vertices.at(i + m_dimX + 1);
 
-        vec3f normal_v1_v2 = normalize(cross((*vec1) - (*vec3), (*vec2) - (*vec1)));
-        vec3f normal_v3_v2 = normalize(cross((*vec3) - (*vec4), (*vec2) - (*vec3)));
+        vec3f normal_v1_v2 = normalize(cross( (*vec2) - (*vec1), (*vec1) - (*vec3) ));
+        vec3f normal_v3_v2 = normalize(cross( (*vec2) - (*vec3), (*vec3) - (*vec4) ));
 
         float colorGrey[] = { 0.0f, 0.9f, 0.9f, 1.0f };
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
@@ -375,16 +371,16 @@ void Grid::drawTriangles(){
 
         //float colorGreen[] = { 0.0f, 1.0f, 0.0f, 1.0f };
         //glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGreen);
-        glColor3f(0, 1, 0);
-        glBegin(GL_LINES);
-
-            glVertex3fv((( (( (*vec1) + (*vec2) + (*vec3) ) / 3)))._v);
-            glVertex3fv((( (( (*vec1) + (*vec2) + (*vec3) ) / 3) + (normal_v1_v2 / 10)))._v);
-
-            glVertex3fv((( (( (*vec3) + (*vec2) + (*vec4) ) / 3)))._v);
-            glVertex3fv((( (( (*vec3) + (*vec2) + (*vec4) ) / 3) + (normal_v3_v2 / 10)))._v);
-
-        glEnd();
+//        glColor3f(0, 1, 0);
+//        glBegin(GL_LINES);
+//
+//            glVertex3fv((( (( (*vec1) + (*vec2) + (*vec3) ) / 3)))._v);
+//            glVertex3fv((( (( (*vec1) + (*vec2) + (*vec3) ) / 3) + (normal_v1_v2 / 10)))._v);
+//
+//            glVertex3fv((( (( (*vec3) + (*vec2) + (*vec4) ) / 3)))._v);
+//            glVertex3fv((( (( (*vec3) + (*vec2) + (*vec4) ) / 3) + (normal_v3_v2 / 10)))._v);
+//
+//        glEnd();
 
         glEnable(GL_LIGHTING);
 
@@ -403,5 +399,35 @@ void Grid::drawTriangles(){
     glEnd();
     glEnable(GL_LIGHTING);
 
+}
+
+void Grid::setK(const size_t k)
+{
+    m_k = k;
+}
+
+void Grid::setH(const float h)
+{
+    m_h = h;
+}
+
+void Grid::setRadius(const float radius)
+{
+    m_radius = radius;
+}
+
+void Grid::reapproximateWLS()
+{
+    approximateWLS(m_vertices);
+}
+
+void Grid::enableQuads()
+{
+    m_showQuads = true;
+}
+
+void Grid::disableQuads()
+{
+    m_showQuads = false;
 }
 
