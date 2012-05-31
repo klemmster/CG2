@@ -19,6 +19,7 @@ GLWidget::GLWidget(QWidget *parent) :
     setMouseTracking(true);
         showTree = 0;
     setFocus();
+    m_k = 1;
 }
 
 void GLWidget::setFilename(const std::string& fileName) {
@@ -73,7 +74,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid(tree, 10,10);
+    grid = Grid(tree, 5,5);
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -212,7 +213,7 @@ void GLWidget::sigShowWLS(bool show) {
 
 void GLWidget::sigShowBezier(bool show) {
     grid.enableQuads();
-    grid.approximateTensor(grid.m_k);
+    grid.approximateTensor(m_k);
     updateGL();
 }
 
@@ -242,7 +243,8 @@ void GLWidget::sigSetRadius(double r){
         cout << "Set Radius to: " << radius << "\n";
         grid.setRadius(radius);
     }
-    
+
+    grid.m_k = m_k;
     grid.reapproximateWLS();
     updateGL();
 }
@@ -253,7 +255,8 @@ void GLWidget::sigSetH(double h) {
         cout << "Set H to: " << h << "\n";
         grid.setH( (float) h );
     }
-    
+
+    grid.m_k = m_k;
     grid.reapproximateWLS();
     updateGL();
 }
@@ -261,7 +264,7 @@ void GLWidget::sigSetH(double h) {
 void GLWidget::sigSetK(int k) {
     if (k > 0){
         cout << "Set K to: " << k << "\n";
-        grid.setK(k);
+        m_k = k;
     }
     updateGL();
 }

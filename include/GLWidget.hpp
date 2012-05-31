@@ -19,7 +19,7 @@ public slots:
     void sigShowKDTree(bool show);
     void sigShowWLS(bool show);
     void sigShowBezier(bool show);
-    
+
     void sigFindInRadius();
     void sigSetRadius(double r);
     void sigSetH(double h);
@@ -41,6 +41,7 @@ protected:
     VertexList vertices;
     KDTree tree;
     Grid grid;
+    size_t m_k;
 
 private:
     bool showTree;

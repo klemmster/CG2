@@ -25,7 +25,7 @@ public:
     void reapproximateWLS();
 
     size_t m_k;
-    
+
 private:
 
     VertexPtr getByDeCasteljau(const float weight, const size_t iteration,

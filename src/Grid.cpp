@@ -48,6 +48,7 @@ Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
     //TODO Use GUI
     //repeatedApproximation(2);
     approximateWLS(m_vertices);
+    m_k = 1;
     //approximateTensor(4);
     //toggleQuads();
 }
@@ -399,11 +400,6 @@ void Grid::drawTriangles(){
     glEnd();
     glEnable(GL_LIGHTING);
 
-}
-
-void Grid::setK(const size_t k)
-{
-    m_k = k;
 }
 
 void Grid::setH(const float h)
