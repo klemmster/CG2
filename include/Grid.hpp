@@ -23,15 +23,16 @@ public:
     void setH(const float);
     void setRadius(const float radius);
     void reapproximateWLS();
-
     size_t m_k;
 
 private:
 
     VertexPtr getByDeCasteljau(const float weight, const size_t iteration,
-            const size_t pointNum, const VertexList srcList);
+            const size_t pointNum, const VertexList srcList, size_t count, VertexList& tangentsList);
     void drawTriangles();
     void drawQuads();
+    void resetBaseVertices();
+
 
     float getWendland(const float distance) const;
     float m_MinX;

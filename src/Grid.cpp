@@ -17,9 +17,21 @@ using namespace Eigen;
 Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
     m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_showQuads(false)
 {
+    resetBaseVertices();
 
-    const VertexList& minm_vertices = tree.getMinVertices();
-    const VertexList& maxm_vertices = tree.getMaxVertices();
+   //TODO Use GUI
+    //repeatedApproximation(2);
+    m_radius = 0.3;
+    m_k = 1;
+    m_h = 0.2;
+    approximateWLS(m_vertices);
+    //approximateTensor(4);
+    //toggleQuads();
+}
+
+void Grid::resetBaseVertices(){
+    const VertexList& minm_vertices = m_tree.getMinVertices();
+    const VertexList& maxm_vertices = m_tree.getMaxVertices();
 
     m_MinX = (*minm_vertices.at(0))[0];
     m_MinY = (*minm_vertices.at(1))[1];
@@ -29,28 +41,23 @@ Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
     m_MaxY = (*maxm_vertices.at(1))[1];
     m_MaxZ = (*maxm_vertices.at(2))[2];
 
-    float xStep = abs(m_MaxX - m_MinX) / dim_x;
-    float yStep = abs(m_MaxY - m_MinY) / dim_y;
+    float xStep = abs(m_MaxX - m_MinX) / m_dimX;
+    float yStep = abs(m_MaxY - m_MinY) / m_dimY;
 
     float xPos = m_MinX;
     float yPos = m_MinY;
 
     vec3f color(0.2, 0.8, 0.5);
 
-    for(size_t y = 0; y < dim_y; ++y){
-        for(size_t x = 0; x < dim_x; ++x){
+    for(size_t y = 0; y < m_dimY; ++y){
+        for(size_t x = 0; x < m_dimX; ++x){
             m_vertices.push_back(VertexPtr(new Vertex(xPos, yPos, m_MaxZ, color)));
             xPos += xStep;
         }
             yPos += yStep;
             xPos = m_MinX;
     }
-    //TODO Use GUI
-    //repeatedApproximation(2);
-    approximateWLS(m_vertices);
-    m_k = 1;
-    //approximateTensor(4);
-    //toggleQuads();
+
 }
 
 void Grid::approximateLS(VertexList & resultList){
@@ -99,7 +106,7 @@ void Grid::approximateWLS(VertexList& resultList){
     for(VertexPtr pointDesired: resultList){
         //Get Points used for this approximation
         //TODO: Should be a good automatic? radius -- maybe gridsize related
-        VertexList list = m_tree.findInRadius(pointDesired, .3);
+        VertexList list = m_tree.findInRadius(pointDesired, m_radius);
         MatrixXf bDimsMatSum(6,6);
         VectorXf bDimsVecSum(6);
         bDimsMatSum <<  0, 0, 0, 0, 0, 0,
@@ -138,6 +145,7 @@ void Grid::approximateWLS(VertexList& resultList){
 
 void Grid::approximateTensor(const size_t k){
     m_k = k;
+    resetBaseVertices();
     approximateWLS(m_vertices);
     m_interpolVertices.clear();
 
@@ -167,7 +175,8 @@ void Grid::approximateTensor(const size_t k){
     while(index < newDimX){
         for(size_t i=0; i<rows.size(); ++i){
             VertexListPtr rowSource = rows.at(i);
-            VertexPtr ptr = getByDeCasteljau(curvePos, rowSource->size()-1, 0, (*rowSource));
+            VertexList tangents;
+            VertexPtr ptr = getByDeCasteljau(curvePos, rowSource->size()-1, 0, (*rowSource), rowSource->size()-1, tangents);
             columns.at(index)->push_back(ptr);
         }
         ++index;
@@ -179,7 +188,8 @@ void Grid::approximateTensor(const size_t k){
     while(index < newDimY){
         for(size_t i=0; i<columns.size(); ++i){
         VertexListPtr column = columns.at(i);
-        VertexPtr ptr = getByDeCasteljau(curvePos, column->size()-1, 0, (*column));
+        VertexList tangents;
+        VertexPtr ptr = getByDeCasteljau(curvePos, column->size()-1, 0, (*column), column->size()-1, tangents);
         m_interpolVertices.push_back(ptr);
         }
         curvePos += yStep;
@@ -224,21 +234,25 @@ void Grid::repeatedApproximation(const size_t k){
 float Grid::getWendland(const float distance) const{
     //(1 - d/h)^4 * (4d/h +1)
     // term1      *   term2
-    float h = 0.01f;
-    float term1Part = (1.0f - distance/h);
+    float term1Part = (1.0f - distance/m_h);
     float term1 = std::pow(term1Part, 4);
-    float term2 = (4*distance/h)+1;
+    float term2 = (4*distance/m_h)+1;
     return term1 * term2;
 }
 
 VertexPtr Grid::getByDeCasteljau(const float weight, const size_t iteration,
-        const size_t pointNum, const VertexList srcList){
+        const size_t pointNum, const VertexList srcList, size_t count, VertexList& tangentsList){
     if(iteration == 0){
         VertexPtr result(new  Vertex((*srcList.at(pointNum))));
         return result;
     }else{
-        VertexPtr a = getByDeCasteljau(weight, iteration-1, pointNum, srcList);
-        VertexPtr b = getByDeCasteljau(weight, iteration-1, pointNum+1, srcList);
+        VertexPtr a = getByDeCasteljau(weight, iteration-1, pointNum, srcList, count, tangentsList);
+        VertexPtr b = getByDeCasteljau(weight, iteration-1, pointNum+1, srcList, count, tangentsList);
+
+        if(iteration == count-1){
+            VertexPtr vec(new Vertex((*a)-(*b)));
+            tangentsList.push_back(vec);
+        }
         VertexPtr result(new Vertex((1.0-weight)*(*a) + (*b)*weight));
         return result;
     }
@@ -414,6 +428,7 @@ void Grid::setRadius(const float radius)
 
 void Grid::reapproximateWLS()
 {
+    resetBaseVertices();
     approximateWLS(m_vertices);
 }
 
