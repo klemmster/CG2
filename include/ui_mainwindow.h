@@ -108,6 +108,7 @@ public:
 
         radiusBox = new QDoubleSpinBox(groupBox);
         radiusBox->setObjectName(QString::fromUtf8("radiusBox"));
+        radiusBox->setDecimals(4);
 
         horizontalLayout_4->addWidget(radiusBox);
 
@@ -123,6 +124,7 @@ public:
 
         hBox = new QDoubleSpinBox(groupBox);
         hBox->setObjectName(QString::fromUtf8("hBox"));
+        hBox->setDecimals(4);
 
         horizontalLayout_2->addWidget(hBox);
 
@@ -165,6 +167,7 @@ public:
 
         spinBox = new QSpinBox(groupBox_2);
         spinBox->setObjectName(QString::fromUtf8("spinBox"));
+        spinBox->setValue(5);
 
         horizontalLayout_5->addWidget(spinBox);
 
@@ -175,6 +178,7 @@ public:
 
         spinBox_2 = new QSpinBox(groupBox_2);
         spinBox_2->setObjectName(QString::fromUtf8("spinBox_2"));
+        spinBox_2->setValue(5);
 
         horizontalLayout_5->addWidget(spinBox_2);
 
@@ -219,7 +223,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CG2 - \303\234bung 1", 0, QApplication::UnicodeUTF8));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CG2 - \303\234bung 2", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QApplication::translate("MainWindow", "WLS", 0, QApplication::UnicodeUTF8));
         WLSBox->setText(QApplication::translate("MainWindow", "WLS", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Radius:", 0, QApplication::UnicodeUTF8));

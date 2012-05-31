@@ -53,7 +53,8 @@ void GLWidget::initializeGL() {
 
 //    // Somewhere in the initialization part of your programâ¦
     glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+    glDisable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
 //
 //    // Create light components
     GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
@@ -61,11 +62,11 @@ void GLWidget::initializeGL() {
    // GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
     GLfloat position[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 //
-//    // Assign created components to GL_LIGHT0
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-   // glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-    glLightfv(GL_LIGHT0, GL_POSITION, position);
+//    // Assign created components to GL_LIGHT1
+    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight);
+   // glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
+    glLightfv(GL_LIGHT1, GL_POSITION, position);
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
@@ -75,6 +76,8 @@ void GLWidget::initializeGL() {
     tree = KDTree(vertices, 2);
     treeTimer.stop();
     grid = Grid(tree, 5,5);
+    m_m = 5;
+    m_n = 5;
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -212,8 +215,24 @@ void GLWidget::sigShowWLS(bool show) {
 }
 
 void GLWidget::sigShowBezier(bool show) {
+    if(show){
     grid.enableQuads();
     grid.approximateTensor(m_k);
+    }else{
+        grid.disableQuads();
+        grid.reapproximateWLS();
+    }
+    updateGL();
+}
+
+void GLWidget::sigShowRepeated(bool show) {
+    if(show){
+        grid.enableQuads();
+        grid.repeatedApproximation(m_k);
+    }else{
+        grid.disableQuads();
+        grid.reapproximateWLS();
+    }
     updateGL();
 }
 
@@ -265,6 +284,24 @@ void GLWidget::sigSetK(int k) {
     if (k > 0){
         cout << "Set K to: " << k << "\n";
         m_k = k;
+    }
+    updateGL();
+}
+
+void GLWidget::sigSetN(int n) {
+    if (n > 0){
+        cout << "Set N to: " << n << "\n";
+        m_n = n;
+        grid = Grid(tree, m_m, m_n);
+    }
+    updateGL();
+}
+
+void GLWidget::sigSetM(int m) {
+    if (m > 0){
+        cout << "Set M to: " << m << "\n";
+        m_m = m;
+        grid = Grid(tree, m_m, m_n);
     }
     updateGL();
 }
