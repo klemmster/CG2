@@ -108,6 +108,7 @@ public:
 
         radiusBox = new QDoubleSpinBox(groupBox);
         radiusBox->setObjectName(QString::fromUtf8("radiusBox"));
+        radiusBox->setDecimals(4);
 
         horizontalLayout_4->addWidget(radiusBox);
 
@@ -123,6 +124,7 @@ public:
 
         hBox = new QDoubleSpinBox(groupBox);
         hBox->setObjectName(QString::fromUtf8("hBox"));
+        hBox->setDecimals(4);
 
         horizontalLayout_2->addWidget(hBox);
 
