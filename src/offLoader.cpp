@@ -33,7 +33,7 @@ bool OffLoader::parseFirstLine(Tokens tokens)
      //First and Only Token should equal OFF, and there shoul be just one token
      assert(tokens.size() == 1);
      std::string token = tokens.at(0);
-     if(!boost::iequals(token, "off")) {
+     if(!(boost::iequals(token, "off") || boost::iequals(token, "noff"))) {
           std::cout << token << std::endl;
           std::cerr << "First Line expected: 'OFF'" << std::endl;
           return false;
@@ -46,13 +46,14 @@ bool OffLoader::parseSecondLine(Tokens tokens)
      //There should be three tokens here
      assert(tokens.size() == 3);
      m_NumVertices = std::atoi(tokens.at(0).c_str());
+     m_NumNormals = std::atoi(tokens.at(0).c_str());
      std::cout << boost::format("%s Vertices") % m_NumVertices << std::endl;
      return true;
 }
 
 const VertexPtr OffLoader::parseVertex(const Tokens& tokens) const
 {
-     assert(tokens.size() == 3);
+     //assert(tokens.size() == 3);
      /*
      float x = std::atof(tokens.at(0).c_str());
      float y = std::atof(tokens.at(1).c_str());
@@ -62,5 +63,13 @@ const VertexPtr OffLoader::parseVertex(const Tokens& tokens) const
      float y = boost::lexical_cast<float>(tokens.at(1));
      float z = boost::lexical_cast<float>(tokens.at(2));
      return VertexPtr(new Vertex(x, y, z));
+}
+
+const NormalPtr OffLoader::parseNormal(const Tokens& tokens) const
+{
+    float dirX = boost::lexical_cast<float>(tokens.at(3));
+    float dirY = boost::lexical_cast<float>(tokens.at(4));
+    float dirZ = boost::lexical_cast<float>(tokens.at(5));
+    return NormalPtr(new Normal(dirX, dirY, dirZ));
 }
 
