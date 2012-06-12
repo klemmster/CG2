@@ -19,6 +19,11 @@ Normal::Normal(const float dirX, const float dirY, const float dirZ, const vec3f
 
 }
 
+void Normal::flip()
+{
+    vec3f(-x(), -y(), -z());
+}
+
 Normal::~Normal()
 {
     //dtor

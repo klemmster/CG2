@@ -3,6 +3,7 @@
 
 
 #include <QtOpenGL/QGLWidget>
+#include "normal.hpp"
 #include "vertex.hpp"
 #include "tree.hpp"
 #include "Grid.hpp"
@@ -41,6 +42,7 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *event);
     std::string m_fileName;
+    NormalList normals;
     VertexList vertices;
     KDTree tree;
     Grid grid;

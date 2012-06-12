@@ -70,7 +70,9 @@ void GLWidget::initializeGL() {
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
-    vertices = loader.readOff(m_fileName);
+    TupleVerticesNormals verticesNormals = loader.readNOff(m_fileName);
+    vertices = std::get<0>(verticesNormals);
+    normals = std::get<1>(verticesNormals);
     readTimer.stop();
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
@@ -126,6 +128,19 @@ void GLWidget::paintGL() {
     }
 
     glEnd();
+    
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glBegin(GL_LINES);
+    for (size_t i = 0; i < vertices.size(); i++)
+    {
+        VertexPtr vertex = vertices.at(i);
+        NormalPtr normal = normals.at(i);
+        //normal->flip();
+        glVertex3fv((*vertex)._v);
+        glVertex3fv(((*normal) / -30 + (*vertex))._v); 
+    }
+    glEnd();
+    
     glEnable(GL_LIGHTING);
 
 }
