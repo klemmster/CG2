@@ -18,14 +18,36 @@ VertexList OffLoader::readOff(const std::string& fileName)
 {
     TokenizedFile file(fileName);
     VertexList vertices;
+    NormalList normals;
     if(parseFirstLine(file.next())) {
        if(parseSecondLine(file.next())) {
             for(unsigned int i=0; i<m_NumVertices; i++) {
-                 vertices.push_back(parseVertex(file.next()));
+                vertices.push_back(parseVertex(file.next()));
             }
        }
     }
     return vertices;
+}
+
+TupleVerticesNormals OffLoader::readNOff(const std::string& fileName)
+{
+    TokenizedFile file(fileName);
+    VertexList vertices;
+    NormalList normals;
+    
+    if(parseFirstLine(file.next())) {
+        if(parseSecondLine(file.next())) {
+            for(unsigned int i=0; i<m_NumVertices; i++) {
+                
+                tuple<VertexPtr, NormalPtr> tuVerNorm = parseVertexAndNormal(file.next());
+                
+                vertices.push_back(get<0>(tuVerNorm));
+                normals.push_back(get<1>(tuVerNorm));
+            }
+        }
+    }
+            
+    return TupleVerticesNormals(vertices, normals);
 }
 
 bool OffLoader::parseFirstLine(Tokens tokens)
@@ -53,7 +75,7 @@ bool OffLoader::parseSecondLine(Tokens tokens)
 
 const VertexPtr OffLoader::parseVertex(const Tokens& tokens) const
 {
-     //assert(tokens.size() == 3);
+     assert(tokens.size() == 3);
      /*
      float x = std::atof(tokens.at(0).c_str());
      float y = std::atof(tokens.at(1).c_str());
@@ -65,11 +87,17 @@ const VertexPtr OffLoader::parseVertex(const Tokens& tokens) const
      return VertexPtr(new Vertex(x, y, z));
 }
 
-const NormalPtr OffLoader::parseNormal(const Tokens& tokens) const
+const tuple<VertexPtr, NormalPtr> OffLoader::parseVertexAndNormal(const Tokens& tokens) const
 {
+    assert(tokens.size() == 6);
+    
+    float x = boost::lexical_cast<float>(tokens.at(0));
+    float y = boost::lexical_cast<float>(tokens.at(1));
+    float z = boost::lexical_cast<float>(tokens.at(2));
+    
     float dirX = boost::lexical_cast<float>(tokens.at(3));
     float dirY = boost::lexical_cast<float>(tokens.at(4));
     float dirZ = boost::lexical_cast<float>(tokens.at(5));
-    return NormalPtr(new Normal(dirX, dirY, dirZ));
+    return tuple<VertexPtr, NormalPtr>(VertexPtr(new Vertex(x, y, z)), NormalPtr(new Normal(dirX, dirY, dirZ)));
 }
 

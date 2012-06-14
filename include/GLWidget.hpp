@@ -3,9 +3,10 @@
 
 
 #include <QtOpenGL/QGLWidget>
+#include "normal.hpp"
 #include "vertex.hpp"
 #include "tree.hpp"
-#include "Grid.hpp"
+#include "Grid3D.hpp"
 
 class GLWidget : public QGLWidget {
 
@@ -41,9 +42,10 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *event);
     std::string m_fileName;
+    NormalList normals;
     VertexList vertices;
     KDTree tree;
-    Grid grid;
+    Grid3D grid;
     size_t m_k;
     size_t m_n;
     size_t m_m;

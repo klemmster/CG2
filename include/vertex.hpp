@@ -20,17 +20,23 @@ class Vertex: public vec3f
         Vertex(const vec3f pos);
         Vertex(const float x, const float y, const float z);
         Vertex(const float x, const float y, const float z, const vec3f color);
+        Vertex(const vec3f pos, float w);
+        Vertex(const float x, const float y, const float z, float w);
+        Vertex(const float x, const float y, const float z, const vec3f color, float w);
         virtual ~Vertex();
 
         void draw() const;
         void highlight(const vec3f color = vec3f(1.0, 0.0, 0.0));
         void resetColor();
+        const float& getFunValue() const { return m_W; };
+        void setFunValue(float val) { m_W = val; };
 
     protected:
-    private:
-
-        Vertex() {};
         vec3f m_Color;
+        //Function Value
+        float m_W;
+    private:
+        Vertex() {};
 };
 
 class SortVertex

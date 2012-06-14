@@ -43,7 +43,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories ( ${Boost_LIBRARY_DIRS} )
 
 IF(UNIX AND NOT WIN32)
-    set(CMAKE_CXX_FLAGS "-w -msse4.2 -O3 -march=native -std=c++0x")
+    set(CMAKE_CXX_FLAGS "-w -O3 -march=native -std=c++0x")
     set(CMAKE_CXX_FLAGS_DEBUG "-w -O0 -g -march=native -std=c++0x")
     MESSAGE(STATUS "Use c++0x")
 ELSEIF(APPLE)
@@ -53,6 +53,6 @@ ELSEIF(APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -stdlib=libc++ -g -Wall")
 ENDIF()
 
-add_executable(PointMesh ./src/normal.cpp ./src/Grid.cpp ./src/domain.cpp ./src/limitedPriorityQueue.cpp ./src/hyperRegion.cpp ./src/hyperSphere.cpp ./src/node.cpp ./src/tree.cpp ./src/TokenizedFile.cpp ./src/vertex.cpp ./src/GLWidget.cpp ./src/offLoader.cpp ./src/main.cpp ${MOCFILES} ${headers} )
+add_executable(PointMesh ./src/Grid3D.cpp ./src/normal.cpp ./src/Grid.cpp ./src/domain.cpp ./src/limitedPriorityQueue.cpp ./src/hyperRegion.cpp ./src/hyperSphere.cpp ./src/node.cpp ./src/tree.cpp ./src/TokenizedFile.cpp ./src/vertex.cpp ./src/GLWidget.cpp ./src/offLoader.cpp ./src/main.cpp ${MOCFILES} ${headers} )
 target_link_libraries(PointMesh ${Boost_LIBRARIES} ${GLUT_LIBRARY} ${QT_LIBRARIES} ${OPENGL_LIBRARIES} )
 

@@ -11,22 +11,46 @@
 
 
 Vertex::Vertex(const vec3f pos):
-    vec3f(pos)
+    vec3f(pos),
+    m_Color(vec3f(.6f, .6f, .6f)),
+    m_W(0.0f)
 {
-    m_Color = vec3f(.6, .6, .6);
 }
 
 Vertex::Vertex(const float x, const float y, const float z):
-    vec3f(x, y, z)
+    vec3f(x, y, z),
+    m_Color(vec3f(.6f, .6f, .6f)),
+    m_W(0.0f)
 {
-    m_Color = vec3f(.6, .6, .6);
 }
 
 Vertex::Vertex(const float x, const float y, const float z, const vec3f color):
     vec3f(x, y, z),
-    m_Color(color)
+    m_Color(color),
+    m_W(0.0f)
 {
+}
 
+/* Constructors with function value */
+Vertex::Vertex(const vec3f pos, float w):
+    vec3f(pos),
+    m_W(w),
+    m_Color(vec3f(.6f, .6f, .6f))
+{
+}
+
+Vertex::Vertex(const float x, const float y, const float z, float w):
+    vec3f(x, y, z),
+    m_W(w)
+{
+    m_Color = vec3f(.6, .6, .6);
+}
+
+Vertex::Vertex(const float x, const float y, const float z, const vec3f color, float w):
+    vec3f(x, y, z),
+    m_Color(color),
+    m_W(w)
+{
 }
 
 Vertex::~Vertex()

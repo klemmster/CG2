@@ -12,14 +12,15 @@ typedef shared_ptr<Normal> NormalPtr;
 typedef vector<NormalPtr> NormalList;
 typedef shared_ptr<NormalList> NormalListPtr;
 
-class Normal: vec3f
+class Normal: public vec3f
 {
     public:
         Normal(const vec3f normal);
         Normal(const float dirX, const float dirY, const float dirZ);
         Normal(const float dirX, const float dirY, const float dirZ, const vec3f color);
         virtual ~Normal();
-
+        void flip();
+    
     protected:
     private:
 

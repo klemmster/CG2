@@ -70,12 +70,14 @@ void GLWidget::initializeGL() {
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
-    vertices = loader.readOff(m_fileName);
+    TupleVerticesNormals verticesNormals = loader.readNOff(m_fileName);
+    vertices = std::get<0>(verticesNormals);
+    normals = std::get<1>(verticesNormals);
     readTimer.stop();
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid(tree, 5,5);
+    grid = Grid3D(tree, 5,5,5);
     m_m = 5;
     m_n = 5;
 }
@@ -108,11 +110,11 @@ void GLWidget::paintGL() {
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
     glTranslatef(modelOffsetX, modelOffsetY, modelOffsetZ);
-    if (showTree)
-    {
-        tree.draw();
-    }
-    grid.draw();
+//    if (showTree)
+//    {
+//        tree.draw();
+//    }
+//    grid.draw();
     //glScalef(20, 20, 20);
 
     glDisable(GL_LIGHTING);
@@ -126,6 +128,19 @@ void GLWidget::paintGL() {
     }
 
     glEnd();
+    
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glBegin(GL_LINES);
+    for (size_t i = 0; i < vertices.size(); i++)
+    {
+        VertexPtr vertex = vertices.at(i);
+        NormalPtr normal = normals.at(i);
+        //normal->flip();
+        glVertex3fv((*vertex)._v);
+        glVertex3fv(((*normal) / -30 + (*vertex))._v); 
+    }
+    glEnd();
+    
     glEnable(GL_LIGHTING);
 
 }
@@ -292,7 +307,7 @@ void GLWidget::sigSetN(int n) {
     if (n > 0){
         cout << "Set N to: " << n << "\n";
         m_n = n;
-        grid = Grid(tree, m_m, m_n);
+        //grid = Grid(tree, m_m, m_n);
     }
     updateGL();
 }
@@ -301,7 +316,7 @@ void GLWidget::sigSetM(int m) {
     if (m > 0){
         cout << "Set M to: " << m << "\n";
         m_m = m;
-        grid = Grid(tree, m_m, m_n);
+        //grid = Grid(tree, m_m, m_n);
     }
     updateGL();
 }
