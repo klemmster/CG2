@@ -77,7 +77,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid(tree, 5,5);
+    grid = Grid3D(tree, 5,5,5);
     m_m = 5;
     m_n = 5;
 }
@@ -307,7 +307,7 @@ void GLWidget::sigSetN(int n) {
     if (n > 0){
         cout << "Set N to: " << n << "\n";
         m_n = n;
-        grid = Grid(tree, m_m, m_n);
+        //grid = Grid(tree, m_m, m_n);
     }
     updateGL();
 }
@@ -316,7 +316,7 @@ void GLWidget::sigSetM(int m) {
     if (m > 0){
         cout << "Set M to: " << m << "\n";
         m_m = m;
-        grid = Grid(tree, m_m, m_n);
+        //grid = Grid(tree, m_m, m_n);
     }
     updateGL();
 }

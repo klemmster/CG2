@@ -35,6 +35,8 @@ private:
     float m_MaxX;
     float m_MaxY;
     float m_MaxZ;
+    
+    VertexList m_vertices;
 };
 
 
