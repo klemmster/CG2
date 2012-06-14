@@ -110,11 +110,11 @@ void GLWidget::paintGL() {
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
     glTranslatef(modelOffsetX, modelOffsetY, modelOffsetZ);
-    if (showTree)
-    {
-        tree.draw();
-    }
-    grid.draw();
+//    if (showTree)
+//    {
+//        tree.draw();
+//    }
+//    grid.draw();
     //glScalef(20, 20, 20);
 
     glDisable(GL_LIGHTING);

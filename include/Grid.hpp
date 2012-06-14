@@ -13,10 +13,10 @@ public:
     virtual ~Grid () {};
 
     void approximateLS(VertexList& resultList);
-    void approximateWLS(VertexList& resultList);
+    virtual void approximateWLS(VertexList& resultList);
     void approximateTensor(const size_t k);
     void repeatedApproximation(const size_t k);
-    void draw();
+    virtual void draw();
     void enableQuads();
     void disableQuads();
     void setK(const size_t k);
@@ -25,6 +25,9 @@ public:
     void reapproximateWLS();
     size_t m_k;
 
+protected:
+    float getWendland(const float distance) const;
+    
 private:
 
     VertexPtr getByDeCasteljau(const float weight, const size_t iteration,
@@ -33,8 +36,6 @@ private:
     void drawQuads();
     void resetBaseVertices();
 
-
-    float getWendland(const float distance) const;
     float m_MinX;
     float m_MinY;
     float m_MinZ;

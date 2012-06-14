@@ -7,6 +7,7 @@
 #include "vertex.hpp"
 #include "tree.hpp"
 #include "Grid.hpp"
+#include "Grid3D.hpp"
 
 class GLWidget : public QGLWidget {
 
