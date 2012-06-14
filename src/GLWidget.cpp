@@ -45,7 +45,7 @@ vec3f highlightColor(0.0, 1.0, 0.0);
 void GLWidget::initializeGL() {
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
-    glDisable(GL_COLOR_MATERIAL);
+    glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_BLEND);
     glEnable(GL_POLYGON_SMOOTH);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -53,8 +53,8 @@ void GLWidget::initializeGL() {
 
 //    // Somewhere in the initialization part of your programâ¦
     glEnable(GL_LIGHTING);
-    glDisable(GL_LIGHT0);
-    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT0);
+    //glEnable(GL_LIGHT1);
 //
 //    // Create light components
     GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };

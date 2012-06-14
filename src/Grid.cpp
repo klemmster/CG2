@@ -302,8 +302,7 @@ void Grid::drawQuads(){
         }
 
         //std::cout << " Draw Surface " << std::endl;
-        float colorGrey[] = { 0.9f, 0.9f, 0.9f, 1.0f };
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
+        glColor3f(0.9f, 0.9f, 0.9f);
         for (size_t x = 0; x < width - 1; ++x)
         {
             for (size_t y = 0; y < height - 1; ++y)
@@ -362,8 +361,7 @@ void Grid::drawTriangles(){
         vec3f normal_v1_v2 = normalize(cross( (*vec2) - (*vec1), (*vec1) - (*vec3) ));
         vec3f normal_v3_v2 = normalize(cross( (*vec2) - (*vec3), (*vec3) - (*vec4) ));
 
-        float colorGrey[] = { 0.0f, 0.9f, 0.9f, 1.0f };
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, colorGrey);
+        glColor3f(0.0f, 0.9f, 0.9f);
 
         glBegin(GL_TRIANGLES);
             glNormal3fv(normal_v1_v2._v);
