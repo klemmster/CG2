@@ -22,6 +22,8 @@ using namespace Eigen;
 Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z)
     : m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_dimZ(dim_z)
 {
+    m_radius = 0.03;
+    
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
 
