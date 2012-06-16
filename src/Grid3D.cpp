@@ -16,6 +16,10 @@
 
 #include <math.h>
 #include "Grid3D.hpp"
+#include <Eigen/Core>
+#include <Eigen/Dense>
+
+using namespace Eigen;
 
 Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z)
     : m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_dimZ(dim_z)
@@ -79,9 +83,9 @@ void Grid3D::approximateWLS(VertexList& resultList)
                         0, 0, 0, 0, 0, 0;
         bDimsVecSum << 0, 0, 0, 0, 0, 0;
 
+        VectorXf b(6);
         for(VertexPtr point : list)
         {
-            VectorXf b(6);
             float x = (*point)[0];
             float y = (*point)[1];
             float z = (*point)[2];

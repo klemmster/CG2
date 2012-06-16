@@ -27,7 +27,9 @@ public:
 
 protected:
     float getWendland(const float distance) const;
-    
+    std::vector<Eigen::VectorXf> m_coefficients;
+    float m_radius;
+
 private:
 
     VertexPtr getByDeCasteljau(const float weight, const size_t iteration,
@@ -45,7 +47,6 @@ private:
 
     VertexList m_vertices;
     VertexList m_interpolVertices;
-    std::vector<Eigen::VectorXf> m_coefficients;
     std::vector<vec3f> m_quadNormals;
 
     KDTree m_tree;
@@ -53,7 +54,6 @@ private:
     size_t m_dimY;
 
     float m_h;
-    float m_radius;
     bool m_showQuads;
     bool m_showTriangles;
 
