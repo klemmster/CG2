@@ -63,7 +63,70 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
 
 void Grid3D::approximateWLS(VertexList& resultList)
 {
+    //Single Approximation for every Grid point
+    for(VertexPtr pointDesired: resultList)
+    {
+        //Get Points used for this approximation
+        //TODO: Should be a good automatic? radius -- maybe gridsize related
+        VertexList list = m_tree.findInRadius(pointDesired, m_radius);
+        MatrixXf bDimsMatSum(6,6);
+        VectorXf bDimsVecSum(6);
+        bDimsMatSum <<  0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0;
+        bDimsVecSum << 0, 0, 0, 0, 0, 0;
 
+        for(VertexPtr point : list)
+        {
+            VectorXf b(6);
+            float x = (*point)[0];
+            float y = (*point)[1];
+            float z = (*point)[2];
+            b << 1, x, y, x*x, x*y, y*y;
+            MatrixXf bDims(6,6);
+            bDims = b*b.transpose();
+            vec3f distVec = (*pointDesired) - (*point);
+            float dist = norm(distVec);
+            float wendFac = getWendland(dist);
+            bDimsMatSum += (wendFac * bDims);
+            bDimsVecSum += (wendFac * b*z);
+        }
+
+        // constant polynom basis
+        /**
+        VectorXf b(1);
+        float x = (*pointDesired)[0];
+        float y = (*pointDesired)[1];
+        float z = (*pointDesired)[2];
+        b << 1;
+        **/
+
+        // linear polynom basis
+        /**
+        VectorXf b(4);
+        float x = (*pointDesired)[0];
+        float y = (*pointDesired)[1];
+        float z = (*pointDesired)[2];
+        b << 1, x, y, z;
+        **/
+
+        // qadratic polynom basis
+        /**
+        VectorXf b(10);
+        float x = (*pointDesired)[0];
+        float y = (*pointDesired)[1];
+        float z = (*pointDesired)[2];
+        b << 1, x, y, z, x*x, x*y, x*z, y*y, y*z, z*z;
+        **/
+
+        VectorXf c(6);
+        c = bDimsMatSum.inverse() * bDimsVecSum;
+        (*pointDesired)[2] = b.dot(c);
+        m_coefficients.push_back(c);
+    }
 }
 
 void Grid3D::draw()
