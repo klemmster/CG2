@@ -114,7 +114,7 @@ void GLWidget::paintGL() {
 //    {
 //        tree.draw();
 //    }
-//    grid.draw();
+    grid.draw();
     //glScalef(20, 20, 20);
 
     glDisable(GL_LIGHTING);
@@ -128,7 +128,7 @@ void GLWidget::paintGL() {
     }
 
     glEnd();
-    
+
     glColor3f(0.0f, 1.0f, 0.0f);
     glBegin(GL_LINES);
     for (size_t i = 0; i < vertices.size(); i++)
@@ -137,10 +137,10 @@ void GLWidget::paintGL() {
         NormalPtr normal = normals.at(i);
         //normal->flip();
         glVertex3fv((*vertex)._v);
-        glVertex3fv(((*normal) / -30 + (*vertex))._v); 
+        glVertex3fv(((*normal) / -30 + (*vertex))._v);
     }
     glEnd();
-    
+
     glEnable(GL_LIGHTING);
 
 }
