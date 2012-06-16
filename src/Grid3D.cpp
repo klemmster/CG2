@@ -17,6 +17,8 @@
 #include "Grid3D.hpp"
 #include <math.h>
 
+using namespace Eigen;
+
 Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z)
     : m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_dimZ(dim_z)
 {
@@ -76,12 +78,12 @@ void Grid3D::approximateWLS(VertexList& resultList)
         //Get Points used for this approximation
         //TODO: Should be a good automatic? radius -- maybe gridsize related
         VertexList list = m_tree.findInRadius(pointDesired, m_radius);
-        Eigen::MatrixXf bDimsMatSum = Eigen::MatrixXf::Zero(k,k);
-        Eigen::VectorXf bDimsVecSum = Eigen::VectorXf::Zero(k);
+        MatrixXf bDimsMatSum = MatrixXf::Zero(k,k);
+        VectorXf bDimsVecSum = VectorXf::Zero(k);
 
+        VectorXf b(k);
         for(VertexPtr point : list)
         {
-            Eigen::VectorXf b(k);
             float x = (*point)[0];
             float y = (*point)[1];
             float z = (*point)[2];
@@ -95,14 +97,13 @@ void Grid3D::approximateWLS(VertexList& resultList)
             bDimsVecSum += (wendFac * b*z);
         }
 
-        Eigen::VectorXf b(k);
         float x = (*pointDesired)[0];
         float y = (*pointDesired)[1];
         b << 1, x, y, x*x, x*y, y*y;
 
         // constant polynom basis
         /**
-        Eigen::VectorXf b(1);
+        VectorXf b(1);
         float x = (*pointDesired)[0];
         float y = (*pointDesired)[1];
         float z = (*pointDesired)[2];
@@ -111,7 +112,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
 
         // linear polynom basis
         /**
-        Eigen::VectorXf b(4);
+        VectorXf b(4);
         float x = (*pointDesired)[0];
         float y = (*pointDesired)[1];
         float z = (*pointDesired)[2];
@@ -120,14 +121,14 @@ void Grid3D::approximateWLS(VertexList& resultList)
 
         // quadratic polynom basis
         /**
-        Eigen::VectorXf b(10);
+        VectorXf b(10);
         float x = (*pointDesired)[0];
         float y = (*pointDesired)[1];
         float z = (*pointDesired)[2];
         b << 1, x, y, z, x*x, x*y, x*z, y*y, y*z, z*z;
         **/
 
-        Eigen::VectorXf c(k);
+        VectorXf c(k);
         c = bDimsMatSum.inverse() * bDimsVecSum;
         (*pointDesired)[2] = b.dot(c);
         m_coefficients.push_back(c);
