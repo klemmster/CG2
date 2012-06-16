@@ -34,19 +34,19 @@ TupleVerticesNormals OffLoader::readNOff(const std::string& fileName)
     TokenizedFile file(fileName);
     VertexList vertices;
     NormalList normals;
-    
+
     if(parseFirstLine(file.next())) {
         if(parseSecondLine(file.next())) {
             for(unsigned int i=0; i<m_NumVertices; i++) {
-                
+
                 tuple<VertexPtr, NormalPtr> tuVerNorm = parseVertexAndNormal(file.next());
-                
+
                 vertices.push_back(get<0>(tuVerNorm));
                 normals.push_back(get<1>(tuVerNorm));
             }
         }
     }
-            
+
     return TupleVerticesNormals(vertices, normals);
 }
 
@@ -90,14 +90,14 @@ const VertexPtr OffLoader::parseVertex(const Tokens& tokens) const
 const tuple<VertexPtr, NormalPtr> OffLoader::parseVertexAndNormal(const Tokens& tokens) const
 {
     assert(tokens.size() == 6);
-    
+
     float x = boost::lexical_cast<float>(tokens.at(0));
     float y = boost::lexical_cast<float>(tokens.at(1));
     float z = boost::lexical_cast<float>(tokens.at(2));
-    
+
     float dirX = boost::lexical_cast<float>(tokens.at(3));
     float dirY = boost::lexical_cast<float>(tokens.at(4));
     float dirZ = boost::lexical_cast<float>(tokens.at(5));
-    return tuple<VertexPtr, NormalPtr>(VertexPtr(new Vertex(x, y, z)), NormalPtr(new Normal(dirX, dirY, dirZ)));
+    return tuple<VertexPtr, NormalPtr>(VertexPtr(new Vertex(x, y, z)), NormalPtr(new Normal( normalize( vec3f(dirX, dirY, dirZ) ) )));
 }
 

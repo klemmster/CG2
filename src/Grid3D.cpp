@@ -23,13 +23,14 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
 
-    m_MinX = (*minm_vertices.at(0))[0];
-    m_MinY = (*minm_vertices.at(1))[1];
-    m_MinZ = (*minm_vertices.at(2))[2];
+    // minimal greater bounding box
+    m_MinX = (*minm_vertices.at(0))[0] - 0.01;
+    m_MinY = (*minm_vertices.at(1))[1] - 0.01;
+    m_MinZ = (*minm_vertices.at(2))[2] - 0.01;
 
-    m_MaxX = (*maxm_vertices.at(0))[0];
-    m_MaxY = (*maxm_vertices.at(1))[1];
-    m_MaxZ = (*maxm_vertices.at(2))[2];
+    m_MaxX = (*maxm_vertices.at(0))[0] + 0.01;
+    m_MaxY = (*maxm_vertices.at(1))[1] + 0.01;
+    m_MaxZ = (*maxm_vertices.at(2))[2] + 0.01;
 
     float stepX = abs(m_MaxX - m_MinX) / dim_x;
     float stepY = abs(m_MaxY - m_MinY) / dim_y;

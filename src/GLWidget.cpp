@@ -77,7 +77,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid3D(tree, 5,5,5);
+    grid = Grid3D(tree, 10,10,10);
     m_m = 5;
     m_n = 5;
 }
@@ -136,6 +136,7 @@ void GLWidget::paintGL() {
         VertexPtr vertex = vertices.at(i);
         NormalPtr normal = normals.at(i);
         //normal->flip();
+
         glVertex3fv((*vertex)._v);
         glVertex3fv(((*normal) / -30 + (*vertex))._v);
     }

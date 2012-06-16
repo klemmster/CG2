@@ -21,7 +21,9 @@ Normal::Normal(const float dirX, const float dirY, const float dirZ, const vec3f
 
 void Normal::flip()
 {
-    vec3f(-x(), -y(), -z());
+    _v[0] = -_v[0];
+    _v[1] = -_v[1];
+    _v[2] = -_v[2];
 }
 
 Normal::~Normal()
