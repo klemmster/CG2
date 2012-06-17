@@ -33,9 +33,11 @@ GLfloat rotationZ = 0.0f;
 GLfloat positionZ = -30.0f;
 GLfloat positionY = 0.0f;
 GLfloat positionX = 0.0f;
+GLfloat zoom = 0.6f;
 GLfloat modelOffsetX = 0.0f;
 GLfloat modelOffsetY = 0.0f;
 GLfloat modelOffsetZ = 0.0f;
+GLfloat screenRatio;
 
 unsigned int kNearest = 50;
 float radius = 40;
@@ -89,11 +91,8 @@ void GLWidget::resizeGL(int w, int h) {
     //gluOrtho2D(0, w, 0, h); // set origin to bottom left corner
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    screenRatio = (GLfloat)w / (GLfloat)h;
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(60, (GLfloat)w / (GLfloat)h, 0.1f, 10000.0f);
-    gluLookAt(0, 0, 1, 0, 0, 0, 0.0, 1.0, 0.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -104,7 +103,16 @@ void GLWidget::paintGL() {
     glColor3f(1,0,0);
     glLoadIdentity();
 
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    if(zoom>1)
+		zoom = 1;
+    if(zoom<0)
+		zoom = 0;
+	float uZoom = zoom*zoom;
+    gluPerspective(1+uZoom*60, screenRatio, 0.1f, 10000.0f);
     gluLookAt(positionX, positionY, positionZ, 0, 0, 0, 0, 1, 0);
+   
 
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
@@ -166,7 +174,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event){
-    positionZ += event->delta()/100.0;
+    //positionZ += event->delta()/100.0;
+    zoom -= event->delta()*0.00015f;
     updateGL();
 }
 
