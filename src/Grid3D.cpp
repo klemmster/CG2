@@ -23,7 +23,7 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     : m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_dimZ(dim_z)
 {
     m_radius = 0.03;
-    
+
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
 
@@ -35,6 +35,10 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     m_MaxX = (*maxm_vertices.at(0))[0] + 0.01;
     m_MaxY = (*maxm_vertices.at(1))[1] + 0.01;
     m_MaxZ = (*maxm_vertices.at(2))[2] + 0.01;
+
+    m_diagLength = sqrt(pow((m_MaxX-m_MinX), 2) +
+                        pow((m_MaxY-m_MinY),2) +
+                        pow((m_MaxZ - m_MinZ),2));
 
     float stepX = abs(m_MaxX - m_MinX) / dim_x;
     float stepY = abs(m_MaxY - m_MinY) / dim_y;
@@ -52,7 +56,7 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
         {
             for (size_t x = 0; x <= m_dimX; x++)
             {
-                m_vertices.push_back(VertexPtr(new Vertex(xPos, yPos, zPos, color, 0)));
+                m_GridVertices.push_back(VertexPtr(new Vertex(xPos, yPos, zPos, color, 0)));
                 xPos += stepX;
             }
 
@@ -64,8 +68,19 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
         yPos = m_MinY;
     }
 
-    approximateWLS(m_vertices);
+    generateVertices();
+    //approximateWLS(m_GridVertices);
  }
+
+void Grid3D::generateVertices()
+    /* Create 2 more Points per point */
+{
+    for(VertexPtr vertex: m_tree.getVertices()){
+        double epsilon;
+
+    }
+
+}
 
 void Grid3D::approximateWLS(VertexList& resultList)
 {
@@ -142,9 +157,9 @@ void Grid3D::draw()
     glDisable(GL_LIGHTING);
     glColor3f(0, 0, 1);
 
-    for (size_t i = 0; i < m_vertices.size(); i++)
+    for (size_t i = 0; i < m_GridVertices.size(); i++)
     {
-        VertexPtr point = m_vertices.at(i);
+        VertexPtr point = m_GridVertices.at(i);
 
         glBegin(GL_POINTS);
             glVertex3fv(point->_v);

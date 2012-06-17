@@ -23,6 +23,9 @@ public:
     virtual void approximateWLS(VertexList& resultList);
     virtual void draw();
 
+protected:
+    void generateVertices();
+
 private:
     unsigned int factorial(const int num);
 
@@ -31,6 +34,7 @@ private:
     size_t m_dimY;
     size_t m_dimZ;
 
+    float m_diagLength;
     float m_MinX;
     float m_MinY;
     float m_MinZ;
@@ -38,7 +42,8 @@ private:
     float m_MaxY;
     float m_MaxZ;
 
-    VertexList m_vertices;
+    VertexList m_GridVertices;
+    VertexList m_generatedPoints;
 };
 
 
