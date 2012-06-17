@@ -256,19 +256,19 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		updateGL();
 		break;
     case Qt::Key_Left:
-        rotationX -= 1.0;
+        rotationY -= 4.0;
         updateGL();
         break;
     case Qt::Key_Right:
-        rotationX += 1.0;
+        rotationY += 4.0;
         updateGL();
         break;
     case Qt::Key_Up:
-        rotationY += 1.0;
+        rotationX += 4.0;
         updateGL();
         break;
     case Qt::Key_Down:
-        rotationY -= 1.0;
+        rotationX -= 4.0;
         updateGL();
         break;
     case Qt::Key_W:
@@ -303,6 +303,12 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		camAlpha = 0;
 		camBeta = 0;
 		zoom = 0.6f;
+		rotationX = 0;
+		rotationY = 0;
+		rotationZ = 0;
+		modelOffsetX = 0;
+		modelOffsetY = 0;
+		modelOffsetZ = 0;
 		updateGL();
 		break;
     default:
