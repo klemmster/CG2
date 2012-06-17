@@ -30,9 +30,16 @@ QPoint lastPos;
 GLfloat rotationX = 0.0f;
 GLfloat rotationY = 0.0f;
 GLfloat rotationZ = 0.0f;
-GLfloat positionZ = -30.0f;
+GLfloat positionZ = 0.0f;
 GLfloat positionY = 0.0f;
 GLfloat positionX = 0.0f;
+GLfloat camDistance = 5.0f;
+GLfloat scale = 1;
+GLfloat eyeDirX = 0;
+GLfloat eyeDirY = 0;
+GLfloat eyeDirZ = 0;
+GLfloat camAlpha = 0;
+GLfloat camBeta = 0;
 GLfloat zoom = 0.6f;
 GLfloat modelOffsetX = 0.0f;
 GLfloat modelOffsetY = 0.0f;
@@ -109,15 +116,41 @@ void GLWidget::paintGL() {
 		zoom = 1;
     if(zoom<0)
 		zoom = 0;
+
+	if(camDistance<0.02f)
+		camDistance = 0.02f;
+	if(camDistance>100)
+		camDistance = 100;
+
+	if(camBeta>3.1f/2)
+		camBeta = 3.1f/2;
+	if(camBeta<-3.1f/2)
+		camBeta = -3.1f/2;
+
+	if(scale < 0.05f)
+		scale = 0.05f;
+	if(scale > 30)
+		scale = 30;
+
 	float uZoom = zoom*zoom;
     gluPerspective(1+uZoom*60, screenRatio, 0.1f, 10000.0f);
-    gluLookAt(positionX, positionY, positionZ, 0, 0, 0, 0, 1, 0);
+
+	eyeDirX = sin(camAlpha) * cos(camBeta);
+	eyeDirY = sin(camBeta);
+	eyeDirZ = -cos(camAlpha) * cos(camBeta);
+
+    gluLookAt(
+		eyeDirX*camDistance+positionX, eyeDirY*camDistance+positionY, eyeDirZ*camDistance+positionZ, 
+		positionX, positionY, positionZ, 
+		0, 1, 0
+		);
    
 
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
     glTranslatef(modelOffsetX, modelOffsetY, modelOffsetZ);
+	glScalef(scale,scale,scale);
 //    if (showTree)
 //    {
 //        tree.draw();
@@ -159,14 +192,44 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
     setFocus();
 }
 
+void camShift(float shiftX,float shiftY) {
+	float eyeCrossLength = sqrt(eyeDirX*eyeDirX + eyeDirZ*eyeDirZ);
+	float eyeUpX = -eyeDirZ / eyeCrossLength;
+	float eyeUpY = 0;
+	float eyeUpZ = eyeDirX / eyeCrossLength;
+	float crossUpX = eyeUpY * eyeDirZ - eyeUpZ * eyeDirY;
+	float crossUpY = eyeUpZ * eyeDirX - eyeUpX * eyeDirZ;
+	float crossUpZ = eyeUpX * eyeDirY - eyeUpY * eyeDirX;
+	positionX += shiftX * eyeUpX + shiftY * crossUpX;
+	positionY += shiftX * eyeUpY + shiftY * crossUpY;
+	positionZ += shiftX * eyeUpZ + shiftY * crossUpZ;
+}
+
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 
     GLfloat dx = (GLfloat)(event->x() - lastPos.x()) / width();
     GLfloat dy = (GLfloat)(event->y() - lastPos.y()) / height();
 
+if(false)
     if (event->buttons() & Qt::LeftButton) {
         rotationX += 180 * dy;
         rotationY += 180 * dx;
+        updateGL();
+    }
+
+    if (event->buttons() & Qt::LeftButton) {	
+        camAlpha += 2 * dx;
+        camBeta += 2 * dy;
+        updateGL();
+    }
+
+    if (event->buttons() & Qt::RightButton) {	
+        camDistance += 3.5f * dy;
+        updateGL();
+    }
+
+    if (event->buttons() & Qt::MiddleButton) {
+		camShift(dx,dy);
         updateGL();
     }
 
@@ -183,36 +246,45 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {
     case Qt::Key_Escape:
         break;
+
+	case Qt::Key_Plus:
+		scale += 0.1f;
+		updateGL();
+		break;
+	case Qt::Key_Minus:
+		scale -= 0.1f;
+		updateGL();
+		break;
     case Qt::Key_Left:
-        positionX -= 1.0;
+        rotationX -= 1.0;
         updateGL();
         break;
     case Qt::Key_Right:
-        positionX += 1.0;
+        rotationX += 1.0;
         updateGL();
         break;
     case Qt::Key_Up:
-        positionY += 1.0;
+        rotationY += 1.0;
         updateGL();
         break;
     case Qt::Key_Down:
-        positionY -= 1.0;
+        rotationY -= 1.0;
         updateGL();
         break;
     case Qt::Key_W:
-        modelOffsetY += 1.0;
+        camShift(0,-0.05f);
         updateGL();
         break;
     case Qt::Key_S:
-        modelOffsetY -= 1.0;
+        camShift(0,0.05f);
         updateGL();
         break;
     case Qt::Key_A:
-        modelOffsetX -= 1.0;
+        camShift(0.05f,0);
         updateGL();
         break;
     case Qt::Key_D:
-        modelOffsetX += 1.0;
+        camShift(-0.05f,0);
         updateGL();
         break;
     case Qt::Key_Q:
@@ -223,6 +295,16 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         modelOffsetZ += 1.0;
         updateGL();
         break;
+	case Qt::Key_C:
+		positionX = 0;
+		positionY = 0;
+		positionZ = 0;
+		camDistance = 5;
+		camAlpha = 0;
+		camBeta = 0;
+		zoom = 0.6f;
+		updateGL();
+		break;
     default:
         event->ignore();
         break;
