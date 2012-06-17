@@ -10,6 +10,8 @@ using namespace std;
 class Vertex;
 typedef shared_ptr< Vertex > VertexPtr;
 typedef vector< VertexPtr > VertexList;
+typedef shared_ptr< VertexList > VertexListPtr;
+typedef vector< VertexListPtr > VertexListPtrVector;
 
 class Vertex: public vec3f
 {

@@ -43,7 +43,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories ( ${Boost_LIBRARY_DIRS} )
 
 IF(UNIX AND NOT WIN32)
-    set(CMAKE_CXX_FLAGS "-w -O3 -march=native -std=c++0x")
+    set(CMAKE_CXX_FLAGS "-w -msse4.2 -O3 -march=native -std=c++0x")
     set(CMAKE_CXX_FLAGS_DEBUG "-w -O0 -g -march=native -std=c++0x")
     MESSAGE(STATUS "Use c++0x")
 ELSEIF(APPLE)

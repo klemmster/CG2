@@ -17,14 +17,22 @@ public:
     void approximateTensor(const size_t k);
     void repeatedApproximation(const size_t k);
     void draw();
-    void toggleQuads();
+    void enableQuads();
+    void disableQuads();
+    void setK(const size_t k);
+    void setH(const float);
+    void setRadius(const float radius);
+    void reapproximateWLS();
+    size_t m_k;
 
 private:
 
-    VertexPtr getByDeCasteljau(const float weight,const size_t iteration,
-            const size_t pointNum, const VertexList srcList);
+    VertexPtr getByDeCasteljau(const float weight, const size_t iteration,
+            const size_t pointNum, const VertexList srcList, size_t count, VertexList& tangentsList);
     void drawTriangles();
     void drawQuads();
+    void resetBaseVertices();
+
 
     float getWendland(const float distance) const;
     float m_MinX;
@@ -42,8 +50,11 @@ private:
     KDTree m_tree;
     size_t m_dimX;
     size_t m_dimY;
-    size_t m_k;
+
+    float m_h;
+    float m_radius;
     bool m_showQuads;
+    bool m_showTriangles;
 
 };
 

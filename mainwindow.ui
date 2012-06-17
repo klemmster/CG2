@@ -30,7 +30,7 @@
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="2" column="1">
+      <item row="3" column="1">
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -114,6 +114,46 @@
            </item>
           </layout>
          </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>m:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBox"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>x n:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="spinBox_2"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="title">
+         <string>Repeated Approx</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QCheckBox" name="checkBox">
+           <property name="text">
+            <string>Repeated Approx</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
@@ -136,6 +176,9 @@
     <slot>sigSetH(double)</slot>
     <slot>sigShowBezier(bool)</slot>
     <slot>sigSetK(int)</slot>
+    <slot>sigSetM(int)</slot>
+    <slot>sigSetN(int)</slot>
+    <slot>sigShowRepeated(bool)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -152,8 +195,8 @@
      <y>51</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1045</x>
-     <y>66</y>
+     <x>1041</x>
+     <y>78</y>
     </hint>
    </hints>
   </connection>
@@ -168,8 +211,8 @@
      <y>85</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1044</x>
-     <y>105</y>
+     <x>1041</x>
+     <y>117</y>
     </hint>
    </hints>
   </connection>
@@ -200,8 +243,8 @@
      <y>184</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1062</x>
-     <y>208</y>
+     <x>1041</x>
+     <y>220</y>
     </hint>
    </hints>
   </connection>
@@ -216,8 +259,56 @@
      <y>220</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1092</x>
-     <y>263</y>
+     <x>1041</x>
+     <y>275</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>glWidget</receiver>
+   <slot>sigSetM(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1120</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>981</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>glWidget</receiver>
+   <slot>sigSetN(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1218</x>
+     <y>251</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1032</x>
+     <y>331</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>glWidget</receiver>
+   <slot>sigShowRepeated(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1083</x>
+     <y>328</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1015</x>
+     <y>406</y>
     </hint>
    </hints>
   </connection>
