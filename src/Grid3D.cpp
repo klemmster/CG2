@@ -76,7 +76,8 @@ void Grid3D::generateVertices()
     /* Create 2 more Points per point */
 {
     for(VertexPtr vertex: m_tree.getVertices()){
-        double epsilon;
+        double epsilon = 0.01 * m_diagLength;
+
 
     }
 

@@ -72,9 +72,7 @@ void GLWidget::initializeGL() {
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
-    TupleVerticesNormals verticesNormals = loader.readNOff(m_fileName);
-    vertices = std::get<0>(verticesNormals);
-    normals = std::get<1>(verticesNormals);
+    vertices = loader.readOff(m_fileName);
     readTimer.stop();
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
@@ -112,7 +110,7 @@ void GLWidget::paintGL() {
 	float uZoom = zoom*zoom;
     gluPerspective(1+uZoom*60, screenRatio, 0.1f, 10000.0f);
     gluLookAt(positionX, positionY, positionZ, 0, 0, 0, 0, 1, 0);
-   
+
 
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
@@ -142,7 +140,7 @@ void GLWidget::paintGL() {
     for (size_t i = 0; i < vertices.size(); i++)
     {
         VertexPtr vertex = vertices.at(i);
-        NormalPtr normal = normals.at(i);
+        NormalPtr normal = vertex->getNormal();
         //normal->flip();
 
         glVertex3fv((*vertex)._v);
