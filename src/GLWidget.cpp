@@ -14,6 +14,8 @@
 #include "offLoader.hpp"
 #include "stopwatch.hpp"
 
+#define SHIFT_SPEED 0.05f
+
 GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent){
     setMouseTracking(true);
@@ -205,6 +207,12 @@ void camShift(float shiftX,float shiftY) {
 	positionZ += shiftX * eyeUpZ + shiftY * crossUpZ;
 }
 
+void camShiftZ(float shift) {
+	positionX += shift * eyeDirX;
+	positionY += shift * eyeDirY;
+	positionZ += shift * eyeDirZ;
+}
+
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 
     GLfloat dx = (GLfloat)(event->x() - lastPos.x()) / width();
@@ -218,8 +226,8 @@ if(false)
     }
 
     if (event->buttons() & Qt::LeftButton) {	
-        camAlpha += 2 * dx;
-        camBeta += 2 * dy;
+        camAlpha += 4 * dx;
+        camBeta += 3 * dy;
         updateGL();
     }
 
@@ -272,27 +280,27 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         updateGL();
         break;
     case Qt::Key_W:
-        camShift(0,-0.05f);
+        camShift(0,SHIFT_SPEED);
         updateGL();
         break;
     case Qt::Key_S:
-        camShift(0,0.05f);
+        camShift(0,-SHIFT_SPEED);
         updateGL();
         break;
     case Qt::Key_A:
-        camShift(0.05f,0);
+        camShift(SHIFT_SPEED,0);
         updateGL();
         break;
     case Qt::Key_D:
-        camShift(-0.05f,0);
+        camShift(-SHIFT_SPEED,0);
         updateGL();
         break;
     case Qt::Key_Q:
-        modelOffsetZ -= 1.0;
+        camShiftZ(-SHIFT_SPEED);
         updateGL();
         break;
     case Qt::Key_E:
-        modelOffsetZ += 1.0;
+        camShiftZ(SHIFT_SPEED);
         updateGL();
         break;
 	case Qt::Key_C:
@@ -309,6 +317,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		modelOffsetX = 0;
 		modelOffsetY = 0;
 		modelOffsetZ = 0;
+		scale = 1;
 		updateGL();
 		break;
     default:
