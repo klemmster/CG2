@@ -21,6 +21,7 @@ typedef shared_ptr< thread > threadPtr;
 #include <float.h>
 #include "stopwatch.hpp"
 KDTree::KDTree(const VertexList vertices, const size_t dimensions):
+    m_origVertices(vertices),
     m_K(dimensions)
 {
 

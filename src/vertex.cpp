@@ -24,6 +24,14 @@ Vertex::Vertex(const float x, const float y, const float z):
 {
 }
 
+Vertex::Vertex(const float x, const float y, const float z, NormalPtr normal):
+    vec3f(x, y, z),
+    m_Color(vec3f(.6f, .6f, .6f)),
+    m_NormalPtr(normal),
+    m_W(0.0f)
+{
+}
+
 Vertex::Vertex(const float x, const float y, const float z, const vec3f color):
     vec3f(x, y, z),
     m_Color(color),

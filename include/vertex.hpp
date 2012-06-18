@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include "vec.hpp"
+#include "normal.hpp"
 
 using namespace std;
 
@@ -19,6 +20,7 @@ class Vertex: public vec3f
         /** Default constructor */
         Vertex(const vec3f pos);
         Vertex(const float x, const float y, const float z);
+        Vertex(const float x, const float y, const float z, NormalPtr normal);
         Vertex(const float x, const float y, const float z, const vec3f color);
         Vertex(const vec3f pos, float w);
         Vertex(const float x, const float y, const float z, float w);
@@ -30,9 +32,11 @@ class Vertex: public vec3f
         void resetColor();
         const float& getFunValue() const { return m_W; };
         void setFunValue(float val) { m_W = val; };
+        NormalPtr getNormal() const { return m_NormalPtr; }
 
     protected:
         vec3f m_Color;
+        NormalPtr m_NormalPtr;
         //Function Value
         float m_W;
     private:
