@@ -142,7 +142,7 @@ void GLWidget::paintGL() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 	float uZoom = zoom*zoom;
-    gluPerspective(1+uZoom*60, screenRatio, 0.1f, 10000.0f);
+    gluPerspective(1+uZoom*60, screenRatio, 0.1f, 1000.0f);
 
 
 	//Camera position/angle
@@ -153,17 +153,20 @@ void GLWidget::paintGL() {
 	eyeDirY = sin(camBeta);
 	eyeDirZ = -cos(camAlpha) * cos(camBeta);
 
+	float eyeX = eyeDirX*camDistance+positionX;
+	float eyeY = eyeDirY*camDistance+positionY;
+	float eyeZ = eyeDirZ*camDistance+positionZ;
+
     gluLookAt(
-		eyeDirX*camDistance+positionX, 
-		eyeDirY*camDistance+positionY, 
-		eyeDirZ*camDistance+positionZ, 
+		eyeX, eyeY, eyeZ, 
 		positionX, positionY, positionZ, 
 		0, 1, 0
 		);
-   
+
+	//Call ray casting
 	if(doRayCasting) {
 
-		rayCaster.cast(grid);
+		rayCaster.cast(grid,eyeX,eyeY,eyeZ);
 		glEnable(GL_LIGHTING);
 		doRayCasting = false;
 		return;

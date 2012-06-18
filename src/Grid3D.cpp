@@ -181,3 +181,8 @@ unsigned int Grid3D::factorial(const int num)
 
     return result;
 }
+
+// TODO PLACEHOLDER, REPLACE ME!
+double Grid3D::getImplicitFunctionValue(float x,float y,float z) {
+	return x*x*4 + y*y*6 + z*z*8 - 1;
+}

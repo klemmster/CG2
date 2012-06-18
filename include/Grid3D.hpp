@@ -22,6 +22,7 @@ public:
 
     virtual void approximateWLS(VertexList& resultList);
     virtual void draw();
+	virtual double getImplicitFunctionValue(float x,float y,float z);
 
 protected:
     void generateVertices();
