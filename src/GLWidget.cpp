@@ -13,6 +13,7 @@
 #include "GLWidget.hpp"
 #include "offLoader.hpp"
 #include "stopwatch.hpp"
+#include "RayCaster.hpp"
 
 #define SHIFT_SPEED 0.05f
 
@@ -47,6 +48,10 @@ GLfloat modelOffsetX = 0.0f;
 GLfloat modelOffsetY = 0.0f;
 GLfloat modelOffsetZ = 0.0f;
 GLfloat screenRatio;
+
+//sry that its global, but so many other variables are global as well ^^
+RayCaster rayCaster;
+bool doRayCasting = false;
 
 unsigned int kNearest = 50;
 float radius = 40;
@@ -89,6 +94,8 @@ void GLWidget::initializeGL() {
     grid = Grid3D(tree, 10,10,10);
     m_m = 5;
     m_n = 5;
+
+
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -99,6 +106,7 @@ void GLWidget::resizeGL(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     screenRatio = (GLfloat)w / (GLfloat)h;
+	rayCaster.refreshViewport();
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -108,10 +116,8 @@ void GLWidget::paintGL() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3f(1,0,0);
-    glLoadIdentity();
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+	//clamp camera values
     if(zoom>1)
 		zoom = 1;
     if(zoom<0)
@@ -132,19 +138,36 @@ void GLWidget::paintGL() {
 	if(scale > 30)
 		scale = 30;
 
+	//Zoom
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 	float uZoom = zoom*zoom;
     gluPerspective(1+uZoom*60, screenRatio, 0.1f, 10000.0f);
+
+
+	//Camera position/angle
+	glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
 	eyeDirX = sin(camAlpha) * cos(camBeta);
 	eyeDirY = sin(camBeta);
 	eyeDirZ = -cos(camAlpha) * cos(camBeta);
 
     gluLookAt(
-		eyeDirX*camDistance+positionX, eyeDirY*camDistance+positionY, eyeDirZ*camDistance+positionZ, 
+		eyeDirX*camDistance+positionX, 
+		eyeDirY*camDistance+positionY, 
+		eyeDirZ*camDistance+positionZ, 
 		positionX, positionY, positionZ, 
 		0, 1, 0
 		);
    
+	if(doRayCasting) {
+
+		rayCaster.cast(grid);
+		glEnable(GL_LIGHTING);
+		doRayCasting = false;
+		return;
+	}
 
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
@@ -206,22 +229,15 @@ void camShift(float shiftX,float shiftY) {
 }
 
 void camShiftZ(float shift) {
-	positionX += shift * eyeDirX;
-	positionY += shift * eyeDirY;
-	positionZ += shift * eyeDirZ;
+	positionX -= shift * eyeDirX;
+	positionY -= shift * eyeDirY;
+	positionZ -= shift * eyeDirZ;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 
     GLfloat dx = (GLfloat)(event->x() - lastPos.x()) / width();
     GLfloat dy = (GLfloat)(event->y() - lastPos.y()) / height();
-
-if(false)
-    if (event->buttons() & Qt::LeftButton) {
-        rotationX += 180 * dy;
-        rotationY += 180 * dx;
-        updateGL();
-    }
 
     if (event->buttons() & Qt::LeftButton) {	
         camAlpha += 4 * dx;
@@ -318,6 +334,9 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		scale = 1;
 		updateGL();
 		break;
+	case Qt::Key_R:
+		doRayCasting = true;
+		updateGL();
     default:
         event->ignore();
         break;
