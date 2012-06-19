@@ -72,6 +72,20 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     //approximateWLS(m_GridVertices);
  }
 
+int Grid3D::getIndex(int idX,int idY,int idZ) {
+	if(idX<0 || idX>=m_dimX || idX<0 || idX>=m_dimX || idX<0 || idX>=m_dimX)
+		return -1; 
+	return idZ*m_dimX*m_dimY + idY*m_dimX%m_dimZ + idX%m_dimX;
+}
+
+shared_ptr<Vertex> Grid3D::getVertex(int idX,int idY,int idZ) {
+	int index = getIndex(idX,idY,idZ);
+	if(index<0)
+		return NULL;
+	else
+		return m_GridVertices.at(index);
+}
+
 void Grid3D::generateVertices()
     /* Create 2 more Points per point */
 {

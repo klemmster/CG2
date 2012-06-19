@@ -24,6 +24,9 @@ public:
     virtual void draw();
 	virtual double getImplicitFunctionValue(float x,float y,float z);
 
+	int getIndex(int idX,int idY,int idZ);
+	shared_ptr<Vertex> getVertex(int idX,int idY,int idZ);
+
 protected:
     void generateVertices();
 

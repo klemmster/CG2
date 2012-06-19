@@ -125,16 +125,16 @@ void GLWidget::paintGL() {
 
 	if(camDistance<0.02f)
 		camDistance = 0.02f;
-	if(camDistance>100)
-		camDistance = 100;
+	if(camDistance>1000)
+		camDistance = 1000;
 
 	if(camBeta>3.1f/2)
 		camBeta = 3.1f/2;
 	if(camBeta<-3.1f/2)
 		camBeta = -3.1f/2;
 
-	if(scale < 0.05f)
-		scale = 0.05f;
+	if(scale < 0.005f)
+		scale = 0.005f;
 	if(scale > 30)
 		scale = 30;
 
