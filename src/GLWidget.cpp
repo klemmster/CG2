@@ -90,7 +90,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid3D(tree, 10,10,10);
+    grid = Grid3D(tree, 8,8,14);
     m_m = 5;
     m_n = 5;
 
@@ -178,7 +178,7 @@ void GLWidget::paintGL() {
 
 	glScalef(scale,scale,scale);
 
-	
+
 
 //    if (showTree)
 //    {
@@ -187,12 +187,11 @@ void GLWidget::paintGL() {
     grid.draw();
     //glScalef(20, 20, 20);
 
-    /*
     glDisable(GL_LIGHTING);
     glColor3f(1.0f, 0.0f, 0.0f);
     glPointSize(3);
     glBegin(GL_POINTS);
-        for(auto vertex : vertices)
+        for(VertexPtr vertex : vertices)
         {
             vertex->draw();
         }
@@ -200,19 +199,15 @@ void GLWidget::paintGL() {
 
     glColor3f(0.0f, 1.0f, 0.0f);
     glBegin(GL_LINES);
-    for (size_t i = 0; i < vertices.size(); i++)
+    for (VertexPtr vertex : vertices)
     {
-        VertexPtr vertex = vertices.at(i);
         NormalPtr normal = vertex->getNormal();
-        //normal->flip();
-
         glVertex3fv((*vertex)._v);
         glVertex3fv(((*normal) / -30 + (*vertex))._v);
     }
     glEnd();
 
     glEnable(GL_LIGHTING);
-    */
 
 }
 

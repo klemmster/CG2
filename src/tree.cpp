@@ -168,7 +168,6 @@ VertexList KDTree::findKNearestNeighbours(const VertexPtr source,
         VertexDistPair pair = resultQueue.top();
         VertexPtr vrtx = std::get<0>(pair);
         result.push_back(vrtx);
-        vrtx->highlight();
         resultQueue.pop();
     }
     //findS.stop();
@@ -238,9 +237,6 @@ VertexList KDTree::findInRadius(const VertexPtr source, const double radius){
     HyperSphere hyperSphere(source, radius, m_K);
     findInRadius(m_root, hyperSphere, result);
     //findS.stop();
-    for(VertexPtr ptr : result){
-        ptr->highlight();
-    }
     return result;
 }
 

@@ -23,7 +23,6 @@ using namespace Eigen;
 Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z)
     : m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_dimZ(dim_z)
 {
-    m_radius = 100.0f;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
@@ -41,9 +40,15 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
                         pow((m_MaxY-m_MinY),2) +
                         pow((m_MaxZ - m_MinZ),2));
 
+
     float stepX = abs(m_MaxX - m_MinX) / dim_x;
     float stepY = abs(m_MaxY - m_MinY) / dim_y;
     float stepZ = abs(m_MaxZ - m_MinZ) / dim_z;
+
+    m_radius = (stepX + stepY + stepZ) / 2.0;
+    std::cout << "StepX: " << std::setprecision(5) << stepX << "\n";
+    std::cout << "m_radisu: " << std::setprecision(5) << m_radius << "\n";
+
 
     float xPos = m_MinX;
     float yPos = m_MinY;
@@ -62,7 +67,6 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
             for (size_t x = 0; x <= m_dimX; x++)
             {
                 VertexPtr vrtx = VertexPtr(new Vertex(xPos, yPos, zPos, color, 0));
-                //vrtx->highlight();
                 m_GridVertices.push_back(vrtx);
                 xPos += stepX;
             }
@@ -83,11 +87,9 @@ void Grid3D::generateVertices()
     /* Create 2 more Points per point */
 {
     for(VertexPtr vertex: m_tree.getVertices()){
-        double epsilon = 0.1 * m_diagLength;if(false)
-        while(m_tree.findInRadius(vertex, epsilon).size() > 0){
-            //std::cout << "Size: " << m_tree.findInRadius(vertex, epsilon).size()<< "\n";
+        double epsilon = 0.1 * m_diagLength;
+        while(m_tree.findInRadius(vertex, epsilon).size() > 1){
             epsilon /= 2.0;
-            //std::cout << "Epsilon: " << epsilon << "\n";
         }
         VertexPtr point1(new Vertex((*vertex) + (*vertex->getNormal()), epsilon));
         VertexPtr point2(new Vertex((*vertex) - (*vertex->getNormal()), -epsilon));
@@ -126,7 +128,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
         for(VertexPtr point : list)
         {
             double funValue = point->getFunValue();
-            Eigen::MatrixXf bDims(k,k);
+            Eigen::MatrixXf bDims = MatrixXf::Zero(k,k);
             bDims = b*b.transpose();
             vec3f distVec = (*pointDesired) - (*point);
             float dist = norm(distVec);
@@ -171,8 +173,8 @@ void Grid3D::approximateWLS(VertexList& resultList)
         double funValue = b.dot(c);
         pointDesired->setFunValue(funValue);
         if(funValue < 0.0f){
-            pointDesired->highlight(vec3f(1.0f, 1.0f, 1.0f));
-            std::cout << "Highlight\n";
+            pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
+            //std::cout << "Highlight\n";
         }
         //m_coefficients.push_back(c);
     }
@@ -203,7 +205,7 @@ unsigned int Grid3D::factorial(const int num)
 
 int Grid3D::getIndex(int idX,int idY,int idZ) {
 	if(idX<0 || idX>=m_dimX || idY<0 || idY>=m_dimY || idZ<0 || idZ>=m_dimZ)
-		return -1; 
+		return -1;
 	return idZ*m_dimX*m_dimY + idY*m_dimX + idX;
 }
 
@@ -232,6 +234,6 @@ double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z)
 	y = (y - m_MinY)/(m_MaxY-m_MinY) * (m_dimY-1);
 	z = (z - m_MinZ)/(m_MaxZ-m_MinZ) * (m_dimZ-1);
 	return getInterpolatedFunctionValue(x,y,z);
-	
+
 //return x*x*4 + y*y*6 + z*z*8 - 1;
 }

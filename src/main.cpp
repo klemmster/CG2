@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     if(argc > 1){
         fileName = argv[1];
     }else{
-        fileName = "snail.off";
+        fileName = "cat.off";
     }
 
     ui.glWidget->setFilename(fileName);

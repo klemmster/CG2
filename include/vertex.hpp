@@ -28,7 +28,7 @@ class Vertex: public vec3f
         virtual ~Vertex();
 
         void draw() const;
-        void highlight(const vec3f color = vec3f(1.0, 0.0, 0.0));
+        void highlight(const vec3f color = vec3f(0.6, 0.5, 0.4));
         void resetColor();
         const double& getFunValue() const { return m_W; };
         void setFunValue(float val) { m_W = val; };
