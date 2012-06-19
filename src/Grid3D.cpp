@@ -84,8 +84,16 @@ void Grid3D::generateVertices()
         }
         VertexPtr point1(new Vertex((*vertex) + (*vertex->getNormal())));
         VertexPtr point2(new Vertex((*vertex) - (*vertex->getNormal())));
+        m_generatedPoints.push_back(point1);
+        m_generatedPoints.push_back(point2);
     }
 
+    VertexList allPoints(m_generatedPoints);
+    for(auto vrtx: m_GridVertices){
+        allPoints.push_back(vrtx);
+    }
+    m_fullTree = KDTree(allPoints, 3);
+    approximateWLS(m_GridVertices);
 }
 
 void Grid3D::approximateWLS(VertexList& resultList)
@@ -100,7 +108,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
     {
         //Get Points used for this approximation
         //TODO: Should be a good automatic? radius -- maybe gridsize related
-        VertexList list = m_tree.findInRadius(pointDesired, m_radius);
+        VertexList list = m_fullTree.findInRadius(pointDesired, m_radius);
         MatrixXf bDimsMatSum = MatrixXf::Zero(k,k);
         VectorXf bDimsVecSum = VectorXf::Zero(k);
 
@@ -110,7 +118,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
             float x = (*point)[0];
             float y = (*point)[1];
             float z = (*point)[2];
-            b << 1, x, y, x*x, x*y, y*y;
+            b << 1, x, y, z, x*x, x*y, y*y, x*z, y*z, z*z, x*y*z;
             Eigen::MatrixXf bDims(k,k);
             bDims = b*b.transpose();
             vec3f distVec = (*pointDesired) - (*point);
@@ -153,7 +161,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
 
         VectorXf c(k);
         c = bDimsMatSum.inverse() * bDimsVecSum;
-        (*pointDesired)[2] = b.dot(c);
+        pointDesired->setFunValue(b.dot(c));
         m_coefficients.push_back(c);
     }
 }

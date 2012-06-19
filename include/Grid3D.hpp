@@ -31,6 +31,7 @@ private:
     unsigned int factorial(const int num);
 
     KDTree m_tree;
+    KDTree m_fullTree;
     size_t m_dimX;
     size_t m_dimY;
     size_t m_dimZ;

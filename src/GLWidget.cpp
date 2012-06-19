@@ -158,8 +158,8 @@ void GLWidget::paintGL() {
 	float eyeZ = eyeDirZ*camDistance+positionZ;
 
     gluLookAt(
-		eyeX, eyeY, eyeZ, 
-		positionX, positionY, positionZ, 
+		eyeX, eyeY, eyeZ,
+		positionX, positionY, positionZ,
 		0, 1, 0
 		);
 
@@ -185,17 +185,18 @@ void GLWidget::paintGL() {
     //glScalef(20, 20, 20);
 
     glDisable(GL_LIGHTING);
+    /*
     glColor3f(1.0f, 0.0f, 0.0f);
     glPointSize(3);
     glBegin(GL_POINTS);
-
-    for(auto vertex : vertices)
-    {
-        vertex->draw();
-    }
-
+        for(auto vertex : vertices)
+        {
+            vertex->draw();
+        }
     glEnd();
+    */
 
+    /*
     glColor3f(0.0f, 1.0f, 0.0f);
     glBegin(GL_LINES);
     for (size_t i = 0; i < vertices.size(); i++)
@@ -208,6 +209,7 @@ void GLWidget::paintGL() {
         glVertex3fv(((*normal) / -30 + (*vertex))._v);
     }
     glEnd();
+    */
 
     glEnable(GL_LIGHTING);
 
@@ -242,13 +244,13 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     GLfloat dx = (GLfloat)(event->x() - lastPos.x()) / width();
     GLfloat dy = (GLfloat)(event->y() - lastPos.y()) / height();
 
-    if (event->buttons() & Qt::LeftButton) {	
+    if (event->buttons() & Qt::LeftButton) {
         camAlpha += 4 * dx;
         camBeta += 3 * dy;
         updateGL();
     }
 
-    if (event->buttons() & Qt::RightButton) {	
+    if (event->buttons() & Qt::RightButton) {
         camDistance += 3.5f * dy;
         updateGL();
     }
