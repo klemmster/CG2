@@ -77,8 +77,13 @@ void Grid3D::generateVertices()
 {
     for(VertexPtr vertex: m_tree.getVertices()){
         double epsilon = 0.01 * m_diagLength;
-
-
+        while(m_tree.findInRadius(vertex, epsilon).size() > 1){
+            //std::cout << "Size: " << m_tree.findInRadius(vertex, epsilon).size()<< "\n";
+            epsilon /= 2.0;
+            //std::cout << "Epsilon: " << epsilon << "\n";
+        }
+        VertexPtr point1(new Vertex((*vertex) + (*vertex->getNormal())));
+        VertexPtr point2(new Vertex((*vertex) - (*vertex->getNormal())));
     }
 
 }
