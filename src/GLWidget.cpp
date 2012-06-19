@@ -184,8 +184,8 @@ void GLWidget::paintGL() {
     grid.draw();
     //glScalef(20, 20, 20);
 
-    glDisable(GL_LIGHTING);
     /*
+    glDisable(GL_LIGHTING);
     glColor3f(1.0f, 0.0f, 0.0f);
     glPointSize(3);
     glBegin(GL_POINTS);
@@ -194,9 +194,7 @@ void GLWidget::paintGL() {
             vertex->draw();
         }
     glEnd();
-    */
 
-    /*
     glColor3f(0.0f, 1.0f, 0.0f);
     glBegin(GL_LINES);
     for (size_t i = 0; i < vertices.size(); i++)
@@ -209,9 +207,9 @@ void GLWidget::paintGL() {
         glVertex3fv(((*normal) / -30 + (*vertex))._v);
     }
     glEnd();
-    */
 
     glEnable(GL_LIGHTING);
+    */
 
 }
 

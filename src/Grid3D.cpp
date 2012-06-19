@@ -16,13 +16,14 @@
 
 #include "Grid3D.hpp"
 #include <math.h>
+#include <iomanip>
 
 using namespace Eigen;
 
 Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z)
     : m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_dimZ(dim_z)
 {
-    m_radius = 0.03;
+    m_radius = 100.0f;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
@@ -48,6 +49,10 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     float yPos = m_MinY;
     float zPos = m_MinZ;
 
+    std::cout << "xPos: " << xPos << "\n";
+    std::cout << "yPos: " << yPos << "\n";
+    std::cout << "zPos: " << zPos << "\n";
+
     vec3f color(0.2, 0.8, 0.5);
 
     for (size_t z = 0; z <= m_dimZ; z++)
@@ -56,7 +61,9 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
         {
             for (size_t x = 0; x <= m_dimX; x++)
             {
-                m_GridVertices.push_back(VertexPtr(new Vertex(xPos, yPos, zPos, color, 0)));
+                VertexPtr vrtx = VertexPtr(new Vertex(xPos, yPos, zPos, color, 0));
+                //vrtx->highlight();
+                m_GridVertices.push_back(vrtx);
                 xPos += stepX;
             }
 
@@ -69,21 +76,21 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     }
 
     generateVertices();
-    //approximateWLS(m_GridVertices);
+    approximateWLS(m_GridVertices);
  }
 
 void Grid3D::generateVertices()
     /* Create 2 more Points per point */
 {
     for(VertexPtr vertex: m_tree.getVertices()){
-        double epsilon = 0.01 * m_diagLength;
-        while(m_tree.findInRadius(vertex, epsilon).size() > 1){
+        double epsilon = 0.1 * m_diagLength;
+        while(m_tree.findInRadius(vertex, epsilon).size() > 0){
             //std::cout << "Size: " << m_tree.findInRadius(vertex, epsilon).size()<< "\n";
             epsilon /= 2.0;
             //std::cout << "Epsilon: " << epsilon << "\n";
         }
-        VertexPtr point1(new Vertex((*vertex) + (*vertex->getNormal())));
-        VertexPtr point2(new Vertex((*vertex) - (*vertex->getNormal())));
+        VertexPtr point1(new Vertex((*vertex) + (*vertex->getNormal()), epsilon));
+        VertexPtr point2(new Vertex((*vertex) - (*vertex->getNormal()), -epsilon));
         m_generatedPoints.push_back(point1);
         m_generatedPoints.push_back(point2);
     }
@@ -105,7 +112,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
     int k = 1;
     std::cout << "K: " << k << "\n";
     VectorXf b(1);
-    b << 1;
+    b << 1.0f;
 
     //Single Approximation for every Grid point
     for(VertexPtr pointDesired: resultList)
@@ -161,27 +168,22 @@ void Grid3D::approximateWLS(VertexList& resultList)
 
         VectorXf c(k);
         c = bDimsMatSum.inverse() * bDimsVecSum;
-        pointDesired->setFunValue(b.dot(c));
-        std::cout << "Fun Value: " << b.dot(c) << "\n";
+        double funValue = b.dot(c);
+        pointDesired->setFunValue(funValue);
+        if(funValue < 0.0f){
+            pointDesired->highlight(vec3f(1.0f, 1.0f, 1.0f));
+            std::cout << "Highlight\n";
+        }
         //m_coefficients.push_back(c);
     }
 }
 
 void Grid3D::draw()
 {
-    glDisable(GL_LIGHTING);
-    glColor3f(0, 0, 1);
-
-    for (size_t i = 0; i < m_GridVertices.size(); i++)
+    for (VertexPtr vrtx : m_GridVertices)
     {
-        VertexPtr point = m_GridVertices.at(i);
-
-        glBegin(GL_POINTS);
-            glVertex3fv(point->_v);
-        glEnd();
+        vrtx->draw();
     }
-
-    glEnable(GL_LIGHTING);
 }
 
 unsigned int Grid3D::factorial(const int num)

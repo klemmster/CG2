@@ -30,7 +30,7 @@ class Vertex: public vec3f
         void draw() const;
         void highlight(const vec3f color = vec3f(1.0, 0.0, 0.0));
         void resetColor();
-        const float& getFunValue() const { return m_W; };
+        const double& getFunValue() const { return m_W; };
         void setFunValue(float val) { m_W = val; };
         NormalPtr getNormal() const { return m_NormalPtr; }
 
@@ -38,7 +38,7 @@ class Vertex: public vec3f
         vec3f m_Color;
         NormalPtr m_NormalPtr;
         //Function Value
-        float m_W;
+        double m_W;
     private:
         Vertex() {};
 };

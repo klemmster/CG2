@@ -67,8 +67,13 @@ Vertex::~Vertex()
 }
 
 void Vertex::draw() const{
-    //glColor3fv(m_Color._v);
-    glVertex3fv(_v);
+    glDisable(GL_LIGHTING);
+    glPointSize(3);
+    glColor3fv(m_Color._v);
+    glBegin(GL_POINTS);
+        glVertex3fv(_v);
+    glEnd();
+    glEnable(GL_LIGHTING);
 }
 
 void Vertex::highlight(const vec3f color){
