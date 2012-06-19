@@ -79,25 +79,11 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     approximateWLS(m_GridVertices);
  }
 
-int Grid3D::getIndex(int idX,int idY,int idZ) {
-	if(idX<0 || idX>=m_dimX || idX<0 || idX>=m_dimX || idX<0 || idX>=m_dimX)
-		return -1; 
-	return idZ*m_dimX*m_dimY + idY*m_dimX%m_dimZ + idX%m_dimX;
-}
-
-shared_ptr<Vertex> Grid3D::getVertex(int idX,int idY,int idZ) {
-	int index = getIndex(idX,idY,idZ);
-	if(index<0)
-		return NULL;
-	else
-		return m_GridVertices.at(index);
-}
-
 void Grid3D::generateVertices()
     /* Create 2 more Points per point */
 {
     for(VertexPtr vertex: m_tree.getVertices()){
-        double epsilon = 0.1 * m_diagLength;
+        double epsilon = 0.1 * m_diagLength;if(false)
         while(m_tree.findInRadius(vertex, epsilon).size() > 0){
             //std::cout << "Size: " << m_tree.findInRadius(vertex, epsilon).size()<< "\n";
             epsilon /= 2.0;
@@ -212,7 +198,40 @@ unsigned int Grid3D::factorial(const int num)
     return result;
 }
 
-// TODO PLACEHOLDER, REPLACE ME!
-double Grid3D::getImplicitFunctionValue(float x,float y,float z) {
-	return x*x*4 + y*y*6 + z*z*8 - 1;
+
+//--- Getting values ---
+
+int Grid3D::getIndex(int idX,int idY,int idZ) {
+	if(idX<0 || idX>=m_dimX || idY<0 || idY>=m_dimY || idZ<0 || idZ>=m_dimZ)
+		return -1; 
+	return idZ*m_dimX*m_dimY + idY*m_dimX + idX;
+}
+
+shared_ptr<Vertex> Grid3D::getVertex(int idX,int idY,int idZ) {
+	int index = getIndex(idX,idY,idZ);
+	if(index<0)
+		return NULL;
+	else
+		return m_GridVertices.at(index);
+}
+
+double Grid3D::getInterpolatedFunctionValue(float x,float y,float z) {
+	shared_ptr<Vertex> vertex = getVertex((int)x,(int)y,(int)z);
+	if(vertex==NULL)
+		return OUTOFRANGE_DISTANCE;
+	else
+		return vertex->getFunValue();
+}
+
+double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z) {
+	//if(x<m_MinX || x>m_MaxX || y<m_MinY || y>m_MaxY || z<m_MinZ || z>m_MaxZ)
+	//	return OUTOFRANGE_DISTANCE;
+	//else
+	//	return -0.5f;
+	x = (x - m_MinX)/(m_MaxX-m_MinX) * (m_dimX-1);
+	y = (y - m_MinY)/(m_MaxY-m_MinY) * (m_dimY-1);
+	z = (z - m_MinZ)/(m_MaxZ-m_MinZ) * (m_dimZ-1);
+	return getInterpolatedFunctionValue(x,y,z);
+	
+//return x*x*4 + y*y*6 + z*z*8 - 1;
 }

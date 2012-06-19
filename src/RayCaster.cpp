@@ -1,7 +1,7 @@
 #include "RayCaster.hpp"
 
-#define RAY_STEPSIZE 0.02f
-#define RAY_LENGTH 10.0f
+#define RAY_STEPSIZE 0.03f
+#define RAY_LENGTH 14.0f
 
 #define GET_COLOR_INDEX (y*m_width*3+x*3)
 
@@ -11,16 +11,31 @@ void RayCaster::setColor(int x,int y, float r,float g,float b) {
 	m_colors[GET_COLOR_INDEX] = b;
 } 
 
-void RayCaster::cast(Grid3D grid,float eyeX,float eyeY,float eyeZ) {
+void RayCaster::cast(Grid3D * grid,int type,float eyeX,float eyeY,float eyeZ,float scale) {
 	double modelView[16], projection[16];
 	glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
     glGetDoublev(GL_PROJECTION_MATRIX, projection); 
 
 	GLdouble x,y,z;	
 
+	float dScale = 1/scale;
+
 	int rayStepCount = (int)(RAY_LENGTH/RAY_STEPSIZE+0.5f);
 
 	vec3f rayDir;
+
+	//Filltest funcvalues
+	for(int i=0;i<grid->m_dimX;i++) 
+		for(int j=0;j<grid->m_dimY;j++)
+			for(int k=0;k<grid->m_dimZ;k++) {
+				float x = i/(float)grid->m_dimX - 0.5f;
+				float y = j/(float)grid->m_dimY - 0.5f;
+				float z = k/(float)grid->m_dimZ - 0.5f;
+				grid->getVertex(i,j,k)->setFunValue(x*x*4 + y*y*4 + z*z*4 - 1);
+			}
+
+
+	float maxColorVal = 0;
 
 	for(int screen_x=0;screen_x<m_width;screen_x++) {
 		for(int screen_y=0;screen_y<m_height;screen_y++) {
@@ -45,27 +60,53 @@ void RayCaster::cast(Grid3D grid,float eyeX,float eyeY,float eyeZ) {
 			float rayZ = eyeZ;
 			float colorVal = 0;
 			float minFuncVal = 100000;
+
+			setColor(screen_x,screen_y,0,0,0.1f);
+
 			for(int m=0;m<rayStepCount;m++) {
-				float funcVal = grid.getImplicitFunctionValue(rayX,rayY,rayZ);
+				float funcVal = grid->getImplicitFunctionValueWorldCoordinates(
+									rayX*dScale,rayY*dScale,rayZ*dScale
+								);
 				if(funcVal < minFuncVal)
 					minFuncVal = funcVal;
-				if(funcVal < 0)
-					colorVal += 0.02f;
+				if(funcVal <= 0) {
+					if(type == RC_FIRSTTOUCH)
+					{
+						colorVal = 1;
+						setColor(screen_x,screen_y,colorVal,colorVal,colorVal);
+						break;
+					}else{
+						colorVal += 1;
+						if(colorVal>maxColorVal) {
+							maxColorVal = colorVal;
+						}
+					}
+				}
 				rayX += rayDir[0];
 				rayY += rayDir[1];
 				rayZ += rayDir[2];
 			}
-		
-			if(minFuncVal < 0) {
-				colorVal = -minFuncVal+0.2f;
-				setColor(screen_x,screen_y,colorVal,colorVal,colorVal);
-			}else{
-				colorVal = pow(4,-minFuncVal);
-				setColor(screen_x,screen_y,colorVal,colorVal*0.8f,colorVal*0.2f);
+
+			if(type!=RC_FIRSTTOUCH) {
+				if(minFuncVal <= 0) {
+					//colorVal = -minFuncVal+0.9f;
+					if(colorVal<0)
+						colorVal = 0;
+					setColor(screen_x,screen_y,colorVal,colorVal,colorVal);
+				}else if(minFuncVal < OUTOFRANGE_DISTANCE){
+					//colorVal = pow(4,-minFuncVal);
+					colorVal = 0;
+					setColor(screen_x,screen_y,colorVal,colorVal*0.8f,colorVal*0.2f);
+				}
 			}
 			
 		}
 	}
+
+	//Normalize
+	if(type==RC_TRANSPARENT && maxColorVal>0)
+		for(int i=0;i<m_width*m_height*3*sizeof(float);i++)
+			m_colors[i]/=maxColorVal;
 
 	glDrawPixels(m_width,m_height,GL_RGB,GL_FLOAT,m_colors);
 	

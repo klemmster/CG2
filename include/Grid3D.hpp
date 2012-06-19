@@ -13,6 +13,8 @@
 #include "tree.hpp"
 #include "vertex.hpp"
 
+#define OUTOFRANGE_DISTANCE 100000
+
 class Grid3D : public Grid
 {
 public:
@@ -22,10 +24,15 @@ public:
 
     virtual void approximateWLS(VertexList& resultList);
     virtual void draw();
-	virtual double getImplicitFunctionValue(float x,float y,float z);
+	virtual double getInterpolatedFunctionValue(float x,float y,float z);
+	virtual double getImplicitFunctionValueWorldCoordinates(float x,float y,float z);
 
 	int getIndex(int idX,int idY,int idZ);
 	shared_ptr<Vertex> getVertex(int idX,int idY,int idZ);
+
+	size_t m_dimX;
+    size_t m_dimY;
+    size_t m_dimZ;
 
 protected:
     void generateVertices();
@@ -35,9 +42,6 @@ private:
 
     KDTree m_tree;
     KDTree m_fullTree;
-    size_t m_dimX;
-    size_t m_dimY;
-    size_t m_dimZ;
 
     float m_diagLength;
     float m_MinX;

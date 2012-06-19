@@ -49,9 +49,8 @@ GLfloat modelOffsetY = 0.0f;
 GLfloat modelOffsetZ = 0.0f;
 GLfloat screenRatio;
 
-//sry that its global, but so many other variables are global as well ^^
 RayCaster rayCaster;
-bool doRayCasting = false;
+int doRayCasting = -1;
 
 unsigned int kNearest = 50;
 float radius = 40;
@@ -125,8 +124,8 @@ void GLWidget::paintGL() {
 
 	if(camDistance<0.02f)
 		camDistance = 0.02f;
-	if(camDistance>1000)
-		camDistance = 1000;
+	if(camDistance>10000)
+		camDistance = 10000;
 
 	if(camBeta>3.1f/2)
 		camBeta = 3.1f/2;
@@ -142,7 +141,7 @@ void GLWidget::paintGL() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 	float uZoom = zoom*zoom;
-    gluPerspective(1+uZoom*60, screenRatio, 0.1f, 1000.0f);
+    gluPerspective(1+uZoom*70, screenRatio, 0.1f, 1000.0f);
 
 
 	//Camera position/angle
@@ -164,11 +163,11 @@ void GLWidget::paintGL() {
 		);
 
 	//Call ray casting
-	if(doRayCasting) {
+	if(doRayCasting>0) {
 
-		rayCaster.cast(grid,eyeX,eyeY,eyeZ);
+		rayCaster.cast(&grid,doRayCasting,eyeX,eyeY,eyeZ,scale);
 		glEnable(GL_LIGHTING);
-		doRayCasting = false;
+		doRayCasting = -1;
 		return;
 	}
 
@@ -176,7 +175,11 @@ void GLWidget::paintGL() {
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
     glTranslatef(modelOffsetX, modelOffsetY, modelOffsetZ);
+
 	glScalef(scale,scale,scale);
+
+	
+
 //    if (showTree)
 //    {
 //        tree.draw();
@@ -338,8 +341,13 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		updateGL();
 		break;
 	case Qt::Key_R:
-		doRayCasting = true;
+		doRayCasting = RC_FIRSTTOUCH;
 		updateGL();
+		break;
+	case Qt::Key_T:
+		doRayCasting = RC_TRANSPARENT;
+		updateGL();
+		break;
     default:
         event->ignore();
         break;

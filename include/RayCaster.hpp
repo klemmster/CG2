@@ -12,6 +12,13 @@
   #include <GL/glut.h>
 #endif
 
+#define RC
+
+#define RC_FIRSTTOUCH 1
+#define RC_TRANSPARENT 2
+#define RC_FAKEFRESNEL 3
+
+
 class RayCaster {
 
 public:
@@ -27,7 +34,7 @@ public:
 	float * m_colors;
 
 	void refreshViewport();
-	void cast(Grid3D grid,float eyeX,float eyeY,float eyeZ);
+	void cast(Grid3D * grid,int type,float eyeX,float eyeY,float eyeZ,float scale);
 
 private:
 	bool initialized;
