@@ -98,10 +98,14 @@ void Grid3D::generateVertices()
 
 void Grid3D::approximateWLS(VertexList& resultList)
 {
-    int m = 2;
-    int d = 2;
+    int m = 0;
+    int d = 3;
 
-    int k = factorial(d + m) / (factorial(m) * factorial(d));
+    //int k = factorial(d + m) / (factorial(m) * factorial(d));
+    int k = 1;
+    std::cout << "K: " << k << "\n";
+    VectorXf b(1);
+    b << 1;
 
     //Single Approximation for every Grid point
     for(VertexPtr pointDesired: resultList)
@@ -112,25 +116,21 @@ void Grid3D::approximateWLS(VertexList& resultList)
         MatrixXf bDimsMatSum = MatrixXf::Zero(k,k);
         VectorXf bDimsVecSum = VectorXf::Zero(k);
 
-        VectorXf b(k);
         for(VertexPtr point : list)
         {
-            float x = (*point)[0];
-            float y = (*point)[1];
-            float z = (*point)[2];
-            b << 1, x, y, z, x*x, x*y, y*y, x*z, y*z, z*z, x*y*z;
+            double funValue = point->getFunValue();
             Eigen::MatrixXf bDims(k,k);
             bDims = b*b.transpose();
             vec3f distVec = (*pointDesired) - (*point);
             float dist = norm(distVec);
             float wendFac = getWendland(dist);
             bDimsMatSum += (wendFac * bDims);
-            bDimsVecSum += (wendFac * b*z);
+            bDimsVecSum += (wendFac * b*funValue);
         }
 
-        float x = (*pointDesired)[0];
-        float y = (*pointDesired)[1];
-        b << 1, x, y, x*x, x*y, y*y;
+        //float x = (*pointDesired)[0];
+        //float y = (*pointDesired)[1];
+        //b << 1, x, y, x*x, x*y, y*y;
 
         // constant polynom basis
         /**
@@ -162,7 +162,8 @@ void Grid3D::approximateWLS(VertexList& resultList)
         VectorXf c(k);
         c = bDimsMatSum.inverse() * bDimsVecSum;
         pointDesired->setFunValue(b.dot(c));
-        m_coefficients.push_back(c);
+        std::cout << "Fun Value: " << b.dot(c) << "\n";
+        //m_coefficients.push_back(c);
     }
 }
 
