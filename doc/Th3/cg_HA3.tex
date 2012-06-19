@@ -1,0 +1,105 @@
+\documentclass[a4paper,oneside,12pt]{scrartcl}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amssymb,graphicx,latexsym,stmaryrd,dsfont,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{ngerman,url,booktabs,scrpage2}
+\usepackage{color}
+\usepackage{algpseudocode}
+
+\newcommand{\heading}[1]{\item{\textbf{#1}}$ $\\}
+\newcommand{\formel}[1]{\begin{center}#1\end{center}}
+\newcommand{\eqs}[1]{
+$\begin{array}{rcll}
+$ #1 $
+\end{array}$}
+\newcommand{\image}[2]{
+\begin{center}
+\includegraphics[scale = #1]{#2}
+\end{center}
+}
+
+\newcounter{counter}
+\stepcounter{counter}
+
+\definecolor{gray}{gray}{.5}
+\newcommand{\comment}[1]{\textcolor{gray}{\textit{// #1}}}
+\newcommand{\task}[1]{
+\section*{Aufgabe #1}
+\stepcounter{counter}
+}
+\newcommand{\subtask}[1]{\subsection*{#1}}
+\newcommand{\subsubtask}[1]{#1$ $\\}
+\newcommand{\mathsum}[3]{\underset{#1}{\overset{#2}{\sum}}#3}
+\newcommand{\isum}[1]{\mathsum{i=0}{n}{#1}}
+
+\newcommand{\twovector}[2]{\left(\begin{array}{c} #1 \\ #2 \end{array}\right)}
+\newcommand{\threevector}[3]{\left(\begin{array}{c} #1 \\ #2 \\ #3 \end{array}\right)}
+\newcommand{\fourmatrix}[4]{\left(\begin{array}{cc} #1 & #2 \\ #3 & #4 \end{array}\right)}
+\newcommand{\ninematrix}[9]{\left(\begin{array}{ccc} #1 & #2 & #3 \\ #4 & #5 & #6 \\ #7 & #8 & #9 \end{array}\right)}
+\newcommand{\nvector}[2]{\left(\begin{array}{c} #1 \\ \vdots \\ #2 \end{array}\right)}
+\newcommand{\nmatrix}[4]{\left(\begin{array}{ccc} #1 & \ldots & #2 \\ \vdots & \ddots & \vdots \\ #3 & \ldots & #4 \end{array}\right)}
+\newcommand{\eq}{&=&}
+\newcommand{\eqbreak}{\\[0.5cm]}
+\newcommand{\eqsmbreak}{\\[0.35cm]}
+\newcommand{\eqtbreak}{\\[0.12cm]}
+\newcommand{\eqbreakp}{\\[0.8cm]}
+\newcommand{\eqsmbreakp}{\\[0.65cm]}
+\newcommand{\eqtbreakp}{\\[0.32cm]}
+\newcommand{\rc}{r^c}
+\newcommand{\vvec}{\vec v}
+\newcommand{\pnt}[1]{\textbf{#1}}
+\newcommand{\ppnt}{\pnt{p}}
+
+\parindent 0pt
+
+\begin{document}
+
+\begin{center}
+\normalsize Computer Graphics 2\\[0.3cm]
+\huge \textbf{Hausaufgabe 2} \normalsize\\[0.8cm]
+\begin{tabular}{rl}
+\texttt{343635} & Richard Klemm\\
+\texttt{319716} & Andreas Fender\\
+\texttt{315744} & Christopher Sierigk\\
+\end{tabular}
+\end{center}
+
+\stepcounter{counter}
+
+\task{1}
+
+
+\task{2}
+
+Der Kreis ist ein Kegelschnitt einer zur X-Y-Ebene parallelen Ebene mit Kegeln die die Spitze bei (0,0,0) haben und Rotationssymmetrisch zur Z-Achse sind. Die implizite Darstellung sieht wie folgt aus:
+\formel{$f(x,y) = x^2 + y^2 - r^2$}
+Wobei $\{(x,y) | f(x,y) = 0\}$ den Kreis bilden. $r$ ist sowohl die Höhe der Ebene als auch der Radius des entstehenden Kreises. 
+
+Seien $f_1(x,y)$ und $f_2(x,y)$ zwei Kreise mit den Radien $r_1$ und $r_2$. Die algebraische Summe sieht dann wie folgt aus:
+\formel{$f_1(x,y) + f_2(x,y) = 2x^2 + 2y^2 - r_1^2 - r_2^2$}
+Der resultierende Kreis ist bei $f_1(x,y) + f_2(x,y) = 0$. Somit gilt:
+\begin{center}
+\eqs{$
+2x^2 + 2y^2 - r_1^2 - r_2^2 \eq 0 & | \cdot \frac12\eqbreak
+x^2 + y^2 - \frac{r_1^2 + r_2^2}2 \eq 0
+$}
+\end{center}
+Demnach entsteht ein Kreis, dessen quadratischer Radius der Durchschnitt aus $r_1^2$ und $r_2^2$ ist, d.h.
+\formel{$R^2 = \frac{r_1^2 + r_2^2}2$}
+Auf beiden Seiten kann $\pi$ multipliziert werden:
+\begin{center}
+\eqs{$
+R^2 \eq \frac{r_1^2 + r_2^2}2 & | \cdot \pi\eqbreak
+\pi\cdot R^2 \eq \pi \cdot \frac{r_1^2 + r_2^2}2 \eqbreak
+R^2\pi \eq \frac{r_1^2\pi + r_2^2\pi}2
+$}
+\end{center}
+Somit kann auch gesagt werden, dass der resultierende Kreis den Druchschnittsflächeninhalt der beiden Kreise hat.
+
+\task{4}
+
+Ja.\\
+Marching Cubes fragt eine endliche Menge von Sampling Punkten ab. Scharfe Kanten (Features) werden nicht erkannt. Auch bei einer Erhöhung der Sampling Punkte werden Features nicht erkannt, da diese sich innerhalb eines Cubes befinden.
+
+\end{document}
