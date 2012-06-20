@@ -27,10 +27,9 @@ public:
 	};
 
 	~RayCaster() {
-		
+
 	}
 
-	vec3f m_rays[];
 	float * m_colors;
 
 	void refreshViewport();
