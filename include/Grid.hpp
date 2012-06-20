@@ -28,7 +28,18 @@ public:
 protected:
     float getWendland(const float distance) const;
     float m_radius;
+    size_t m_dimX;
+    size_t m_dimY;
+    float m_h;
+    KDTree m_tree;
     std::vector<Eigen::VectorXf> m_coefficients;
+
+    float m_MinX;
+    float m_MinY;
+    float m_MinZ;
+    float m_MaxX;
+    float m_MaxY;
+    float m_MaxZ;
 
 private:
 
@@ -38,22 +49,11 @@ private:
     void drawQuads();
     void resetBaseVertices();
 
-    float m_MinX;
-    float m_MinY;
-    float m_MinZ;
-    float m_MaxX;
-    float m_MaxY;
-    float m_MaxZ;
 
     VertexList m_vertices;
     VertexList m_interpolVertices;
     std::vector<vec3f> m_quadNormals;
 
-    KDTree m_tree;
-    size_t m_dimX;
-    size_t m_dimY;
-
-    float m_h;
     bool m_showQuads;
     bool m_showTriangles;
 

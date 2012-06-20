@@ -21,8 +21,9 @@
 
 using namespace Eigen;
 
-Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z)
-    : m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_dimZ(dim_z)
+Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z):
+    Grid(tree, dim_x, dim_y),
+    m_dimZ(dim_z)
 {
 	m_interpolate = true;
 
@@ -46,9 +47,9 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     float stepY = abs(m_MaxY - m_MinY) / dim_y;
     float stepZ = abs(m_MaxZ - m_MinZ) / dim_z;
 
-    m_radius = (stepX + stepY + stepZ) / 1.2;
+    m_radius = (stepX + stepY + stepZ) / 3.0;
     //std::cout << "StepX: " << std::setprecision(5) << stepX << "\n";
-
+    std::cout << "Diagonal: " << std::setprecision(5) << m_diagLength << "\n";
 
     float xPos = m_MinX;
     float yPos = m_MinY;
@@ -110,7 +111,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
     //int k = factorial(d + m) / (factorial(m) * factorial(d));
     int k = 1;
     std::cout << "K: " << k << "\n";
-    VectorXf b(1);
+    VectorXf b = VectorXf::Zero(1);
     b << 1.0f;
 
     //Single Approximation for every Grid point
@@ -119,9 +120,9 @@ void Grid3D::approximateWLS(VertexList& resultList)
         //Get Points used for this approximation
         VertexList list = m_fullTree.findInRadius(pointDesired, m_radius);
         MatrixXf bDimsMatSum = MatrixXf::Zero(k,k);
-        VectorXf bDimsVecSum = VectorXf::Zero(k);
+        VectorXf bDimsVecSum = VectorXf::Zero(1);
 
-        //std::cout << "SIze: " << list.size() << "\n";
+        //std::cout << "Size: " << list.size() << "\n";
         for(VertexPtr point : list)
         {
             double funValue = point->getFunValue();
@@ -131,6 +132,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
             vec3f distVec = (*pointDesired) - (*point);
             float dist = norm(distVec);
             float wendFac = getWendland(dist);
+            //std::cout << "wendFac: " << wendFac << "\n";
             bDimsMatSum += (wendFac * bDims);
             bDimsVecSum += (wendFac * b*funValue);
         }
@@ -166,14 +168,13 @@ void Grid3D::approximateWLS(VertexList& resultList)
         b << 1, x, y, z, x*x, x*y, x*z, y*y, y*z, z*z;
         **/
 
-        VectorXf c(k);
+        VectorXf c = VectorXf::Zero(k);
         c = bDimsMatSum.inverse() * bDimsVecSum;
         double funValue = b.dot(c);
         NormalPtr normal = interpolateNormal(list);
         pointDesired->setFunValue(funValue);
         if(funValue < 0.0f){
             pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
-            //std::cout << "Highlight\n";
         }
         //m_coefficients.push_back(c);
     }

@@ -94,8 +94,6 @@ void GLWidget::initializeGL() {
     grid = Grid3D(tree, 8,8,14);
     m_m = 5;
     m_n = 5;
-
-
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -113,7 +111,7 @@ void GLWidget::resizeGL(int w, int h) {
 }
 
 void GLWidget::paintGL() {
-	
+
 	if(locRepaint)
 		return;
 

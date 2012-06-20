@@ -32,27 +32,19 @@ public:
 	double getVertexValue(int idX,int idY,int idZ);
     NormalPtr interpolateNormal(VertexList vrtxList) const;
 
-	size_t m_dimX;
-    size_t m_dimY;
-    size_t m_dimZ;
-	bool m_interpolate;
 
 protected:
     void generateVertices();
 
+    size_t m_dimZ;
+	bool m_interpolate;
+
 private:
     unsigned int factorial(const int num);
 
-    KDTree m_tree;
     KDTree m_fullTree;
 
     float m_diagLength;
-    float m_MinX;
-    float m_MinY;
-    float m_MinZ;
-    float m_MaxX;
-    float m_MaxY;
-    float m_MaxZ;
 
     VertexList m_GridVertices;
     VertexList m_generatedPoints;

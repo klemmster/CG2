@@ -17,14 +17,14 @@ using namespace Eigen;
 Grid::Grid (KDTree tree, const size_t dim_x, const size_t dim_y):
     m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_showQuads(false)
 {
-    resetBaseVertices();
+    //resetBaseVertices();
 
    //TODO Use GUI
     //repeatedApproximation(2);
     m_radius = 0.3;
     m_k = 1;
     m_h = 0.2;
-    approximateWLS(m_vertices);
+    //approximateWLS(m_vertices);
     //approximateTensor(4);
     //toggleQuads();
 }
@@ -230,6 +230,7 @@ void Grid::repeatedApproximation(const size_t k){
 
     approximateWLS(m_interpolVertices);
 }
+#include <iomanip>
 
 float Grid::getWendland(const float distance) const{
     //(1 - d/h)^4 * (4d/h +1)
