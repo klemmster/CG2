@@ -229,14 +229,14 @@ int Grid3D::getIndex(int idX,int idY,int idZ) {
 shared_ptr<Vertex> Grid3D::getVertex(int idX,int idY,int idZ) {
 	int index = getIndex(idX,idY,idZ);
 	if(index<0)
-		return NULL;
+		return nullptr;
 	else
 		return m_GridVertices.at(index);
 }
 
 double Grid3D::getVertexValue(int idX,int idY,int idZ) {
 	shared_ptr<Vertex> vertex = getVertex(idX,idY,idZ);
-	if(vertex==NULL)
+	if(vertex==nullptr)
 		return OUTOFRANGE_DISTANCE;
 	else
 		return vertex->getFunValue();
