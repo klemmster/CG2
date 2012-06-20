@@ -123,60 +123,61 @@ void Grid3D::approximateWLS(VertexList& resultList)
         VectorXf bDimsVecSum = VectorXf::Zero(1);
 
         //std::cout << "Size: " << list.size() << "\n";
-        for(VertexPtr point : list)
-        {
-            double funValue = point->getFunValue();
-            //std::cout << "funvalue: " << std::setprecision(5) << funValue << "\n";
-            Eigen::MatrixXf bDims = MatrixXf::Zero(k,k);
-            bDims = b*b.transpose();
-            vec3f distVec = (*pointDesired) - (*point);
-            float dist = norm(distVec);
-            float wendFac = getWendland(dist);
-            //std::cout << "wendFac: " << wendFac << "\n";
-            bDimsMatSum += (wendFac * bDims);
-            bDimsVecSum += (wendFac * b*funValue);
+        if(list.size() > 0){
+            for(VertexPtr point : list)
+            {
+                double funValue = point->getFunValue();
+                //std::cout << "funvalue: " << std::setprecision(5) << funValue << "\n";
+                Eigen::MatrixXf bDims = MatrixXf::Zero(k,k);
+                bDims = b*b.transpose();
+                vec3f distVec = (*pointDesired) - (*point);
+                float dist = norm(distVec);
+                float wendFac = getWendland(dist);
+                bDimsMatSum += (wendFac * bDims);
+                bDimsVecSum += (wendFac * b*funValue);
+            }
+
+            //float x = (*pointDesired)[0];
+            //float y = (*pointDesired)[1];
+            //b << 1, x, y, x*x, x*y, y*y;
+
+            // constant polynom basis
+            /**
+            VectorXf b(1);
+            float x = (*pointDesired)[0];
+            float y = (*pointDesired)[1];
+            float z = (*pointDesired)[2];
+            b << 1;
+            **/
+
+            // linear polynom basis
+            /**
+            VectorXf b(4);
+            float x = (*pointDesired)[0];
+            float y = (*pointDesired)[1];
+            float z = (*pointDesired)[2];
+            b << 1, x, y, z;
+            **/
+
+            // quadratic polynom basis
+            /**
+            VectorXf b(10);
+            float x = (*pointDesired)[0];
+            float y = (*pointDesired)[1];
+            float z = (*pointDesired)[2];
+            b << 1, x, y, z, x*x, x*y, x*z, y*y, y*z, z*z;
+            **/
+
+            VectorXf c = VectorXf::Zero(k);
+            c = bDimsMatSum.inverse() * bDimsVecSum;
+            double funValue = b.dot(c);
+            NormalPtr normal = interpolateNormal(list);
+            pointDesired->setFunValue(funValue);
+            if(funValue < 0.0f){
+                pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
+            }
         }
-
-        //float x = (*pointDesired)[0];
-        //float y = (*pointDesired)[1];
-        //b << 1, x, y, x*x, x*y, y*y;
-
-        // constant polynom basis
-        /**
-        VectorXf b(1);
-        float x = (*pointDesired)[0];
-        float y = (*pointDesired)[1];
-        float z = (*pointDesired)[2];
-        b << 1;
-        **/
-
-        // linear polynom basis
-        /**
-        VectorXf b(4);
-        float x = (*pointDesired)[0];
-        float y = (*pointDesired)[1];
-        float z = (*pointDesired)[2];
-        b << 1, x, y, z;
-        **/
-
-        // quadratic polynom basis
-        /**
-        VectorXf b(10);
-        float x = (*pointDesired)[0];
-        float y = (*pointDesired)[1];
-        float z = (*pointDesired)[2];
-        b << 1, x, y, z, x*x, x*y, x*z, y*y, y*z, z*z;
-        **/
-
-        VectorXf c = VectorXf::Zero(k);
-        c = bDimsMatSum.inverse() * bDimsVecSum;
-        double funValue = b.dot(c);
-        NormalPtr normal = interpolateNormal(list);
-        pointDesired->setFunValue(funValue);
-        if(funValue < 0.0f){
-            pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
-        }
-        //m_coefficients.push_back(c);
+            //m_coefficients.push_back(c);
     }
 }
 
