@@ -173,6 +173,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
             double funValue = b.dot(c);
             NormalPtr normal = interpolateNormal(list);
             pointDesired->setFunValue(funValue);
+            pointDesired->setNormal(normal);
             if(funValue < 0.0f){
                 pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
             }

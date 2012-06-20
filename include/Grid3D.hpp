@@ -28,7 +28,7 @@ public:
 	virtual double getImplicitFunctionValueWorldCoordinates(float x,float y,float z);
 
 	int getIndex(int idX,int idY,int idZ);
-	shared_ptr<Vertex> getVertex(int idX,int idY,int idZ);
+	VertexPtr getVertex(int idX,int idY,int idZ);
 	double getVertexValue(int idX,int idY,int idZ);
     NormalPtr interpolateNormal(VertexList vrtxList) const;
 	size_t getDimZ() {return m_dimZ;};
