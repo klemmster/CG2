@@ -72,8 +72,26 @@ Vertex::~Vertex()
 
 void Vertex::draw(bool useAlpha) const{
     glDisable(GL_LIGHTING);
+	glEnable(GL_ALPHA);
     glPointSize(3);
-    glColor4f(m_Color._v[0],m_Color._v[1],m_Color._v[2],useAlpha?1-(m_W)*2:1);
+	float alpha = 1;
+	if(useAlpha) {
+		alpha = 1-(m_W);
+		if(alpha<0)
+			alpha = 0;
+		if(alpha>1)
+			alpha = 1;
+		if(m_W>1)
+		alpha = 0;
+		float cl = m_W * 100;
+		if(m_W>0)
+			return;
+		else
+			glColor4f(1,-cl,0,1);
+	}else{
+		glColor4f(m_Color._v[0],m_Color._v[1],m_Color._v[2],alpha);
+	}
+    
     glBegin(GL_POINTS);
         glVertex3fv(_v);
     glEnd();

@@ -50,6 +50,7 @@ GLfloat modelOffsetY = 0.0f;
 GLfloat modelOffsetZ = 0.0f;
 GLfloat screenRatio;
 bool useAlpha = false;
+bool drawCloud = true;
 
 RayCaster rayCaster;
 int doRayCasting = -1;
@@ -60,7 +61,12 @@ float radius = 40;
 size_t vrtxID = 0;
 vec3f highlightColor(0.0, 1.0, 0.0);
 
+int idI = 0;
+int idJ = 0;
+int idK = 0;
+
 void GLWidget::initializeGL() {
+
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
@@ -93,7 +99,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid3D(tree, 8,8,14);
+    grid = Grid3D(tree, 20,20,22);
     m_m = 5;
     m_n = 5;
 }
@@ -116,6 +122,8 @@ void GLWidget::paintGL() {
 
 	if(locRepaint)
 		return;
+
+	grid.getVertex(idI,idJ,idK)->m_Color = vec3f(1,1,0);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3f(1,0,0);
@@ -194,24 +202,26 @@ void GLWidget::paintGL() {
     //glScalef(20, 20, 20);
 
     glDisable(GL_LIGHTING);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glPointSize(3);
-    glBegin(GL_POINTS);
-        for(VertexPtr vertex : vertices)
-        {
-            vertex->draw();
-        }
-    glEnd();
+	if(drawCloud) {
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glPointSize(3);
+		glBegin(GL_POINTS);
+		    for(VertexPtr vertex : vertices)
+		    {
+		        vertex->draw();
+		    }
+		glEnd();
 
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glBegin(GL_LINES);
-    for (VertexPtr vertex : vertices)
-    {
-        NormalPtr normal = vertex->getNormal();
-        glVertex3fv((*vertex)._v);
-        glVertex3fv(((*normal) / -30 + (*vertex))._v);
-    }
-    glEnd();
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glBegin(GL_LINES);
+		for (VertexPtr vertex : vertices)
+		{
+		    NormalPtr normal = vertex->getNormal();
+		    glVertex3fv((*vertex)._v);
+		    glVertex3fv(((*normal) / -30 + (*vertex))._v);
+		}
+		glEnd();
+	}
 
     glEnable(GL_LIGHTING);
 
@@ -321,6 +331,18 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         camShift(-SHIFT_SPEED,0);
         updateGL();
         break;
+    case Qt::Key_I:
+        idI++;
+        updateGL();
+        break;
+    case Qt::Key_J:
+        idJ++;
+        updateGL();
+        break;
+    case Qt::Key_K:
+        idK++;
+        updateGL();
+        break;
     case Qt::Key_Q:
         camShiftZ(-SHIFT_SPEED);
         updateGL();
@@ -331,6 +353,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         break;
 	case Qt::Key_L:
 		useAlpha ^= 1;
+		updateGL();
+		break;
+	case Qt::Key_O:
+		drawCloud ^= 1;
 		updateGL();
 		break;
 	case Qt::Key_C:
