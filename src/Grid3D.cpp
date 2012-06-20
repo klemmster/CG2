@@ -23,6 +23,7 @@ using namespace Eigen;
 Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z)
     : m_tree(tree), m_dimX(dim_x), m_dimY(dim_y), m_dimZ(dim_z)
 {
+	m_interpolate = true;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
@@ -39,7 +40,6 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     m_diagLength = sqrt(pow((m_MaxX-m_MinX), 2) +
                         pow((m_MaxY-m_MinY),2) +
                         pow((m_MaxZ - m_MinZ),2));
-
 
     float stepX = abs(m_MaxX - m_MinX) / dim_x;
     float stepY = abs(m_MaxY - m_MinY) / dim_y;
@@ -217,12 +217,39 @@ shared_ptr<Vertex> Grid3D::getVertex(int idX,int idY,int idZ) {
 		return m_GridVertices.at(index);
 }
 
-double Grid3D::getInterpolatedFunctionValue(float x,float y,float z) {
-	shared_ptr<Vertex> vertex = getVertex((int)x,(int)y,(int)z);
+double Grid3D::getVertexValue(int idX,int idY,int idZ) {
+	shared_ptr<Vertex> vertex = getVertex(idX,idY,idZ);
 	if(vertex==NULL)
 		return OUTOFRANGE_DISTANCE;
 	else
 		return vertex->getFunValue();
+}
+
+
+double Grid3D::getInterpolatedFunctionValue(float x,float y,float z) {
+	if(m_interpolate) {
+		int iX = (int)x;
+		int iY = (int)y;
+		int iZ = (int)z;
+		float u = x-iX;
+		float v = y-iY;
+		float w = z-iZ;
+		float uR = 1-u;
+		float vR = 1-v;
+		float wR = 1-w;
+		float sum = 0;
+		sum += getVertexValue(iX,iY,iZ) * uR*vR*wR;
+		sum += getVertexValue(iX+1,iY,iZ) * u*vR*wR;
+		sum += getVertexValue(iX,iY+1,iZ) * uR*v*wR;
+		sum += getVertexValue(iX+1,iY+1,iZ) * u*v*wR;
+		sum += getVertexValue(iX,iY,iZ+1) * uR*vR*w;
+		sum += getVertexValue(iX+1,iY,iZ+1) * u*vR*w;
+		sum += getVertexValue(iX,iY+1,iZ+1) * uR*v*w;
+		sum += getVertexValue(iX+1,iY+1,iZ+1) * u*v*w;
+		return sum;
+	}else{
+		return getVertexValue((int)x,(int)y,(int)z);
+	}
 }
 
 double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z) {

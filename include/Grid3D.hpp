@@ -29,10 +29,12 @@ public:
 
 	int getIndex(int idX,int idY,int idZ);
 	shared_ptr<Vertex> getVertex(int idX,int idY,int idZ);
+	double getVertexValue(int idX,int idY,int idZ);
 
 	size_t m_dimX;
     size_t m_dimY;
     size_t m_dimZ;
+	bool m_interpolate;
 
 protected:
     void generateVertices();

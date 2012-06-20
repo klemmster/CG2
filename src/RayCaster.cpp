@@ -16,21 +16,22 @@ void RayCaster::cast(Grid3D * grid,int type,float eyeX,float eyeY,float eyeZ,flo
 	glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
     glGetDoublev(GL_PROJECTION_MATRIX, projection); 
 
-	GLdouble x,y,z;	
+	GLdouble x,y,z;
 
 	float dScale = 1/scale;
 
 	int rayStepCount = (int)(RAY_LENGTH/RAY_STEPSIZE+0.5f);
 
 	vec3f rayDir;
+	float stepSize = RAY_STEPSIZE;
 
 	//Filltest funcvalues
 	for(int i=0;i<grid->m_dimX;i++) 
 		for(int j=0;j<grid->m_dimY;j++)
 			for(int k=0;k<grid->m_dimZ;k++) {
-				float x = i/(float)grid->m_dimX - 0.5f;
-				float y = j/(float)grid->m_dimY - 0.5f;
-				float z = k/(float)grid->m_dimZ - 0.5f;
+				float x = i/((float)grid->m_dimX-1) - 0.5f;
+				float y = j/((float)grid->m_dimY-1) - 0.5f;
+				float z = k/((float)grid->m_dimZ-1) - 0.5f;
 				grid->getVertex(i,j,k)->setFunValue(x*x*4 + y*y*4 + z*z*4 - 1);
 			}
 
@@ -50,9 +51,9 @@ void RayCaster::cast(Grid3D * grid,int type,float eyeX,float eyeY,float eyeZ,flo
 			float dirZ = z - eyeZ;
 			float dist = sqrt(dirX*dirX + dirY*dirY + dirZ*dirZ);
 			rayDir = vec3f(
-						dirX/dist * RAY_STEPSIZE,
-						dirY/dist * RAY_STEPSIZE,
-						dirZ/dist * RAY_STEPSIZE
+						dirX/dist,
+						dirY/dist,
+						dirZ/dist
 					);
 
 			float rayX = eyeX;
@@ -67,6 +68,7 @@ void RayCaster::cast(Grid3D * grid,int type,float eyeX,float eyeY,float eyeZ,flo
 				float funcVal = grid->getImplicitFunctionValueWorldCoordinates(
 									rayX*dScale,rayY*dScale,rayZ*dScale
 								);
+
 				if(funcVal < minFuncVal)
 					minFuncVal = funcVal;
 				if(funcVal <= 0) {
@@ -81,10 +83,17 @@ void RayCaster::cast(Grid3D * grid,int type,float eyeX,float eyeY,float eyeZ,flo
 							maxColorVal = colorVal;
 						}
 					}
+				}else{
+					if(type == RC_FIRSTTOUCH) {
+						if(funcVal<OUTOFRANGE_DISTANCE && false)
+							stepSize = funcVal;
+						else
+							stepSize = RAY_STEPSIZE;
+					}
 				}
-				rayX += rayDir[0];
-				rayY += rayDir[1];
-				rayZ += rayDir[2];
+				rayX += rayDir[0] * stepSize;
+				rayY += rayDir[1] * stepSize;
+				rayZ += rayDir[2] * stepSize;
 			}
 
 			if(type!=RC_FIRSTTOUCH) {

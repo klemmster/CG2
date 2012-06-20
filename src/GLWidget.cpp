@@ -51,6 +51,7 @@ GLfloat screenRatio;
 
 RayCaster rayCaster;
 int doRayCasting = -1;
+bool locRepaint = false;
 
 unsigned int kNearest = 50;
 float radius = 40;
@@ -112,6 +113,9 @@ void GLWidget::resizeGL(int w, int h) {
 }
 
 void GLWidget::paintGL() {
+	
+	if(locRepaint)
+		return;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3f(1,0,0);
@@ -165,9 +169,11 @@ void GLWidget::paintGL() {
 	//Call ray casting
 	if(doRayCasting>0) {
 
+		locRepaint = true;
 		rayCaster.cast(&grid,doRayCasting,eyeX,eyeY,eyeZ,scale);
 		glEnable(GL_LIGHTING);
 		doRayCasting = -1;
+		locRepaint = true;
 		return;
 	}
 
@@ -241,17 +247,20 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     GLfloat dy = (GLfloat)(event->y() - lastPos.y()) / height();
 
     if (event->buttons() & Qt::LeftButton) {
+		locRepaint = false;
         camAlpha += 4 * dx;
         camBeta += 3 * dy;
         updateGL();
     }
 
     if (event->buttons() & Qt::RightButton) {
+		locRepaint = false;
         camDistance += 3.5f * dy;
         updateGL();
     }
 
     if (event->buttons() & Qt::MiddleButton) {
+		locRepaint = false;
 		camShift(dx,dy);
         updateGL();
     }
@@ -260,12 +269,14 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event){
+	locRepaint = false;
     //positionZ += event->delta()/100.0;
     zoom -= event->delta()*0.00015f;
     updateGL();
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* event) {
+
     switch(event->key()) {
     case Qt::Key_Escape:
         break;
@@ -345,8 +356,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		break;
     default:
         event->ignore();
-        break;
+        return;
     }
+
+	locRepaint = false;
 }
 
 void GLWidget::sigShowKDTree(bool show) {
