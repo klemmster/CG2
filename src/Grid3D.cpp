@@ -27,7 +27,7 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     Grid(tree, dim_x, dim_y),
     m_dimZ(dim_z)
 {
-	m_interpolate = true;
+	m_interpolate = false;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
@@ -239,16 +239,20 @@ shared_ptr<Vertex> Grid3D::getVertex(int idX,int idY,int idZ) {
 		return m_GridVertices.at(index);
 }
 
-double Grid3D::getVertexValue(int idX,int idY,int idZ) {
+double Grid3D::getVertexValue(int idX,int idY,int idZ,int valueType) {
 	shared_ptr<Vertex> vertex = getVertex(idX,idY,idZ);
 	if(vertex==nullptr)
 		return OUTOFRANGE_DISTANCE;
-	else
-		return vertex->getFunValue();
+	else{
+		if(valueType == 0)	
+			return vertex->getFunValue();
+		else
+			return (*vertex->getNormal())[0];
+	}
 }
 
 
-double Grid3D::getInterpolatedFunctionValue(float x,float y,float z) {
+double Grid3D::getInterpolatedFunctionValue(float x,float y,float z,int valueType) {
 	if(m_interpolate) {
 		int iX = (int)x;
 		int iY = (int)y;
@@ -260,21 +264,21 @@ double Grid3D::getInterpolatedFunctionValue(float x,float y,float z) {
 		float vR = 1-v;
 		float wR = 1-w;
 		float sum = 0;
-		sum += getVertexValue(iX,iY,iZ) * uR*vR*wR;
-		sum += getVertexValue(iX+1,iY,iZ) * u*vR*wR;
-		sum += getVertexValue(iX,iY+1,iZ) * uR*v*wR;
-		sum += getVertexValue(iX+1,iY+1,iZ) * u*v*wR;
-		sum += getVertexValue(iX,iY,iZ+1) * uR*vR*w;
-		sum += getVertexValue(iX+1,iY,iZ+1) * u*vR*w;
-		sum += getVertexValue(iX,iY+1,iZ+1) * uR*v*w;
-		sum += getVertexValue(iX+1,iY+1,iZ+1) * u*v*w;
+		sum += getVertexValue(iX,iY,iZ,valueType) * uR*vR*wR;
+		sum += getVertexValue(iX+1,iY,iZ,valueType) * u*vR*wR;
+		sum += getVertexValue(iX,iY+1,iZ,valueType) * uR*v*wR;
+		sum += getVertexValue(iX+1,iY+1,iZ,valueType) * u*v*wR;
+		sum += getVertexValue(iX,iY,iZ+1,valueType) * uR*vR*w;
+		sum += getVertexValue(iX+1,iY,iZ+1,valueType) * u*vR*w;
+		sum += getVertexValue(iX,iY+1,iZ+1,valueType) * uR*v*w;
+		sum += getVertexValue(iX+1,iY+1,iZ+1,valueType) * u*v*w;
 		return sum;
 	}else{
-		return getVertexValue((int)x,(int)y,(int)z);
+		return getVertexValue((int)x,(int)y,(int)z,valueType);
 	}
 }
 
-double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z) {
+double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z,int valueType) {
 	//if(x<m_MinX || x>m_MaxX || y<m_MinY || y>m_MaxY || z<m_MinZ || z>m_MaxZ)
 	//	return OUTOFRANGE_DISTANCE;
 	//else
@@ -282,7 +286,7 @@ double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z)
 	x = (x - m_MinX)/(m_MaxX-m_MinX) * (m_dimX);
 	y = (y - m_MinY)/(m_MaxY-m_MinY) * (m_dimY);
 	z = (z - m_MinZ)/(m_MaxZ-m_MinZ) * (m_dimZ);
-	return getInterpolatedFunctionValue(x,y,z);
+	return getInterpolatedFunctionValue(x,y,z,valueType);
 
 //return x*x*4 + y*y*6 + z*z*8 - 1;
 }

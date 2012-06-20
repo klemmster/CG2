@@ -76,13 +76,6 @@ void Vertex::draw(bool useAlpha) const{
     glPointSize(3);
 	float alpha = 1;
 	if(useAlpha) {
-		alpha = 1-(m_W);
-		if(alpha<0)
-			alpha = 0;
-		if(alpha>1)
-			alpha = 1;
-		if(m_W>1)
-		alpha = 0;
 		float cl = m_W * 10;
 		if(m_W<=0)
 			glColor4f(1,-cl,0,1);
