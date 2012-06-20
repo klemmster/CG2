@@ -19,25 +19,27 @@
 #include <float.h>
 #include <iomanip>
 
+#define DIM_BIAS 0.4f
+
 using namespace Eigen;
 
 Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z):
     Grid(tree, dim_x, dim_y),
     m_dimZ(dim_z)
 {
-	m_interpolate = false;
+	m_interpolate = true;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
 
     // slightly bigger bounding box
-    m_MinX = (*minm_vertices.at(0))[0] - 0.01;
-    m_MinY = (*minm_vertices.at(1))[1] - 0.01;
-    m_MinZ = (*minm_vertices.at(2))[2] - 0.01;
+    m_MinX = (*minm_vertices.at(0))[0] - DIM_BIAS;
+    m_MinY = (*minm_vertices.at(1))[1] - DIM_BIAS;
+    m_MinZ = (*minm_vertices.at(2))[2] - DIM_BIAS;
 
-    m_MaxX = (*maxm_vertices.at(0))[0] + 0.01;
-    m_MaxY = (*maxm_vertices.at(1))[1] + 0.01;
-    m_MaxZ = (*maxm_vertices.at(2))[2] + 0.01;
+    m_MaxX = (*maxm_vertices.at(0))[0] + DIM_BIAS;
+    m_MaxY = (*maxm_vertices.at(1))[1] + DIM_BIAS;
+    m_MaxZ = (*maxm_vertices.at(2))[2] + DIM_BIAS;
 
     m_diagLength = sqrt(pow((m_MaxX-m_MinX), 2) +
                         pow((m_MaxY-m_MinY),2) +
@@ -46,6 +48,8 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     float stepX = abs(m_MaxX - m_MinX) / dim_x;
     float stepY = abs(m_MaxY - m_MinY) / dim_y;
     float stepZ = abs(m_MaxZ - m_MinZ) / dim_z;
+
+	
 
     m_radius = (stepX + stepY + stepZ) / 3.0;
     //std::cout << "StepX: " << std::setprecision(5) << stepX << "\n";

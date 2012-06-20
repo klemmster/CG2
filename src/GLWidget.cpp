@@ -99,7 +99,7 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid3D(tree, 20,20,22);
+    grid = Grid3D(tree, 28,28,28);
     m_m = 5;
     m_n = 5;
 }
@@ -279,7 +279,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event){
-	locRepaint = false;
     //positionZ += event->delta()/100.0;
     zoom -= event->delta()*0.00015f;
     updateGL();
@@ -389,7 +388,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         return;
     }
 
-	locRepaint = false;
+	//locRepaint = false;
 }
 
 void GLWidget::sigShowKDTree(bool show) {
