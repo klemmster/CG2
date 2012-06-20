@@ -23,7 +23,7 @@ public:
     virtual ~Grid3D() {};
 
     virtual void approximateWLS(VertexList& resultList);
-    virtual void draw();
+    virtual void draw(bool useAlpha);
 	virtual double getInterpolatedFunctionValue(float x,float y,float z);
 	virtual double getImplicitFunctionValueWorldCoordinates(float x,float y,float z);
 

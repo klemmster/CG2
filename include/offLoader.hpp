@@ -13,12 +13,12 @@ class OffLoader
     public:
         OffLoader();
         virtual ~OffLoader();
-        virtual VertexList readOff(const std::string& fileName);
+        virtual VertexList readOff(const std::string& fileName,float scale);
 
     protected:
         bool parseFirstLine(Tokens tokens);
         bool parseSecondLine(Tokens tokens);
-        const VertexPtr parseVertex(const Tokens& tokens) const;
+        const VertexPtr parseVertex(const Tokens& tokens,float scale) const;
 
     private:
         unsigned int m_NumVertices;

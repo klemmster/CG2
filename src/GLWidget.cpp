@@ -25,8 +25,9 @@ GLWidget::GLWidget(QWidget *parent) :
     m_k = 1;
 }
 
-void GLWidget::setFilename(const std::string& fileName) {
+void GLWidget::setFilename(const std::string& fileName,float scale) {
     m_fileName = fileName;
+	m_scale = scale;
 }
 
 QPoint lastPos;
@@ -48,6 +49,7 @@ GLfloat modelOffsetX = 0.0f;
 GLfloat modelOffsetY = 0.0f;
 GLfloat modelOffsetZ = 0.0f;
 GLfloat screenRatio;
+bool useAlpha = false;
 
 RayCaster rayCaster;
 int doRayCasting = -1;
@@ -86,7 +88,7 @@ void GLWidget::initializeGL() {
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
-    vertices = loader.readOff(m_fileName);
+    vertices = loader.readOff(m_fileName,m_scale);
     readTimer.stop();
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
@@ -188,7 +190,7 @@ void GLWidget::paintGL() {
 //    {
 //        tree.draw();
 //    }
-    grid.draw();
+    grid.draw(useAlpha);
     //glScalef(20, 20, 20);
 
     glDisable(GL_LIGHTING);
@@ -327,6 +329,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         camShiftZ(SHIFT_SPEED);
         updateGL();
         break;
+	case Qt::Key_L:
+		useAlpha ^= 1;
+		updateGL();
+		break;
 	case Qt::Key_C:
 		positionX = 0;
 		positionY = 0;

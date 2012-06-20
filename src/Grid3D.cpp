@@ -197,11 +197,11 @@ NormalPtr Grid3D::interpolateNormal(VertexList vrtxList) const{
     return NormalPtr(new Normal(avgNormal));
 }
 
-void Grid3D::draw()
+void Grid3D::draw(bool useAlpha)
 {
     for (VertexPtr vrtx : m_GridVertices)
     {
-        vrtx->draw();
+        vrtx->draw(useAlpha);
     }
 }
 

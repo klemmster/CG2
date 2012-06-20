@@ -8,7 +8,6 @@
   #include <GL/glut.h>
 #endif
 
-
 Vertex::Vertex(const vec3f pos):
     vec3f(pos),
     m_Color(vec3f(.6f, .6f, .6f)),
@@ -71,10 +70,10 @@ Vertex::~Vertex()
      //dtor
 }
 
-void Vertex::draw() const{
+void Vertex::draw(bool useAlpha) const{
     glDisable(GL_LIGHTING);
     glPointSize(3);
-    glColor3fv(m_Color._v);
+    glColor4f(m_Color._v[0],m_Color._v[1],m_Color._v[2],useAlpha?1-(m_W)*2:1);
     glBegin(GL_POINTS);
         glVertex3fv(_v);
     glEnd();
