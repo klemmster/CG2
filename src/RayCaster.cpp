@@ -1,7 +1,7 @@
 #include "RayCaster.hpp"
 
 #define RAY_STEPSIZE 0.005f
-#define RAY_LENGTH 14.0f
+#define RAY_LENGTH 10.0f
 
 #define GET_COLOR_INDEX (y*m_width*3+x*3)
 

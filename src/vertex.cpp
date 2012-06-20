@@ -83,11 +83,11 @@ void Vertex::draw(bool useAlpha) const{
 			alpha = 1;
 		if(m_W>1)
 		alpha = 0;
-		float cl = m_W * 100;
-		if(m_W>0)
-			return;
-		else
+		float cl = m_W * 10;
+		if(m_W<=0)
 			glColor4f(1,-cl,0,1);
+		else
+			return;
 	}else{
 		glColor4f(m_Color._v[0],m_Color._v[1],m_Color._v[2],alpha);
 	}
