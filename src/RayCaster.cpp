@@ -1,6 +1,6 @@
 #include "RayCaster.hpp"
 
-#define RAY_STEPSIZE 0.03f
+#define RAY_STEPSIZE 0.005f
 #define RAY_LENGTH 14.0f
 
 #define GET_COLOR_INDEX (y*m_width*3+x*3)
@@ -26,16 +26,15 @@ void RayCaster::cast(Grid3D * grid,int type,float eyeX,float eyeY,float eyeZ,flo
 	float stepSize = RAY_STEPSIZE;
 
 	//Filltest funcvalues
-    /*
-	for(int i=0;i<grid->m_dimX;i++)
-		for(int j=0;j<grid->m_dimY;j++)
-			for(int k=0;k<grid->m_dimZ;k++) {
-				float x = i/((float)grid->m_dimX-1) - 0.5f;
-				float y = j/((float)grid->m_dimY-1) - 0.5f;
-				float z = k/((float)grid->m_dimZ-1) - 0.5f;
+if(0)
+	for(int i=0;i<=grid->getDimX();i++)
+		for(int j=0;j<=grid->getDimY();j++)
+			for(int k=0;k<=grid->getDimZ();k++) {
+				float x = i/((float)grid->getDimX()) - 0.5f;
+				float y = j/((float)grid->getDimY()) - 0.5f;
+				float z = k/((float)grid->getDimZ()) - 0.5f;
 				grid->getVertex(i,j,k)->setFunValue(x*x*4 + y*y*4 + z*z*4 - 1);
 			}
-    */
 
 
 	float maxColorVal = 0;

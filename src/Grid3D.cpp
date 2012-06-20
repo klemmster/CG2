@@ -25,7 +25,7 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     Grid(tree, dim_x, dim_y),
     m_dimZ(dim_z)
 {
-	m_interpolate = true;
+	m_interpolate = false;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
@@ -221,9 +221,9 @@ unsigned int Grid3D::factorial(const int num)
 //--- Getting values ---
 
 int Grid3D::getIndex(int idX,int idY,int idZ) {
-	if(idX<0 || idX>=m_dimX || idY<0 || idY>=m_dimY || idZ<0 || idZ>=m_dimZ)
+	if(idX<0 || idX>m_dimX || idY<0 || idY>m_dimY || idZ<0 || idZ>m_dimZ)
 		return -1;
-	return idZ*m_dimX*m_dimY + idY*m_dimX + idX;
+	return idZ*(m_dimX+1)*(m_dimY+1) + idY*(m_dimX+1) + idX;
 }
 
 shared_ptr<Vertex> Grid3D::getVertex(int idX,int idY,int idZ) {
@@ -274,9 +274,9 @@ double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z)
 	//	return OUTOFRANGE_DISTANCE;
 	//else
 	//	return -0.5f;
-	x = (x - m_MinX)/(m_MaxX-m_MinX) * (m_dimX-1);
-	y = (y - m_MinY)/(m_MaxY-m_MinY) * (m_dimY-1);
-	z = (z - m_MinZ)/(m_MaxZ-m_MinZ) * (m_dimZ-1);
+	x = (x - m_MinX)/(m_MaxX-m_MinX) * (m_dimX);
+	y = (y - m_MinY)/(m_MaxY-m_MinY) * (m_dimY);
+	z = (z - m_MinZ)/(m_MaxZ-m_MinZ) * (m_dimZ);
 	return getInterpolatedFunctionValue(x,y,z);
 
 //return x*x*4 + y*y*6 + z*z*8 - 1;

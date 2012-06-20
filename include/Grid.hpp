@@ -24,6 +24,9 @@ public:
     void setRadius(const float radius);
     void reapproximateWLS();
     size_t m_k;
+	size_t getDimX() {return m_dimX;};
+	size_t getDimY() {return m_dimY;};
+
 
 protected:
     float getWendland(const float distance) const;
