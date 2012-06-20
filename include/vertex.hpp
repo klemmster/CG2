@@ -37,6 +37,8 @@ class Vertex: public vec3f
 
     protected:
         vec3f m_Color;
+        void setNormal(NormalPtr normal){ m_NormalPtr = normal; };
+
         NormalPtr m_NormalPtr;
         //Function Value
         double m_W;

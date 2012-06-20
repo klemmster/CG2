@@ -177,6 +177,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
             double funValue = b.dot(c);
             NormalPtr normal = interpolateNormal(list);
             pointDesired->setFunValue(funValue);
+            pointDesired->setNormal(normal);
             if(funValue < 0.0f){
                 pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
             }
@@ -246,8 +247,12 @@ double Grid3D::getVertexValue(int idX,int idY,int idZ,int valueType) {
 	else{
 		if(valueType == 0)	
 			return vertex->getFunValue();
-		else
-			return (*vertex->getNormal())[0];
+		else{
+			if((*vertex->getNormal())!=nullptr)
+				return (*vertex->getNormal())[0];
+			else
+				return 0;
+		}
 	}
 }
 

@@ -71,10 +71,10 @@ if(0)
 									0
 								);
 				
-				//float normVal = grid->getImplicitFunctionValueWorldCoordinates(
-				//					rayX*dScale,rayY*dScale,rayZ*dScale,
-				//					1
-				//				);
+				float normVal = grid->getImplicitFunctionValueWorldCoordinates(
+									rayX*dScale,rayY*dScale,rayZ*dScale,
+									1
+								);
 
 				if(funcVal < minFuncVal)
 					minFuncVal = funcVal;
