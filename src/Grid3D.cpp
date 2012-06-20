@@ -16,6 +16,7 @@
 
 #include "Grid3D.hpp"
 #include <math.h>
+#include <float.h>
 #include <iomanip>
 
 using namespace Eigen;
@@ -45,9 +46,8 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     float stepY = abs(m_MaxY - m_MinY) / dim_y;
     float stepZ = abs(m_MaxZ - m_MinZ) / dim_z;
 
-    m_radius = (stepX + stepY + stepZ) / 2.0;
-    std::cout << "StepX: " << std::setprecision(5) << stepX << "\n";
-    std::cout << "m_radisu: " << std::setprecision(5) << m_radius << "\n";
+    m_radius = (stepX + stepY + stepZ) / 1.2;
+    //std::cout << "StepX: " << std::setprecision(5) << stepX << "\n";
 
 
     float xPos = m_MinX;
@@ -66,7 +66,7 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
         {
             for (size_t x = 0; x <= m_dimX; x++)
             {
-                VertexPtr vrtx = VertexPtr(new Vertex(xPos, yPos, zPos, color, 0));
+                VertexPtr vrtx = VertexPtr(new Vertex(xPos, yPos, zPos, color, DBL_MAX));
                 m_GridVertices.push_back(vrtx);
                 xPos += stepX;
             }
@@ -95,13 +95,10 @@ void Grid3D::generateVertices()
         VertexPtr point2(new Vertex((*vertex) - (*vertex->getNormal()), -epsilon));
         m_generatedPoints.push_back(point1);
         m_generatedPoints.push_back(point2);
+        m_generatedPoints.push_back(vertex);
     }
 
-    VertexList allPoints(m_generatedPoints);
-    for(auto vrtx: m_GridVertices){
-        allPoints.push_back(vrtx);
-    }
-    m_fullTree = KDTree(allPoints, 3);
+    m_fullTree = KDTree(m_generatedPoints, 3);
     approximateWLS(m_GridVertices);
 }
 
@@ -120,14 +117,15 @@ void Grid3D::approximateWLS(VertexList& resultList)
     for(VertexPtr pointDesired: resultList)
     {
         //Get Points used for this approximation
-        //TODO: Should be a good automatic? radius -- maybe gridsize related
         VertexList list = m_fullTree.findInRadius(pointDesired, m_radius);
         MatrixXf bDimsMatSum = MatrixXf::Zero(k,k);
         VectorXf bDimsVecSum = VectorXf::Zero(k);
 
+        //std::cout << "SIze: " << list.size() << "\n";
         for(VertexPtr point : list)
         {
             double funValue = point->getFunValue();
+            //std::cout << "funvalue: " << std::setprecision(5) << funValue << "\n";
             Eigen::MatrixXf bDims = MatrixXf::Zero(k,k);
             bDims = b*b.transpose();
             vec3f distVec = (*pointDesired) - (*point);
@@ -171,6 +169,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
         VectorXf c(k);
         c = bDimsMatSum.inverse() * bDimsVecSum;
         double funValue = b.dot(c);
+        NormalPtr normal = interpolateNormal(list);
         pointDesired->setFunValue(funValue);
         if(funValue < 0.0f){
             pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
@@ -178,6 +177,23 @@ void Grid3D::approximateWLS(VertexList& resultList)
         }
         //m_coefficients.push_back(c);
     }
+}
+
+NormalPtr Grid3D::interpolateNormal(VertexList vrtxList) const{
+    std::vector<NormalPtr> normals;
+    for(VertexPtr vrtx : vrtxList){
+        NormalPtr normal = vrtx->getNormal();
+        if(normal){
+            normals.push_back(normal);
+        }
+    }
+    //TODO: distance - dependent interpolation if necessary
+    double factor = 1.0/normals.size();
+    vec3f avgNormal;
+    for(NormalPtr normal : normals){
+        avgNormal = ((*normal)*factor)+avgNormal;
+    }
+    return NormalPtr(new Normal(avgNormal));
 }
 
 void Grid3D::draw()
