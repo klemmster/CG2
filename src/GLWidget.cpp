@@ -27,10 +27,12 @@ GLWidget::GLWidget(QWidget *parent) :
     m_radius = 1.0f;
 }
 
-void GLWidget::setFilename(const std::string& fileName,float scale, float radius) {
+void GLWidget::setFilename(const std::string& fileName,float scale,
+        float radius, int dims) {
     m_fileName = fileName;
 	m_scale = scale;
     m_radius = radius;
+    m_dims = dims;
 }
 
 QPoint lastPos;
@@ -102,8 +104,8 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid3D(tree, 10,10,10, m_radius);
-    marchingCubes = MarchingCubes(grid, 10, 10, 10);
+    grid = Grid3D(tree, m_dims,m_dims,m_dims, m_radius);
+    marchingCubes = MarchingCubes(grid, m_dims, m_dims, m_dims);
     m_m = 5;
     m_n = 5;
 }

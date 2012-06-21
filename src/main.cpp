@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     std::string fileName;
 	float scale;
     float radius;
+    int dims;
     if(argc > 1){
         fileName = argv[1];
     }else{
@@ -34,9 +35,13 @@ int main(int argc, char *argv[])
         radius = atof(argv[3]);
     }else{
         radius = 1.0;
+    }if(argc > 4){
+        dims = atoi(argv[4]);
+    }else{
+        dims = 10;
     }
 
-    ui.glWidget->setFilename(fileName,scale, radius);
+    ui.glWidget->setFilename(fileName,scale, radius, dims);
     window->show();
     //GLWidget window;
 
