@@ -16,6 +16,14 @@ Vertex::Vertex(const vec3f pos):
 {
 }
 
+Vertex::Vertex(const vec3f pos, NormalPtr normal):
+    vec3f(pos),
+    m_Color(vec3f(.6f, .6f, .6f)),
+    m_NormalPtr(normal),
+    m_W(0.0)
+{
+}
+
 Vertex::Vertex(const float x, const float y, const float z):
     vec3f(x, y, z),
     m_Color(vec3f(.6f, .6f, .6f)),
@@ -91,7 +99,7 @@ void Vertex::draw(bool useAlpha) const{
 	}else{
 		glColor4f(m_Color._v[0],m_Color._v[1],m_Color._v[2],alpha);
 	}
-    
+
     glBegin(GL_POINTS);
         glVertex3fv(_v);
     glEnd();

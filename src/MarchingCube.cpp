@@ -340,9 +340,24 @@ VertexList Cube::getTriangles(){
 
 VertexPtr Cube::getInterpolatedVertex(const Edge& edge){
     VertexPtr a = std::get<0>(edge);
+    double aVal = a->getFunValue();
     VertexPtr b = std::get<1>(edge);
-    //TODO
-    return a;
+    double bVal = b->getFunValue();
+
+    /*
+    if(abs(aVal) < 0.00001)
+        return a;
+    if(abs(bVal) < 0.00001)
+        return b;
+    if(abs(aVal - bVal) < 0.00001)
+        return a;
+    double fac = -aVal / (bVal - aVal);
+    */
+    double fac = 0.5;
+    vec3f resultVec = (*a) + fac * (*b - *a);
+    //TODO: interpolate normals
+    VertexPtr result(new Vertex(resultVec, a->getNormal()));
+    return result;
 }
 
 MarchingCubes::MarchingCubes():
@@ -371,7 +386,10 @@ MarchingCubes::~MarchingCubes(){
 void MarchingCubes::draw(){
 
     glBegin(GL_TRIANGLES);
-    for(VertexPtr vrtx: m_triangles){
+        for(auto vrtx : m_triangles){
+        NormalPtr normal = vrtx->getNormal();
+        if(normal)
+            glNormal3fv((*normal)._v);
         glVertex3fv((*vrtx)._v);
     }
     glEnd();
