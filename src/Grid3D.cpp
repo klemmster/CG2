@@ -19,7 +19,7 @@
 #include <float.h>
 #include <iomanip>
 
-#define DIM_BIAS 0.5f
+#define DIM_BIAS 0.2f
 
 using namespace Eigen;
 
@@ -193,6 +193,7 @@ NormalPtr Grid3D::interpolateNormal(VertexList vrtxList) const{
     for(VertexPtr vrtx : vrtxList){
         NormalPtr normal = vrtx->getNormal();
         if(normal){
+            (*normal) = (*normal) / norm(*normal);
             normals.push_back(normal);
         }
     }
