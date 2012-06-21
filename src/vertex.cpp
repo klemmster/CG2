@@ -79,7 +79,7 @@ Vertex::~Vertex()
 }
 
 void Vertex::draw(bool useAlpha) const{
-    glDisable(GL_LIGHTING);
+    //glDisable(GL_LIGHTING);
 	glEnable(GL_ALPHA);
     glPointSize(3);
 	float alpha = 1;
@@ -96,7 +96,7 @@ void Vertex::draw(bool useAlpha) const{
     glBegin(GL_POINTS);
         glVertex3fv(_v);
     glEnd();
-    glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHTING);
 }
 
 void Vertex::highlight(const vec3f color){
