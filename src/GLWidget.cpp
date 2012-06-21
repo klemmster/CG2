@@ -101,7 +101,7 @@ void GLWidget::initializeGL() {
     tree = KDTree(vertices, 2);
     treeTimer.stop();
     grid = Grid3D(tree, 28,28,28);
-    marchingCubes = MarchingCubes(grid, 28, 28, 28);
+    marchingCubes = MarchingCubes(grid, 18, 18, 18);
     m_m = 5;
     m_n = 5;
 }
