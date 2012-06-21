@@ -19,6 +19,7 @@ class Vertex: public vec3f
     public:
         /** Default constructor */
         Vertex(const vec3f pos);
+        Vertex(const vec3f pos, NormalPtr normal);
         Vertex(const float x, const float y, const float z);
         Vertex(const float x, const float y, const float z, NormalPtr normal);
         Vertex(const float x, const float y, const float z, const vec3f color);
