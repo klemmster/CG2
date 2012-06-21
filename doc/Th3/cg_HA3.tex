@@ -57,7 +57,7 @@ $ #1 $
 
 \begin{center}
 \normalsize Computer Graphics 2\\[0.3cm]
-\huge \textbf{Hausaufgabe 2} \normalsize\\[0.8cm]
+\huge \textbf{Hausaufgabe 3} \normalsize\\[0.8cm]
 \begin{tabular}{rl}
 \texttt{343635} & Richard Klemm\\
 \texttt{319716} & Andreas Fender\\
@@ -116,29 +116,25 @@ $}
 \end{center}
 Somit kann auch gesagt werden, dass der resultierende Kreis den Druchschnittsflächeninhalt der beiden Kreise hat.
 
+\task{3}
+
+Bei konstanten Approximationspolynomen ist die Basis $\textbf{b(x)} = (1)$. Die implizite Funktion vereinfacht sich zu
+\formel{$f(x) = b(x)c = (1)\cdot c = c$}
+Weiterhin ist $\textbf{c}$ gegeben durch
+\formel{$c = [\mathsum{i=0}{0}{b(x_i)b(x_i)^T}]^{-1}\mathsum{i=0}{0}{b(x_i)f_i}$}
+was sich wiederrum vereinfacht zu
+\formel{$c = [\mathsum{i=0}{0}{1}]^{-1}\mathsum{i=0}{0}{f_i} = f_i$}
+Die Werte von $f_i$ bewegen sich laut Praxisaufgabe zwischen $-\epsilon$ und $\epsilon$. Somit ist der Wertebereich von $f$:
+\formel{$f(x) \in [-\epsilon,\epsilon]$}
+
 \task{4}
 
 Ja.\\
-Marching Cubes fragt eine endliche Menge von Sampling Punkten ab. Scharfe Kanten (Features) werden nicht erkannt. Auch bei einer Erhöhung der Sampling Punkte werden Features nicht erkannt, da diese sich innerhalb eines Cubes befinden.
+Marching Cubes fragt eine endliche Menge von Sampling Punkten ab. Scharfe Kanten (Features) werden nicht erkannt. Auch bei einer Erhöhung der Sampling Punkte werden Features nicht erkannt, da diese sich innerhalb eines Cubes befinden.\\
+\\
+Die folgende Grafik verdeutlicht dies:
+\image{0.25}{marchingfail.png}
+Die rote Linie verdeutlicht ein durch Marching Cubes erzeugtes Face.
 
-\task{5}
-
-Partielle Ableitung
-
-\formel{$\nabla f(x,y,z) = (\frac{\partial f}{\partial x},\frac{\partial f}{\partial y},\frac{\partial f}{\partial z})^T$}
-
-Beispiel Kugelgleichung: 
-
-\formel{$f(x,y,z) = x^2 + y^2 + z^2 - r^2$}
-
-\begin{equation*}
-\begin{split}
-\nabla f& =  \frac{\partial}{\partial x}(x^2 + y^2 + z^2 - r^2) \threevector{1}{0}{0}  \\
-			    &  \quad + \frac{\partial}{\partial y}(x^2 + y^2 + z^2 - r^2) \threevector{0}{1}{0}  \\
-			    &  \quad + \frac{\partial}{\partial z}(x^2 + y^2 + z^2 - r^2) \threevector{0}{0}{1} \\
-			    & = 2x \threevector{1}{0}{0} + 2y \threevector{0}{1}{0} + 2z \threevector{0}{0}{1} \\
-			    & = \threevector{2x}{2y}{2z}
-\end{split}
-\end{equation*}
 
 \end{document}
