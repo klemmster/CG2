@@ -356,8 +356,21 @@ VertexPtr Cube::getInterpolatedVertex(const Edge& edge){
     double fac = 0.5;
     vec3f resultVec = (*a) + fac * (*b - *a);
     //TODO: interpolate normals
-    VertexPtr result(new Vertex(resultVec, a->getNormal()));
-    return result;
+    NormalPtr normala = a->getNormal();
+    NormalPtr normalb = b->getNormal();
+    NormalPtr normal;
+    if(a != nullptr && b != nullptr){
+        vec3f interNormal = (*a) + (*b);
+        interNormal = interNormal / 2.0;
+        normal = NormalPtr(new Normal(interNormal));
+        VertexPtr result(new Vertex(resultVec, normal));
+        return result;
+    }else{
+        if(a == nullptr)
+            normal = b->getNormal();
+        VertexPtr result(new Vertex(resultVec, normal));
+        return result;
+    }
 }
 
 MarchingCubes::MarchingCubes():
@@ -397,8 +410,8 @@ void MarchingCubes::draw(){
 
 void MarchingCubes::march(){
 
-    for(int x=0; x<m_dimX-1; ++x){
-        for(int y=0; y<m_dimY-1; ++y){
+    for(int x=0; x<m_dimX; ++x){
+        for(int y=0; y<m_dimY; ++y){
             for(int z=0; z<m_dimZ; ++z){
                 VertexPtr vrtx0 = m_Grid.getVertex(x, y, z);
                 VertexPtr vrtx1 = m_Grid.getVertex(x+1, y, z);

@@ -24,11 +24,16 @@ GLWidget::GLWidget(QWidget *parent) :
         showTree = 0;
     setFocus();
     m_k = 1;
+    m_radius = 1.0f;
+    m_showMarchingCubes = false;
 }
 
-void GLWidget::setFilename(const std::string& fileName,float scale) {
+void GLWidget::setFilename(const std::string& fileName,float scale,
+        float radius, int dims) {
     m_fileName = fileName;
 	m_scale = scale;
+    m_radius = radius;
+    m_dims = dims;
 }
 
 QPoint lastPos;
@@ -77,21 +82,6 @@ void GLWidget::initializeGL() {
     glClearColor(0, 0, 0, 0);
 
 //    // Somewhere in the initialization part of your programâ¦
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    //glEnable(GL_LIGHT1);
-//
-//    // Create light components
-    GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
-   // GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    GLfloat position[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-//
-//    // Assign created components to GL_LIGHT1
-    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight);
-   // glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
-    glLightfv(GL_LIGHT1, GL_POSITION, position);
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
@@ -100,8 +90,8 @@ void GLWidget::initializeGL() {
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid3D(tree, 28,28,28);
-    marchingCubes = MarchingCubes(grid, 28, 28, 28);
+    grid = Grid3D(tree, m_dims,m_dims,m_dims, m_radius);
+    marchingCubes = MarchingCubes(grid, m_dims, m_dims, m_dims);
     m_m = 5;
     m_n = 5;
 }
@@ -170,6 +160,23 @@ void GLWidget::paintGL() {
 	float eyeY = eyeDirY*camDistance+positionY;
 	float eyeZ = eyeDirZ*camDistance+positionZ;
 
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    //glEnable(GL_LIGHT1);
+    //
+    //    // Create light components
+    GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    // GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    GLfloat position[] = { eyeX, eyeY, eyeZ, 1.0f };
+    //
+    //    // Assign created components to GL_LIGHT1
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    // glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+
     gluLookAt(
 		eyeX, eyeY, eyeZ,
 		positionX, positionY, positionZ,
@@ -194,7 +201,7 @@ void GLWidget::paintGL() {
 
 	glScalef(scale,scale,scale);
 
-
+    glDisable(GL_LIGHTING);
 
 //    if (showTree)
 //    {
@@ -203,9 +210,8 @@ void GLWidget::paintGL() {
     grid.draw(useAlpha);
     //glScalef(20, 20, 20);
 
-    marchingCubes.draw();
 
-    glDisable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
 	if(drawCloud) {
 		glColor3f(1.0f, 0.0f, 0.0f);
 		glPointSize(3);
@@ -227,7 +233,10 @@ void GLWidget::paintGL() {
 		glEnd();
 	}
 
-    glEnable(GL_LIGHTING);
+    if(m_showMarchingCubes)
+        marchingCubes.draw();
+
+    glDisable(GL_LIGHTING);
 
 }
 
@@ -388,6 +397,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		doRayCasting = RC_TRANSPARENT;
 		updateGL();
 		break;
+    case Qt::Key_M:
+        m_showMarchingCubes = !m_showMarchingCubes;
+        updateGL();
+        break;
     default:
         event->ignore();
         return;
