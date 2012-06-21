@@ -30,7 +30,7 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
 {
     m_radius = radius;
     std::cout << "Radius: " << std::setprecision(5) << m_radius << "\n";
-	m_interpolate = false;
+	m_interpolate = true;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
@@ -265,6 +265,8 @@ double Grid3D::getInterpolatedFunctionValue(float x,float y,float z,int valueTyp
 		int iX = (int)x;
 		int iY = (int)y;
 		int iZ = (int)z;
+        if(iX >= m_dimX || iY >= m_dimY || iZ >= m_dimZ)
+            return DBL_MAX;
 		float u = x-iX;
 		float v = y-iY;
 		float w = z-iZ;
