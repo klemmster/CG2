@@ -19,7 +19,8 @@ class Grid3D : public Grid
 {
 public:
     Grid3D(){};
-    Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z);
+    Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z,
+            const float radius);
     virtual ~Grid3D() {};
 
     virtual void approximateWLS(VertexList& resultList);
