@@ -248,7 +248,7 @@ double Grid3D::getVertexValue(int idX,int idY,int idZ,int valueType) {
 		if(valueType == 0)	
 			return vertex->getFunValue();
 		else{
-			if((*vertex->getNormal())!=nullptr)
+			if(vertex->getNormal()!=nullptr)
 				return (*vertex->getNormal())[0];
 			else
 				return 0;

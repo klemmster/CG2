@@ -1,6 +1,6 @@
 #include "RayCaster.hpp"
 
-#define RAY_STEPSIZE 0.0005f
+#define RAY_STEPSIZE 0.005f
 #define RAY_LENGTH 10.0f
 
 #define GET_COLOR_INDEX (y*m_width*3+x*3)
@@ -81,7 +81,7 @@ if(0)
 				if(funcVal <= 0) {
 					if(type == RC_FIRSTTOUCH)
 					{
-						colorVal = 1;
+						colorVal = normVal;
 						setColor(screen_x,screen_y,colorVal,colorVal,colorVal);
 						break;
 					}else{

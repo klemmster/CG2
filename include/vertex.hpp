@@ -34,10 +34,10 @@ class Vertex: public vec3f
         const double& getFunValue() const { return m_W; };
         void setFunValue(float val) { m_W = val; };
         NormalPtr getNormal() const { return m_NormalPtr; }
+		void setNormal(NormalPtr normal){ m_NormalPtr = normal; };
 
     protected:
         vec3f m_Color;
-        void setNormal(NormalPtr normal){ m_NormalPtr = normal; };
 
         NormalPtr m_NormalPtr;
         //Function Value
