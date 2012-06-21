@@ -92,12 +92,14 @@ void Grid3D::generateVertices()
     /* Create 2 more Points per point */
 {
     for(VertexPtr vertex: m_tree.getVertices()){
-        double epsilon = 0.1 * m_diagLength;
+        double epsilon = 0.01 * m_diagLength;
         while(m_tree.findInRadius(vertex, epsilon).size() > 1){
-            epsilon /= 2.0;
+            epsilon /= 1.1;
         }
-        VertexPtr point1(new Vertex((*vertex) + (*vertex->getNormal()), epsilon));
-        VertexPtr point2(new Vertex((*vertex) - (*vertex->getNormal()), -epsilon));
+        NormalPtr normal = vertex->getNormal();
+        (*normal) = ((*normal) * epsilon);
+        VertexPtr point1(new Vertex((*vertex) + (*normal), epsilon));
+        VertexPtr point2(new Vertex((*vertex) - (*normal), -epsilon));
         m_generatedPoints.push_back(point1);
         m_generatedPoints.push_back(point2);
         m_generatedPoints.push_back(vertex);
