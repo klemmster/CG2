@@ -356,11 +356,21 @@ VertexPtr Cube::getInterpolatedVertex(const Edge& edge){
     double fac = 0.5;
     vec3f resultVec = (*a) + fac * (*b - *a);
     //TODO: interpolate normals
-    NormalPtr normal = a->getNormal();
-    if(a == nullptr)
-        normal = b->getNormal();
-    VertexPtr result(new Vertex(resultVec, normal));
-    return result;
+    NormalPtr normala = a->getNormal();
+    NormalPtr normalb = b->getNormal();
+    NormalPtr normal;
+    if(a != nullptr && b != nullptr){
+        vec3f interNormal = (*a) + (*b);
+        interNormal = interNormal / 2.0;
+        normal = NormalPtr(new Normal(interNormal));
+        VertexPtr result(new Vertex(resultVec, normal));
+        return result;
+    }else{
+        if(a == nullptr)
+            normal = b->getNormal();
+        VertexPtr result(new Vertex(resultVec, normal));
+        return result;
+    }
 }
 
 MarchingCubes::MarchingCubes():
