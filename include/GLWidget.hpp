@@ -15,7 +15,7 @@ class GLWidget : public QGLWidget {
 
 public:
     GLWidget(QWidget *parent = NULL);
-    void setFilename(const std::string& fileName,float scale);
+    void setFilename(const std::string& fileName,float scale, float radius);
 
 public slots:
     void sigShowKDTree(bool show);
@@ -52,6 +52,7 @@ protected:
     size_t m_n;
     size_t m_m;
 	float m_scale;
+    float m_radius;
 
 private:
     bool showTree;

@@ -19,14 +19,17 @@
 #include <float.h>
 #include <iomanip>
 
-#define DIM_BIAS 0.4f
+#define DIM_BIAS 0.5f
 
 using namespace Eigen;
 
-Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z):
+#include <iomanip>
+Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t dim_z, const float radius):
     Grid(tree, dim_x, dim_y),
     m_dimZ(dim_z)
 {
+    m_radius = radius;
+    std::cout << "Radius: " << std::setprecision(5) << m_radius << "\n";
 	m_interpolate = false;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
@@ -49,9 +52,6 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
     float stepY = abs(m_MaxY - m_MinY) / dim_y;
     float stepZ = abs(m_MaxZ - m_MinZ) / dim_z;
 
-	
-
-    m_radius = (stepX + stepY + stepZ) / 3.0;
     //std::cout << "StepX: " << std::setprecision(5) << stepX << "\n";
     std::cout << "Diagonal: " << std::setprecision(5) << m_diagLength << "\n";
 
@@ -245,7 +245,7 @@ double Grid3D::getVertexValue(int idX,int idY,int idZ,int valueType) {
 	if(vertex==nullptr)
 		return OUTOFRANGE_DISTANCE;
 	else{
-		if(valueType == 0)	
+		if(valueType == 0)
 			return vertex->getFunValue();
 		else{
 			if(vertex->getNormal()!=nullptr)
