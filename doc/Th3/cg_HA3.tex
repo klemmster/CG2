@@ -57,7 +57,7 @@ $ #1 $
 
 \begin{center}
 \normalsize Computer Graphics 2\\[0.3cm]
-\huge \textbf{Hausaufgabe 2} \normalsize\\[0.8cm]
+\huge \textbf{Hausaufgabe 3} \normalsize\\[0.8cm]
 \begin{tabular}{rl}
 \texttt{343635} & Richard Klemm\\
 \texttt{319716} & Andreas Fender\\
@@ -115,6 +115,17 @@ R^2\pi \eq \frac{r_1^2\pi + r_2^2\pi}2
 $}
 \end{center}
 Somit kann auch gesagt werden, dass der resultierende Kreis den Druchschnittsflächeninhalt der beiden Kreise hat.
+
+\task{3}
+
+Bei konstanten Approximationspolynomen ist die Basis $\textbf{b(x)} = (1)$. Die implizite Funktion vereinfacht sich zu
+\formel{$f(x) = b(x)c = (1)\cdot c = c$}
+Weiterhin ist $\textbf{c}$ gegeben durch
+\formel{$c = [\mathsum{i=0}{0}{b(x_i)b(x_i)^T}]^{-1}\mathsum{i=0}{0}{b(x_i)f_i}$}
+was sich wiederrum vereinfacht zu
+\formel{$c = [\mathsum{i=0}{0}{1}]^{-1}\mathsum{i=0}{0}{f_i} = f_i$}
+Die Werte von $f_i$ bewegen sich laut Praxisaufgabe zwischen $-\epsilon$ und $\epsilon$. Somit ist der Wertebereich von $f$:
+\formel{$f(x) \in [-\epsilon,\epsilon]$}
 
 \task{4}
 
