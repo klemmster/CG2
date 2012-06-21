@@ -85,7 +85,7 @@ void Vertex::draw(bool useAlpha) const{
 	float alpha = 1;
 	if(useAlpha) {
 		float cl = m_W * 10;
-		if(m_W<=0)
+		if(m_W<-0.01f)
 			glColor4f(1,-cl,0,1);
 		else
 			return;

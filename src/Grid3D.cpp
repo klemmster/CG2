@@ -30,7 +30,7 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
 {
     m_radius = radius;
     std::cout << "Radius: " << std::setprecision(5) << m_radius << "\n";
-	m_interpolate = false;
+	m_interpolate = true;
 
     const VertexList& minm_vertices = m_tree.getMinVertices();
     const VertexList& maxm_vertices = m_tree.getMaxVertices();
