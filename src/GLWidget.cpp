@@ -82,21 +82,6 @@ void GLWidget::initializeGL() {
     glClearColor(0, 0, 0, 0);
 
 //    // Somewhere in the initialization part of your programâ¦
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    //glEnable(GL_LIGHT1);
-//
-//    // Create light components
-    GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
-   // GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    GLfloat position[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-//
-//    // Assign created components to GL_LIGHT1
-    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuseLight);
-   // glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
-    glLightfv(GL_LIGHT1, GL_POSITION, position);
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
@@ -175,6 +160,23 @@ void GLWidget::paintGL() {
 	float eyeY = eyeDirY*camDistance+positionY;
 	float eyeZ = eyeDirZ*camDistance+positionZ;
 
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    //glEnable(GL_LIGHT1);
+    //
+    //    // Create light components
+    GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    // GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    GLfloat position[] = { eyeX, eyeY, eyeZ, 1.0f };
+    //
+    //    // Assign created components to GL_LIGHT1
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+    // glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+    
     gluLookAt(
 		eyeX, eyeY, eyeZ,
 		positionX, positionY, positionZ,
@@ -199,7 +201,7 @@ void GLWidget::paintGL() {
 
 	glScalef(scale,scale,scale);
 
-
+    glDisable(GL_LIGHTING);
 
 //    if (showTree)
 //    {
@@ -211,7 +213,7 @@ void GLWidget::paintGL() {
     if(m_showMarchingCubes)
         marchingCubes.draw();
 
-    glDisable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
 	if(drawCloud) {
 		glColor3f(1.0f, 0.0f, 0.0f);
 		glPointSize(3);
@@ -233,7 +235,7 @@ void GLWidget::paintGL() {
 		glEnd();
 	}
 
-    glEnable(GL_LIGHTING);
+    glDisable(GL_LIGHTING);
 
 }
 
