@@ -14,6 +14,7 @@
 #include "offLoader.hpp"
 #include "stopwatch.hpp"
 #include "RayCaster.hpp"
+#include "MarchingCube.hpp"
 
 #define SHIFT_SPEED 0.05f
 
@@ -100,6 +101,7 @@ void GLWidget::initializeGL() {
     tree = KDTree(vertices, 2);
     treeTimer.stop();
     grid = Grid3D(tree, 20,20,22);
+    marchingCubes = MarchingCubes(grid, 20, 20, 22);
     m_m = 5;
     m_n = 5;
 }
@@ -200,6 +202,8 @@ void GLWidget::paintGL() {
 //    }
     grid.draw(useAlpha);
     //glScalef(20, 20, 20);
+
+    marchingCubes.draw();
 
     glDisable(GL_LIGHTING);
 	if(drawCloud) {
