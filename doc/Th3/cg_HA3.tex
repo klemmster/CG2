@@ -69,6 +69,7 @@ $ #1 $
 
 \task{1}
 
+Die Funktion darf keine unendlich dünnen Stellen haben. An jedem Punkt muss eindeutig sein, ob dieser sich innerhalb oder außerhalb des Körpers befindet.
 
 \task{2}
 
@@ -100,6 +101,10 @@ Somit kann auch gesagt werden, dass der resultierende Kreis den Druchschnittsflä
 \task{4}
 
 Ja.\\
-Marching Cubes fragt eine endliche Menge von Sampling Punkten ab. Scharfe Kanten (Features) werden nicht erkannt. Auch bei einer Erhöhung der Sampling Punkte werden Features nicht erkannt, da diese sich innerhalb eines Cubes befinden.
+Marching Cubes fragt eine endliche Menge von Sampling Punkten ab. Scharfe Kanten (Features) werden nicht erkannt. Auch bei einer Erhöhung der Sampling Punkte werden Features nicht erkannt, da diese sich innerhalb eines Cubes befinden.\\
+\\
+Die folgende Grafik verdeutlicht dies:
+\image{0.25}{marchingfail.png}
+Die rote Linie verdeutlicht ein durch Marching Cubes erzeugtes Face.
 
 \end{document}
