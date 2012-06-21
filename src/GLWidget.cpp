@@ -25,6 +25,7 @@ GLWidget::GLWidget(QWidget *parent) :
     setFocus();
     m_k = 1;
     m_radius = 1.0f;
+    m_showMarchingCubes = false;
 }
 
 void GLWidget::setFilename(const std::string& fileName,float scale,
@@ -207,7 +208,8 @@ void GLWidget::paintGL() {
     grid.draw(useAlpha);
     //glScalef(20, 20, 20);
 
-    marchingCubes.draw();
+    if(m_showMarchingCubes)
+        marchingCubes.draw();
 
     glDisable(GL_LIGHTING);
 	if(drawCloud) {
@@ -392,6 +394,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		doRayCasting = RC_TRANSPARENT;
 		updateGL();
 		break;
+    case Qt::Key_M:
+        m_showMarchingCubes = !m_showMarchingCubes;
+        updateGL();
+        break;
     default:
         event->ignore();
         return;

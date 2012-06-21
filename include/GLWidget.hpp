@@ -57,6 +57,7 @@ protected:
 
 private:
     bool showTree;
+    bool m_showMarchingCubes;
 };
 
 #endif  /* _GLWIDGET_H */
