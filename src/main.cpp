@@ -17,13 +17,20 @@ int main(int argc, char *argv[])
     ui.setupUi(window);
 
     std::string fileName;
+	float scale;
     if(argc > 1){
         fileName = argv[1];
     }else{
-        fileName = "snail.off";
+        fileName = "cat.off";
     }
 
-    ui.glWidget->setFilename(fileName);
+    if(argc > 2){
+        scale = atof(argv[2]);
+    }else{
+        scale = 1;
+    }
+
+    ui.glWidget->setFilename(fileName,scale);
     window->show();
     //GLWidget window;
 

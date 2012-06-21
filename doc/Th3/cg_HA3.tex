@@ -69,7 +69,25 @@ $ #1 $
 
 \task{1}
 
-Die Funktion darf keine unendlich dünnen Stellen haben. An jedem Punkt muss eindeutig sein, ob dieser sich innerhalb oder außerhalb des Körpers befindet.
+Um eine implizite Fl"ache $S$ zu beschreiben ist durch die folgende Funktion $F$ definiert.
+
+\formel{$F:\mathbb{R}^3 \to \mathbb{R}$}
+
+Nach Konvention werden alle negativen Werte innerhalb der Fl"ache angenommen.
+
+\formel{$f(x,y,z) < 0$}
+
+Alle Werte die positiv sind und gr"o{\ss}er als 0 werden au§erhalb der Fl"ache angenommen.
+
+\formel{$f(x,y,z) > 0$}
+
+Und alle Werte die genau 0 ergeben liegen demnach genau auf der Oberfl"ache.
+
+\formel{$f(x,y,z) = 0$}
+
+Eine weitere Eigenschaft der impliziten Funktion ist, dass die beschriebene Fl"ache keine L"ocher hat solange die Funktion kontinuierlich ist. Au{\ss}erdem muss die Eigenschaft erf"ullt sein, dass die Funktion sich nicht selbst schneiden kann.\\
+\\
+Eine der gerbr"auchlichste Form der impliziten Funktion ist die \emph{signed distance function}. Bei dieser Funktion wird jedem Punkt im 3dimensionalen Raum ein vorzeichenbehafteter Abstand $d(x)$ zugewiesen. Der absolute Betrag $|d(x)|$ misst den Abstand von $x$ zur Fl"ache $S$. Das Vorzeichen gibt dabei an, ob sich der Punkt innerhalb oder au{\ss}erhalb der Fl"ache befindet.
 
 \task{2}
 
@@ -106,5 +124,6 @@ Marching Cubes fragt eine endliche Menge von Sampling Punkten ab. Scharfe Kanten
 Die folgende Grafik verdeutlicht dies:
 \image{0.25}{marchingfail.png}
 Die rote Linie verdeutlicht ein durch Marching Cubes erzeugtes Face.
+
 
 \end{document}

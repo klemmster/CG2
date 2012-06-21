@@ -14,6 +14,7 @@
 #include "offLoader.hpp"
 #include "stopwatch.hpp"
 #include "RayCaster.hpp"
+#include "MarchingCube.hpp"
 
 #define SHIFT_SPEED 0.05f
 
@@ -25,8 +26,9 @@ GLWidget::GLWidget(QWidget *parent) :
     m_k = 1;
 }
 
-void GLWidget::setFilename(const std::string& fileName) {
+void GLWidget::setFilename(const std::string& fileName,float scale) {
     m_fileName = fileName;
+	m_scale = scale;
 }
 
 QPoint lastPos;
@@ -48,17 +50,24 @@ GLfloat modelOffsetX = 0.0f;
 GLfloat modelOffsetY = 0.0f;
 GLfloat modelOffsetZ = 0.0f;
 GLfloat screenRatio;
+bool useAlpha = false;
+bool drawCloud = true;
 
-//sry that its global, but so many other variables are global as well ^^
 RayCaster rayCaster;
-bool doRayCasting = false;
+int doRayCasting = -1;
+bool locRepaint = false;
 
 unsigned int kNearest = 50;
 float radius = 40;
 size_t vrtxID = 0;
 vec3f highlightColor(0.0, 1.0, 0.0);
 
+int idI = 0;
+int idJ = 0;
+int idK = 0;
+
 void GLWidget::initializeGL() {
+
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
@@ -86,16 +95,15 @@ void GLWidget::initializeGL() {
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
-    vertices = loader.readOff(m_fileName);
+    vertices = loader.readOff(m_fileName,m_scale);
     readTimer.stop();
     Stopwatch treeTimer("GenTree");
     tree = KDTree(vertices, 2);
     treeTimer.stop();
-    grid = Grid3D(tree, 10,10,10);
+    grid = Grid3D(tree, 28,28,28);
+    marchingCubes = MarchingCubes(grid, 28, 28, 28);
     m_m = 5;
     m_n = 5;
-
-
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -114,6 +122,11 @@ void GLWidget::resizeGL(int w, int h) {
 
 void GLWidget::paintGL() {
 
+	if(locRepaint)
+		return;
+
+	//grid.getVertex(idI,idJ,idK)->m_Color = vec3f(1,1,0);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3f(1,0,0);
 
@@ -125,16 +138,16 @@ void GLWidget::paintGL() {
 
 	if(camDistance<0.02f)
 		camDistance = 0.02f;
-	if(camDistance>100)
-		camDistance = 100;
+	if(camDistance>10000)
+		camDistance = 10000;
 
 	if(camBeta>3.1f/2)
 		camBeta = 3.1f/2;
 	if(camBeta<-3.1f/2)
 		camBeta = -3.1f/2;
 
-	if(scale < 0.05f)
-		scale = 0.05f;
+	if(scale < 0.005f)
+		scale = 0.005f;
 	if(scale > 30)
 		scale = 30;
 
@@ -142,7 +155,7 @@ void GLWidget::paintGL() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 	float uZoom = zoom*zoom;
-    gluPerspective(1+uZoom*60, screenRatio, 0.1f, 1000.0f);
+    gluPerspective(1+uZoom*70, screenRatio, 0.1f, 1000.0f);
 
 
 	//Camera position/angle
@@ -164,11 +177,13 @@ void GLWidget::paintGL() {
 		);
 
 	//Call ray casting
-	if(doRayCasting) {
+	if(doRayCasting>0) {
 
-		rayCaster.cast(grid,eyeX,eyeY,eyeZ);
+		locRepaint = true;
+		rayCaster.cast(&grid,doRayCasting,eyeX,eyeY,eyeZ,scale);
 		glEnable(GL_LIGHTING);
-		doRayCasting = false;
+		doRayCasting = -1;
+		locRepaint = true;
 		return;
 	}
 
@@ -176,40 +191,41 @@ void GLWidget::paintGL() {
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
     glTranslatef(modelOffsetX, modelOffsetY, modelOffsetZ);
+
 	glScalef(scale,scale,scale);
+
+
+
 //    if (showTree)
 //    {
 //        tree.draw();
 //    }
-    grid.draw();
+    grid.draw(useAlpha);
     //glScalef(20, 20, 20);
 
+    marchingCubes.draw();
+
     glDisable(GL_LIGHTING);
-    /*
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glPointSize(3);
-    glBegin(GL_POINTS);
-        for(auto vertex : vertices)
-        {
-            vertex->draw();
-        }
-    glEnd();
-    */
+	if(drawCloud) {
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glPointSize(3);
+		glBegin(GL_POINTS);
+		    for(VertexPtr vertex : vertices)
+		    {
+		        vertex->draw();
+		    }
+		glEnd();
 
-    /*
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glBegin(GL_LINES);
-    for (size_t i = 0; i < vertices.size(); i++)
-    {
-        VertexPtr vertex = vertices.at(i);
-        NormalPtr normal = vertex->getNormal();
-        //normal->flip();
-
-        glVertex3fv((*vertex)._v);
-        glVertex3fv(((*normal) / -30 + (*vertex))._v);
-    }
-    glEnd();
-    */
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glBegin(GL_LINES);
+		for (VertexPtr vertex : vertices)
+		{
+		    NormalPtr normal = vertex->getNormal();
+		    glVertex3fv((*vertex)._v);
+		    glVertex3fv(((*normal) / -30 + (*vertex))._v);
+		}
+		glEnd();
+	}
 
     glEnable(GL_LIGHTING);
 
@@ -245,17 +261,20 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     GLfloat dy = (GLfloat)(event->y() - lastPos.y()) / height();
 
     if (event->buttons() & Qt::LeftButton) {
+		locRepaint = false;
         camAlpha += 4 * dx;
         camBeta += 3 * dy;
         updateGL();
     }
 
     if (event->buttons() & Qt::RightButton) {
+		locRepaint = false;
         camDistance += 3.5f * dy;
         updateGL();
     }
 
     if (event->buttons() & Qt::MiddleButton) {
+		locRepaint = false;
 		camShift(dx,dy);
         updateGL();
     }
@@ -264,12 +283,14 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event){
+	locRepaint = false;
     //positionZ += event->delta()/100.0;
     zoom -= event->delta()*0.00015f;
     updateGL();
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* event) {
+
     switch(event->key()) {
     case Qt::Key_Escape:
         break;
@@ -314,6 +335,18 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         camShift(-SHIFT_SPEED,0);
         updateGL();
         break;
+    case Qt::Key_I:
+        idI++;
+        updateGL();
+        break;
+    case Qt::Key_J:
+        idJ++;
+        updateGL();
+        break;
+    case Qt::Key_K:
+        idK++;
+        updateGL();
+        break;
     case Qt::Key_Q:
         camShiftZ(-SHIFT_SPEED);
         updateGL();
@@ -322,6 +355,14 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         camShiftZ(SHIFT_SPEED);
         updateGL();
         break;
+	case Qt::Key_L:
+		useAlpha ^= 1;
+		updateGL();
+		break;
+	case Qt::Key_O:
+		drawCloud ^= 1;
+		updateGL();
+		break;
 	case Qt::Key_C:
 		positionX = 0;
 		positionY = 0;
@@ -340,12 +381,19 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		updateGL();
 		break;
 	case Qt::Key_R:
-		doRayCasting = true;
+		doRayCasting = RC_FIRSTTOUCH;
 		updateGL();
+		break;
+	case Qt::Key_T:
+		doRayCasting = RC_TRANSPARENT;
+		updateGL();
+		break;
     default:
         event->ignore();
-        break;
+        return;
     }
+
+	//locRepaint = false;
 }
 
 void GLWidget::sigShowKDTree(bool show) {

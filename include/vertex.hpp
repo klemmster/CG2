@@ -19,6 +19,7 @@ class Vertex: public vec3f
     public:
         /** Default constructor */
         Vertex(const vec3f pos);
+        Vertex(const vec3f pos, NormalPtr normal);
         Vertex(const float x, const float y, const float z);
         Vertex(const float x, const float y, const float z, NormalPtr normal);
         Vertex(const float x, const float y, const float z, const vec3f color);
@@ -27,18 +28,21 @@ class Vertex: public vec3f
         Vertex(const float x, const float y, const float z, const vec3f color, float w);
         virtual ~Vertex();
 
-        void draw() const;
-        void highlight(const vec3f color = vec3f(1.0, 0.0, 0.0));
+        void draw(bool useAlpha) const;
+		void draw() const {draw(false);}
+        void highlight(const vec3f color = vec3f(0.6, 0.5, 0.4));
         void resetColor();
-        const float& getFunValue() const { return m_W; };
+        const double& getFunValue() const { return m_W; };
         void setFunValue(float val) { m_W = val; };
         NormalPtr getNormal() const { return m_NormalPtr; }
+		void setNormal(NormalPtr normal){ m_NormalPtr = normal; };
 
     protected:
         vec3f m_Color;
+
         NormalPtr m_NormalPtr;
         //Function Value
-        float m_W;
+        double m_W;
     private:
         Vertex() {};
 };

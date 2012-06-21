@@ -7,6 +7,7 @@
 #include "vertex.hpp"
 #include "tree.hpp"
 #include "Grid3D.hpp"
+#include "MarchingCube.hpp"
 
 class GLWidget : public QGLWidget {
 
@@ -14,7 +15,7 @@ class GLWidget : public QGLWidget {
 
 public:
     GLWidget(QWidget *parent = NULL);
-    void setFilename(const std::string& fileName);
+    void setFilename(const std::string& fileName,float scale);
 
 public slots:
     void sigShowKDTree(bool show);
@@ -46,9 +47,11 @@ protected:
     VertexList vertices;
     KDTree tree;
     Grid3D grid;
+    MarchingCubes marchingCubes;
     size_t m_k;
     size_t m_n;
     size_t m_m;
+	float m_scale;
 
 private:
     bool showTree;

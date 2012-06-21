@@ -8,19 +8,27 @@
   #include <GL/glut.h>
 #endif
 
-
-
 Vertex::Vertex(const vec3f pos):
     vec3f(pos),
     m_Color(vec3f(.6f, .6f, .6f)),
-    m_W(0.0f)
+    m_NormalPtr(nullptr),
+    m_W(0.0)
+{
+}
+
+Vertex::Vertex(const vec3f pos, NormalPtr normal):
+    vec3f(pos),
+    m_Color(vec3f(.6f, .6f, .6f)),
+    m_NormalPtr(normal),
+    m_W(0.0)
 {
 }
 
 Vertex::Vertex(const float x, const float y, const float z):
     vec3f(x, y, z),
     m_Color(vec3f(.6f, .6f, .6f)),
-    m_W(0.0f)
+    m_NormalPtr(nullptr),
+    m_W(0.0)
 {
 }
 
@@ -28,35 +36,39 @@ Vertex::Vertex(const float x, const float y, const float z, NormalPtr normal):
     vec3f(x, y, z),
     m_Color(vec3f(.6f, .6f, .6f)),
     m_NormalPtr(normal),
-    m_W(0.0f)
+    m_W(0.0)
 {
 }
 
 Vertex::Vertex(const float x, const float y, const float z, const vec3f color):
     vec3f(x, y, z),
     m_Color(color),
-    m_W(0.0f)
+    m_NormalPtr(nullptr),
+    m_W(0.0)
 {
 }
 
 /* Constructors with function value */
 Vertex::Vertex(const vec3f pos, float w):
     vec3f(pos),
-    m_W(w),
-    m_Color(vec3f(.6f, .6f, .6f))
+    m_Color(vec3f(.6f, .6f, .6f)),
+    m_NormalPtr(nullptr),
+    m_W(w)
 {
 }
 
 Vertex::Vertex(const float x, const float y, const float z, float w):
     vec3f(x, y, z),
+    m_Color(vec3f(.6, .6, .6)),
+    m_NormalPtr(nullptr),
     m_W(w)
 {
-    m_Color = vec3f(.6, .6, .6);
 }
 
 Vertex::Vertex(const float x, const float y, const float z, const vec3f color, float w):
     vec3f(x, y, z),
     m_Color(color),
+    m_NormalPtr(nullptr),
     m_W(w)
 {
 }
@@ -66,9 +78,25 @@ Vertex::~Vertex()
      //dtor
 }
 
-void Vertex::draw() const{
-    //glColor3fv(m_Color._v);
-    glVertex3fv(_v);
+void Vertex::draw(bool useAlpha) const{
+    glDisable(GL_LIGHTING);
+	glEnable(GL_ALPHA);
+    glPointSize(3);
+	float alpha = 1;
+	if(useAlpha) {
+		float cl = m_W * 10;
+		if(m_W<=0)
+			glColor4f(1,-cl,0,1);
+		else
+			return;
+	}else{
+		glColor4f(m_Color._v[0],m_Color._v[1],m_Color._v[2],alpha);
+	}
+
+    glBegin(GL_POINTS);
+        glVertex3fv(_v);
+    glEnd();
+    glEnable(GL_LIGHTING);
 }
 
 void Vertex::highlight(const vec3f color){

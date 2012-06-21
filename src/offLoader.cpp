@@ -14,7 +14,7 @@ OffLoader::~OffLoader()
      //dtor
 }
 
-VertexList OffLoader::readOff(const std::string& fileName)
+VertexList OffLoader::readOff(const std::string& fileName,float scale)
 {
     TokenizedFile file(fileName);
     VertexList vertices;
@@ -23,7 +23,7 @@ VertexList OffLoader::readOff(const std::string& fileName)
         if(parseSecondLine(file.next())) {
             for(unsigned int i=0; i<m_NumVertices; i++) {
 
-                VertexPtr vertex = parseVertex(file.next());
+                VertexPtr vertex = parseVertex(file.next(),scale);
                 vertices.push_back(vertex);
             }
         }
@@ -56,13 +56,13 @@ bool OffLoader::parseSecondLine(Tokens tokens)
      return true;
 }
 
-const VertexPtr OffLoader::parseVertex(const Tokens& tokens) const
+const VertexPtr OffLoader::parseVertex(const Tokens& tokens,float scale) const
 {
     assert(tokens.size() == 6);
 
-    float x = boost::lexical_cast<float>(tokens.at(0));
-    float y = boost::lexical_cast<float>(tokens.at(1));
-    float z = boost::lexical_cast<float>(tokens.at(2));
+    float x = boost::lexical_cast<float>(tokens.at(0)) * scale;
+    float y = boost::lexical_cast<float>(tokens.at(1)) * scale;
+    float z = boost::lexical_cast<float>(tokens.at(2)) * scale;
 
     float dirX = boost::lexical_cast<float>(tokens.at(3));
     float dirY = boost::lexical_cast<float>(tokens.at(4));
