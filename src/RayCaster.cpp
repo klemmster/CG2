@@ -92,8 +92,8 @@ if(0)
 					}
 				}else{
 					if(type == RC_FIRSTTOUCH) {
-						if(funcVal<OUTOFRANGE_DISTANCE && false)
-							stepSize = funcVal;
+						if(funcVal<OUTOFRANGE_DISTANCE && true)
+							stepSize = funcVal+0.001;
 						else
 							stepSize = RAY_STEPSIZE;
 					}
