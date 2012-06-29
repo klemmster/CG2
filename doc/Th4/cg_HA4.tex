@@ -1,0 +1,93 @@
+\documentclass[a4paper,oneside,12pt]{scrartcl}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amssymb,graphicx,latexsym,stmaryrd,dsfont,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{ngerman,url,booktabs,scrpage2}
+\usepackage{color}
+\usepackage{algpseudocode}
+
+\newcommand{\heading}[1]{\item{\textbf{#1}}$ $\\}
+\newcommand{\formel}[1]{\begin{center}#1\end{center}}
+\newcommand{\eqs}[1]{
+$\begin{array}{rcll}
+$ #1 $
+\end{array}$}
+\newcommand{\image}[2]{
+\begin{center}
+\includegraphics[scale = #1]{#2}
+\end{center}
+}
+
+\newcounter{counter}
+\stepcounter{counter}
+
+\definecolor{gray}{gray}{.5}
+\newcommand{\comment}[1]{\textcolor{gray}{\textit{// #1}}}
+\newcommand{\task}[1]{
+\section*{Aufgabe #1}
+\stepcounter{counter}
+}
+\newcommand{\subtask}[1]{\subsection*{#1}}
+\newcommand{\subsubtask}[1]{#1$ $\\}
+\newcommand{\mathsum}[3]{\underset{#1}{\overset{#2}{\sum}}#3}
+\newcommand{\isum}[1]{\mathsum{i=0}{n}{#1}}
+
+\newcommand{\twovector}[2]{\left(\begin{array}{c} #1 \\ #2 \end{array}\right)}
+\newcommand{\threevector}[3]{\left(\begin{array}{c} #1 \\ #2 \\ #3 \end{array}\right)}
+\newcommand{\fourmatrix}[4]{\left(\begin{array}{cc} #1 & #2 \\ #3 & #4 \end{array}\right)}
+\newcommand{\ninematrix}[9]{\left(\begin{array}{ccc} #1 & #2 & #3 \\ #4 & #5 & #6 \\ #7 & #8 & #9 \end{array}\right)}
+\newcommand{\nvector}[2]{\left(\begin{array}{c} #1 \\ \vdots \\ #2 \end{array}\right)}
+\newcommand{\nmatrix}[4]{\left(\begin{array}{ccc} #1 & \ldots & #2 \\ \vdots & \ddots & \vdots \\ #3 & \ldots & #4 \end{array}\right)}
+\newcommand{\eq}{&=&}
+\newcommand{\eqbreak}{\\[0.5cm]}
+\newcommand{\eqsmbreak}{\\[0.35cm]}
+\newcommand{\eqtbreak}{\\[0.12cm]}
+\newcommand{\eqbreakp}{\\[0.8cm]}
+\newcommand{\eqsmbreakp}{\\[0.65cm]}
+\newcommand{\eqtbreakp}{\\[0.32cm]}
+\newcommand{\rc}{r^c}
+\newcommand{\vvec}{\vec v}
+\newcommand{\pnt}[1]{\textbf{#1}}
+\newcommand{\ppnt}{\pnt{p}}
+
+\parindent 0pt
+
+\begin{document}
+
+\begin{center}
+\normalsize Computer Graphics 2\\[0.3cm]
+\huge \textbf{Hausaufgabe 3} \normalsize\\[0.8cm]
+\begin{tabular}{rl}
+\texttt{343635} & Richard Klemm\\
+\texttt{319716} & Andreas Fender\\
+\texttt{315744} & Christopher Sierigk\\
+\end{tabular}
+\end{center}
+
+\stepcounter{counter}
+
+\task{1}
+
+Ein Polyeder besteht aus planaren Primitiven. Diese können von der Grafikpipeline leicht verarbeitet werden. 
+
+\task{2}
+
+
+\task{3}
+
+\textbf{Kante teilen}\\
+
+
+
+\textbf{Kante entfernen}\\
+
+
+
+\task{5}
+
+Ein Sechseckgitter lässt sich durch ein Dreiecksgitter darstellen. Indem z.B. für jedes Sechseck ein Vertex im Zentrum eingefügt wird und zusammen mit Edges zu allen Vertices des Sechsecks:
+
+
+
+\end{document}
