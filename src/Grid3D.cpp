@@ -19,7 +19,7 @@
 #include <float.h>
 #include <iomanip>
 
-#define DIM_BIAS 0.5f
+#define DIM_BIAS 0.2f
 
 using namespace Eigen;
 
@@ -193,6 +193,7 @@ NormalPtr Grid3D::interpolateNormal(VertexList vrtxList) const{
     for(VertexPtr vrtx : vrtxList){
         NormalPtr normal = vrtx->getNormal();
         if(normal){
+            (*normal) = (*normal) / norm(*normal);
             normals.push_back(normal);
         }
     }
@@ -264,6 +265,8 @@ double Grid3D::getInterpolatedFunctionValue(float x,float y,float z,int valueTyp
 		int iX = (int)x;
 		int iY = (int)y;
 		int iZ = (int)z;
+        if(iX >= m_dimX || iY >= m_dimY || iZ >= m_dimZ)
+            return DBL_MAX;
 		float u = x-iX;
 		float v = y-iY;
 		float w = z-iZ;

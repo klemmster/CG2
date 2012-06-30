@@ -176,7 +176,7 @@ void GLWidget::paintGL() {
     // glLightfv(GL_LIGHT1, GL_SPECULAR, specularLight);
     glLightfv(GL_LIGHT0, GL_POSITION, position);
 
-    
+
     gluLookAt(
 		eyeX, eyeY, eyeZ,
 		positionX, positionY, positionZ,
@@ -210,8 +210,6 @@ void GLWidget::paintGL() {
     grid.draw(useAlpha);
     //glScalef(20, 20, 20);
 
-    if(m_showMarchingCubes)
-        marchingCubes.draw();
 
     glEnable(GL_LIGHTING);
 	if(drawCloud) {
@@ -234,6 +232,9 @@ void GLWidget::paintGL() {
 		}
 		glEnd();
 	}
+
+    if(m_showMarchingCubes)
+        marchingCubes.draw();
 
     glDisable(GL_LIGHTING);
 
