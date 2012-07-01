@@ -2,6 +2,36 @@ cmake_minimum_required (VERSION 2.6)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
 project (PointMesh)
 
+find_path( OPEN_MESH_INCLUDE_PATH OpenMesh/
+	/usr/local/include/)
+
+if ( OPEN_MESH_INCLUDE_PATH )
+	MESSAGE("Found OpenMesh include folder at ${OPEN_MESH_INCLUDE_PATH}")
+	include_directories( ${OPEN_MESH_INCLUDE_PATH} )
+else()
+	MESSAGE("Unable to find OpenMesh include folder, please add your path to CMakeLists.txt")
+endif()
+
+find_library( MESH_CORE_LIB
+	NAMES libOpenMeshCore.a
+	PATHS /usr/local/lib/OpenMesh/ )
+
+if ( MESH_CORE_LIB )
+	MESSAGE("Found OpenMeshCore lib folder at ${MESH_CORE_LIB}")
+else()
+	MESSAGE("Unable to find OpenMeshCore lib folder, please add your path to CMakeLists.txt")
+endif()
+
+find_library( MESH_TOOL_LIB
+	NAMES libOpenMeshTools.a
+	PATHS /usr/local/lib/OpenMesh/ )
+
+if ( MESH_TOOL_LIB )
+	MESSAGE("Found OpenMeshTools lib folder at ${MESH_TOOL_LIB}")
+else()
+	MESSAGE("Unable to find OpenMeshTools lib folder, please add your path to CMakeLists.txt")
+endif()
+
 #add_subdirectory(shader)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -54,5 +84,5 @@ ELSEIF(APPLE)
 ENDIF()
 
 add_executable(PointMesh ./src/Grid3D.cpp ./src/MarchingCube.cpp ./src/RayCaster.cpp ./src/normal.cpp ./src/Grid.cpp ./src/domain.cpp ./src/limitedPriorityQueue.cpp ./src/hyperRegion.cpp ./src/hyperSphere.cpp ./src/node.cpp ./src/tree.cpp ./src/TokenizedFile.cpp ./src/vertex.cpp ./src/GLWidget.cpp ./src/offLoader.cpp ./src/main.cpp ${MOCFILES} ${headers} )
-target_link_libraries(PointMesh ${Boost_LIBRARIES} ${GLUT_LIBRARY} ${QT_LIBRARIES} ${OPENGL_LIBRARIES} )
+target_link_libraries(PointMesh ${Boost_LIBRARIES} ${GLUT_LIBRARY} ${QT_LIBRARIES} ${OPENGL_LIBRARIES} ${MESH_CORE_LIB} ${MESH_TOOL_LIB})
 
