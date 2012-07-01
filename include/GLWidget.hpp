@@ -8,6 +8,7 @@
 #include "tree.hpp"
 #include "Grid3D.hpp"
 #include "MarchingCube.hpp"
+#include "HalfEdgeMesh.hpp"
 
 class GLWidget : public QGLWidget {
 
@@ -48,6 +49,7 @@ protected:
     KDTree tree;
     Grid3D grid;
     MarchingCubes marchingCubes;
+    HalfEdgeMesh halfEdgeMesh;
     size_t m_k;
     size_t m_n;
     size_t m_m;

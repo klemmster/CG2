@@ -32,6 +32,7 @@ public:
 
     void march();
     void draw();
+    VertexList getVertices() { return m_triangles; }
 
 protected:
 

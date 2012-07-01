@@ -94,6 +94,8 @@ void GLWidget::initializeGL() {
     marchingCubes = MarchingCubes(grid, m_dims, m_dims, m_dims);
     m_m = 5;
     m_n = 5;
+    
+    halfEdgeMesh.generateHalfEdge(marchingCubes.getVertices());
 }
 
 void GLWidget::resizeGL(int w, int h) {
