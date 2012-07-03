@@ -241,8 +241,8 @@ void GLWidget::paintGL() {
     if(m_showMarchingCubes)
         marchingCubes.draw();
 
-    glDisable(GL_LIGHTING);
     halfEdgeMesh.draw();
+    glDisable(GL_LIGHTING);
 
 }
 

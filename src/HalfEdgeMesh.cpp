@@ -87,6 +87,9 @@ void HalfEdgeMesh::loadFromFile(const std::string fileName){
       std::cerr << "read error\n";
       exit(1);
     }
+    m_Mesh.request_vertex_normals();
+    m_Mesh.request_face_normals();
+    m_Mesh.update_normals();
 }
 
 void HalfEdgeMesh::draw(){
@@ -94,11 +97,15 @@ void HalfEdgeMesh::draw(){
     TriHalfEdgeMesh::FaceIter faceIT;
     TriHalfEdgeMesh::FaceVertexIter vrtxIT;
 
+    TriHalfEdgeMesh::Normal normal;
+
 	glColor3f(1.0f, 0.0f, 0.0f);
     glBegin(GL_TRIANGLES);
         for(faceIT=m_Mesh.faces_begin(); faceIT!= m_Mesh.faces_end(); ++faceIT){
             vrtxIT = m_Mesh.fv_iter(faceIT.handle());
             for(; vrtxIT; ++vrtxIT){
+                glNormal3f(m_Mesh.normal(vrtxIT.handle())[0],m_Mesh.normal(vrtxIT.handle())[1],
+                        m_Mesh.normal(vrtxIT.handle())[2]);
                 glVertex3f(m_Mesh.point(vrtxIT.handle())[0],m_Mesh.point(vrtxIT.handle())[1],
                         m_Mesh.point(vrtxIT.handle())[2]);
             }
