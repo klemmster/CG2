@@ -6,6 +6,8 @@ meshes
 CMakeScripts
 *xcodeproj
 
+*.pdf
+
 #QT- Files
 *.cxx
 
