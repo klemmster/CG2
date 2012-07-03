@@ -22,10 +22,12 @@ class HalfEdgeMesh
 public:
     HalfEdgeMesh();
     virtual ~HalfEdgeMesh();
-    
+
     void generateHalfEdge(const VertexList& triangles);
+    void loadFromFile(const std::string fileName);
     TriHalfEdgeMesh getMesh() { return m_Mesh; }
-    
+    void draw();
+
 private:
     TriHalfEdgeMesh m_Mesh;
 };

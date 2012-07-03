@@ -5,6 +5,14 @@
 //  Created by Christopher Sierigk on 01.07.12.
 //  Copyright (c) 2012 Smart Mobile Factory. All rights reserved.
 //
+#ifdef __APPLE__
+  #include <GL/glew.h>
+  #include <GLUT/glut.h>
+#else
+  #include <GL/glew.h>
+  #include <GL/glut.h>
+#endif
+
 
 #include "HalfEdgeMesh.hpp"
 
@@ -71,4 +79,29 @@ void HalfEdgeMesh::generateHalfEdge(const VertexList& triangles)
     } catch (std::exception& x) {
         std::cerr << x.what() << std::endl;
     }
+}
+
+void HalfEdgeMesh::loadFromFile(const std::string fileName){
+    if (!OpenMesh::IO::read_mesh(m_Mesh, fileName))
+    {
+      std::cerr << "read error\n";
+      exit(1);
+    }
+}
+
+void HalfEdgeMesh::draw(){
+
+    TriHalfEdgeMesh::FaceIter faceIT;
+    TriHalfEdgeMesh::FaceVertexIter vrtxIT;
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+    glBegin(GL_TRIANGLES);
+        for(faceIT=m_Mesh.faces_begin(); faceIT!= m_Mesh.faces_end(); ++faceIT){
+            vrtxIT = m_Mesh.fv_iter(faceIT.handle());
+            for(; vrtxIT; ++vrtxIT){
+                glVertex3f(m_Mesh.point(vrtxIT.handle())[0],m_Mesh.point(vrtxIT.handle())[1],
+                        m_Mesh.point(vrtxIT.handle())[2]);
+            }
+        }
+    glEnd();
 }

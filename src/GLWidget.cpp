@@ -83,18 +83,22 @@ void GLWidget::initializeGL() {
 
     // Somewhere in the initialization part of your program
 
-    OffLoader loader;
-    Stopwatch readTimer("ParseFile");
-    vertices = loader.readOff(m_fileName,m_scale);
-    readTimer.stop();
-    Stopwatch treeTimer("GenTree");
-    tree = KDTree(vertices, 2);
-    treeTimer.stop();
-    grid = Grid3D(tree, m_dims,m_dims,m_dims, m_radius);
-    marchingCubes = MarchingCubes(grid, m_dims, m_dims, m_dims);
-    m_m = 5;
-    m_n = 5;
-    halfEdgeMesh.generateHalfEdge(marchingCubes.getVertices());
+    if(false){
+        OffLoader loader;
+        Stopwatch readTimer("ParseFile");
+        vertices = loader.readOff(m_fileName,m_scale);
+        readTimer.stop();
+        Stopwatch treeTimer("GenTree");
+        tree = KDTree(vertices, 2);
+        treeTimer.stop();
+        grid = Grid3D(tree, m_dims,m_dims,m_dims, m_radius);
+        marchingCubes = MarchingCubes(grid, m_dims, m_dims, m_dims);
+        m_m = 5;
+        m_n = 5;
+    }
+    //TODO: generated once, could need button
+    //halfEdgeMesh.generateHalfEdge(marchingCubes.getVertices());
+    halfEdgeMesh.loadFromFile("openMeshCatSMALL.off");
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -238,6 +242,7 @@ void GLWidget::paintGL() {
         marchingCubes.draw();
 
     glDisable(GL_LIGHTING);
+    halfEdgeMesh.draw();
 
 }
 
