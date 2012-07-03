@@ -25,7 +25,7 @@ GLWidget::GLWidget(QWidget *parent) :
     setFocus();
     m_k = 1;
     m_radius = 1.0f;
-    m_showMarchingCubes = false;
+    m_showMarchingCubes = true;
 }
 
 void GLWidget::setFilename(const std::string& fileName,float scale,
@@ -81,7 +81,7 @@ void GLWidget::initializeGL() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0, 0, 0, 0);
 
-//    // Somewhere in the initialization part of your programâ¦
+    // Somewhere in the initialization part of your program
 
     OffLoader loader;
     Stopwatch readTimer("ParseFile");
@@ -94,7 +94,6 @@ void GLWidget::initializeGL() {
     marchingCubes = MarchingCubes(grid, m_dims, m_dims, m_dims);
     m_m = 5;
     m_n = 5;
-    
     halfEdgeMesh.generateHalfEdge(marchingCubes.getVertices());
 }
 
