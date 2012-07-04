@@ -26,6 +26,7 @@ GLWidget::GLWidget(QWidget *parent) :
     m_k = 1;
     m_radius = 1.0f;
     m_showMarchingCubes = true;
+    wireHalfEdge=true;
 }
 
 void GLWidget::setFilename(const std::string& fileName,float scale,
@@ -56,7 +57,7 @@ GLfloat modelOffsetY = 0.0f;
 GLfloat modelOffsetZ = 0.0f;
 GLfloat screenRatio;
 bool useAlpha = false;
-bool drawCloud = true;
+bool drawCloud = false;
 
 RayCaster rayCaster;
 int doRayCasting = -1;
@@ -83,7 +84,7 @@ void GLWidget::initializeGL() {
 
     // Somewhere in the initialization part of your program
 
-    if(false){
+    //if(false){
         OffLoader loader;
         Stopwatch readTimer("ParseFile");
         vertices = loader.readOff(m_fileName,m_scale);
@@ -92,12 +93,13 @@ void GLWidget::initializeGL() {
         tree = KDTree(vertices, 2);
         treeTimer.stop();
         grid = Grid3D(tree, m_dims,m_dims,m_dims, m_radius);
-        marchingCubes = MarchingCubes(grid, m_dims, m_dims, m_dims);
+        //marchingCubes = MarchingCubes(grid, m_dims, m_dims, m_dims);
         m_m = 5;
         m_n = 5;
-    }
+    //}
     //TODO: generated once, could need button
     //halfEdgeMesh.generateHalfEdge(marchingCubes.getVertices());
+    halfEdgeMesh.setGrid(grid);
     halfEdgeMesh.loadFromFile("openMeshCatSMALL.off");
 }
 
@@ -212,7 +214,8 @@ void GLWidget::paintGL() {
 //    {
 //        tree.draw();
 //    }
-    grid.draw(useAlpha);
+    if(!wireHalfEdge)
+        grid.draw(useAlpha);
     //glScalef(20, 20, 20);
 
 
@@ -241,7 +244,7 @@ void GLWidget::paintGL() {
     if(m_showMarchingCubes)
         marchingCubes.draw();
 
-    halfEdgeMesh.draw();
+    halfEdgeMesh.draw(wireHalfEdge);
     glDisable(GL_LIGHTING);
 
 }
@@ -314,6 +317,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
 		scale += 0.1f;
 		updateGL();
 		break;
+	case Qt::Key_P:
+        halfEdgeMesh.projectAll();
+		updateGL();
+		break;
 	case Qt::Key_Minus:
 		scale -= 0.1f;
 		updateGL();
@@ -336,6 +343,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         break;
     case Qt::Key_W:
         camShift(0,SHIFT_SPEED);
+        updateGL();
+        break;
+    case Qt::Key_U:
+        wireHalfEdge = !wireHalfEdge;
         updateGL();
         break;
     case Qt::Key_S:

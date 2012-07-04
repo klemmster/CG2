@@ -56,6 +56,7 @@ protected:
 	float m_scale;
     float m_radius;
     int m_dims;
+    bool wireHalfEdge;
 
 private:
     bool showTree;

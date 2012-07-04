@@ -81,6 +81,66 @@ void HalfEdgeMesh::generateHalfEdge(const VertexList& triangles)
     }
 }
 
+void HalfEdgeMesh::project(TriHalfEdgeMesh::VertexHandle& vertex){
+
+    TriHalfEdgeMesh::Point point = m_Mesh.point(vertex);
+    float delta = 0.1f;
+    float funValue = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0], point[1], point[2], 0);
+    if(funValue == DBL_MAX){
+        std::cout << "DOUBLEMAX __ FUN\n";
+        return;
+    }
+    float xDelta = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0]+delta, point[1], point[2], 0);
+    if(xDelta == DBL_MAX){
+        std::cout << "DOUBLEMAX __ X\n";
+        xDelta = 0;
+    }else{
+        xDelta -= funValue;
+    }
+    float yDelta = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0], point[1]+delta, point[2], 0);
+    if(yDelta == DBL_MAX){
+        yDelta = 0;
+        std::cout << "DOUBLEMAX __ Y\n";
+    }else{
+        yDelta -= funValue;
+    }
+
+    float zDelta = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0], point[1], point[2]+delta, 0);
+    if(zDelta == DBL_MAX){
+        zDelta = 0;
+        std::cout << "DOUBLEMAX __ Z\n";
+    }else{
+        zDelta -= funValue;
+    }
+
+
+    float length = sqrt((xDelta*xDelta)+(yDelta*yDelta)+(zDelta*zDelta));
+
+    /*
+    if(isnan(xDelta) || isinf(xDelta) || isnan(yDelta) || isinf(yDelta) ||
+            isnan(zDelta) || isinf(zDelta)){
+        return;
+    }
+    */
+
+    if(length != 0){
+        point[0] -= xDelta / length * funValue;
+        point[1] -= yDelta / length * funValue;
+        point[2] -= zDelta / length * funValue;
+    }
+
+    m_Mesh.set_point(vertex, point);
+
+}
+
+void HalfEdgeMesh::projectAll(){
+    TriHalfEdgeMesh::VertexIter vrtxIT;
+    for(vrtxIT = m_Mesh.vertices_begin(); vrtxIT!=m_Mesh.vertices_end(); ++vrtxIT){
+        TriHalfEdgeMesh::VertexHandle vertex = vrtxIT.handle();
+        project(vertex);
+    }
+}
+
 void HalfEdgeMesh::loadFromFile(const std::string fileName){
     if (!OpenMesh::IO::read_mesh(m_Mesh, fileName))
     {
@@ -92,14 +152,18 @@ void HalfEdgeMesh::loadFromFile(const std::string fileName){
     m_Mesh.update_normals();
 }
 
-void HalfEdgeMesh::draw(){
+void HalfEdgeMesh::draw(bool wireframe){
 
     TriHalfEdgeMesh::FaceIter faceIT;
     TriHalfEdgeMesh::FaceVertexIter vrtxIT;
 
     TriHalfEdgeMesh::Normal normal;
 
+    if(wireframe)
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
 	glColor3f(1.0f, 0.0f, 0.0f);
+    m_Mesh.update_normals();
     glBegin(GL_TRIANGLES);
         for(faceIT=m_Mesh.faces_begin(); faceIT!= m_Mesh.faces_end(); ++faceIT){
             vrtxIT = m_Mesh.fv_iter(faceIT.handle());
@@ -111,4 +175,7 @@ void HalfEdgeMesh::draw(){
             }
         }
     glEnd();
+    if(wireframe)
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
+
