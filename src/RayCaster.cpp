@@ -81,7 +81,11 @@ if(0)
 				if(funcVal <= 0) {
 					if(type == RC_FIRSTTOUCH)
 					{
-						colorVal = normVal;
+						if(normVal<0)
+							normVal = 0;
+						if(normVal>1)
+							normVal = 1;
+						colorVal = normVal*0.5f+0.5f;
 						setColor(screen_x,screen_y,colorVal,colorVal,colorVal);
 						break;
 					}else{
