@@ -478,7 +478,7 @@ void GLWidget::sigFindInRadius(){
     updateGL();
 }
 
-void GLWidget::sigSetRadius(double r){
+void GLWidget::sigSetRadius(float r){
     if(r>0){
         radius = (float)r;
         cout << "Set Radius to: " << radius << "\n";
@@ -490,7 +490,7 @@ void GLWidget::sigSetRadius(double r){
     updateGL();
 }
 
-void GLWidget::sigSetH(double h) {
+void GLWidget::sigSetH(float h) {
     if (h > 0){
         //radius = (float)h;
         cout << "Set H to: " << h << "\n";

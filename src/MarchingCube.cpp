@@ -340,9 +340,9 @@ VertexList Cube::getTriangles(){
 
 VertexPtr Cube::getInterpolatedVertex(const Edge& edge){
     VertexPtr a = std::get<0>(edge);
-    double aVal = a->getFunValue();
+    float aVal = a->getFunValue();
     VertexPtr b = std::get<1>(edge);
-    double bVal = b->getFunValue();
+    float bVal = b->getFunValue();
 
     /*
     if(abs(aVal) < 0.00001)
@@ -351,9 +351,9 @@ VertexPtr Cube::getInterpolatedVertex(const Edge& edge){
         return b;
     if(abs(aVal - bVal) < 0.00001)
         return a;
-    double fac = -aVal / (bVal - aVal);
+    float fac = -aVal / (bVal - aVal);
     */
-    double fac = 0.5;
+    float fac = 0.5;
     vec3f resultVec = (*a) + fac * (*b - *a);
     //TODO: interpolate normals
     NormalPtr normala = a->getNormal();

@@ -86,47 +86,61 @@ void HalfEdgeMesh::project(TriHalfEdgeMesh::VertexHandle& vertex){
     TriHalfEdgeMesh::Point point = m_Mesh.point(vertex);
     float delta = 0.1f;
     float funValue = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0], point[1], point[2], 0);
-    if(funValue == DBL_MAX){
-        std::cout << "DOUBLEMAX __ FUN\n";
+    if(isnan(funValue)!= 0 || isinf(funValue)!= 0){
+        std::cout << "Got unreal Value\n";
         return;
     }
     float xDelta = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0]+delta, point[1], point[2], 0);
-    if(xDelta == DBL_MAX){
-        std::cout << "DOUBLEMAX __ X\n";
-        xDelta = 0;
+    if(isnan(xDelta)!= 0 || isinf(xDelta)!= 0){
+        std::cout << "Got unreal Value XDelta\n";
+        std::cout << "For Point: " << point << "\n";
+        std::cout << "For ModPo: " << point[0]+delta << point[1] << point[2] << "\n";
+        return;
+    }
+    if(xDelta == FLT_MAX){
+        //std::cout << "floatMAX __ X\n";
+        xDelta = delta;
     }else{
+        //std::cout << "xDelta: " << xDelta << "\n";
         xDelta -= funValue;
     }
     float yDelta = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0], point[1]+delta, point[2], 0);
-    if(yDelta == DBL_MAX){
-        yDelta = 0;
-        std::cout << "DOUBLEMAX __ Y\n";
+    if(yDelta == FLT_MAX){
+        yDelta = delta;
+        //std::cout << "floatMAX __ Y\n";
     }else{
+        //std::cout << "yDelta: " << yDelta << "\n";
         yDelta -= funValue;
     }
 
     float zDelta = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0], point[1], point[2]+delta, 0);
-    if(zDelta == DBL_MAX){
-        zDelta = 0;
-        std::cout << "DOUBLEMAX __ Z\n";
+    if(zDelta == FLT_MAX){
+        zDelta = delta;
+        //std::cout << "floatMAX __ Z\n";
     }else{
+        //std::cout << "zDelta: " << zDelta << "\n";
         zDelta -= funValue;
     }
 
 
     float length = sqrt((xDelta*xDelta)+(yDelta*yDelta)+(zDelta*zDelta));
 
-    /*
-    if(isnan(xDelta) || isinf(xDelta) || isnan(yDelta) || isinf(yDelta) ||
-            isnan(zDelta) || isinf(zDelta)){
+    if(isinf(length) !=0){
+        std::cout << "xDelta: " << xDelta << "\n";
+        std::cout << "yDelta: " << yDelta << "\n";
+        std::cout << "zDelta: " << zDelta << "\n";
+    }
+
+    if(isnan(xDelta)!= 0 || isinf(xDelta)!= 0 || isnan(yDelta)!= 0 || isinf(yDelta)!= 0 ||
+            isnan(zDelta)!= 0 || isinf(zDelta)!= 0 || isinf(length)!=0){
+        std::cout << "Bogus Values\n";
         return;
     }
-    */
 
     if(length != 0){
-        point[0] -= xDelta / length * funValue;
-        point[1] -= yDelta / length * funValue;
-        point[2] -= zDelta / length * funValue;
+        point[0] -= xDelta * funValue / length;
+        point[1] -= yDelta * funValue / length;
+        point[2] -= zDelta * funValue / length;
     }
 
     m_Mesh.set_point(vertex, point);
