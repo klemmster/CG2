@@ -180,6 +180,11 @@ void Grid3D::approximateWLS(VertexList& resultList)
             NormalPtr normal = interpolateNormal(list);
             pointDesired->setFunValue(funValue);
             pointDesired->setNormal(normal);
+            /*
+            if(std::isinf(funValue) != 0 || std::isnan(funValue) != 0){
+                std::cout << "Bad FunValue\n";
+            }
+            */
             if(funValue < 0.0f){
                 pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
             }
