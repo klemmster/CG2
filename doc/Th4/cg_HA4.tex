@@ -74,7 +74,13 @@ Ein Polyeder ist ein Polygonnetz, dass geschlossen ist. Diese Eigenschaft ist wi
 
 \task{2}
 
+Es kann keine Kante aus einem Dreiecksnetz entfernt werden, wenn dieses dadurch non-manifold wird. Dies passiert beispielsweise an Rand-Edges:
+\image{0.25}{res/edgeDeletionFail1.png}
+Eine Löschung der oberen rechten Kante macht das Mesh non-manifold:
+\image{0.25}{res/edgeDeletionFail2.png}
+Die Löschung hat dazu geführt, dass ein Vertex Mitglied in zwei Triangle-Fans ist.
 
+\newpage
 \task{3}
 
 \textbf{a) Kante teilen}\\
