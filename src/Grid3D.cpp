@@ -71,7 +71,7 @@ Grid3D::Grid3D(KDTree tree, const size_t dim_x, const size_t dim_y, const size_t
         {
             for (size_t x = 0; x <= m_dimX; x++)
             {
-                VertexPtr vrtx = VertexPtr(new Vertex(xPos, yPos, zPos, color, DBL_MAX));
+                VertexPtr vrtx = VertexPtr(new Vertex(xPos, yPos, zPos, color, FLT_MAX));
                 m_GridVertices.push_back(vrtx);
                 xPos += stepX;
             }
@@ -92,7 +92,7 @@ void Grid3D::generateVertices()
     /* Create 2 more Points per point */
 {
     for(VertexPtr vertex: m_tree.getVertices()){
-        double epsilon = 0.01 * m_diagLength;
+        float epsilon = 0.01 * m_diagLength;
         while(m_tree.findInRadius(vertex, epsilon).size() > 1){
             epsilon /= 1.1;
         }
@@ -132,7 +132,7 @@ void Grid3D::approximateWLS(VertexList& resultList)
         if(list.size() > 0){
             for(VertexPtr point : list)
             {
-                double funValue = point->getFunValue();
+                float funValue = point->getFunValue();
                 //std::cout << "funvalue: " << std::setprecision(5) << funValue << "\n";
                 Eigen::MatrixXf bDims = MatrixXf::Zero(k,k);
                 bDims = b*b.transpose();
@@ -176,10 +176,13 @@ void Grid3D::approximateWLS(VertexList& resultList)
 
             VectorXf c = VectorXf::Zero(k);
             c = bDimsMatSum.inverse() * bDimsVecSum;
-            double funValue = b.dot(c);
+            float funValue = b.dot(c);
             NormalPtr normal = interpolateNormal(list);
             pointDesired->setFunValue(funValue);
             pointDesired->setNormal(normal);
+            if(std::isinf(funValue) != 0 || std::isnan(funValue) != 0){
+                std::cout << "Bad FunValue\n";
+            }
             if(funValue < 0.0f){
                 pointDesired->highlight(vec3f(1.0f, 0.0f, 0.0f));
             }
@@ -198,7 +201,7 @@ NormalPtr Grid3D::interpolateNormal(VertexList vrtxList) const{
         }
     }
     //TODO: distance - dependent interpolation if necessary
-    double factor = 1.0/normals.size();
+    float factor = 1.0/normals.size();
     vec3f avgNormal;
     for(NormalPtr normal : normals){
         avgNormal = ((*normal)*factor)+avgNormal;
@@ -243,14 +246,14 @@ shared_ptr<Vertex> Grid3D::getVertex(int idX,int idY,int idZ) {
 		return m_GridVertices.at(index);
 }
 
-double Grid3D::getVertexValue(int idX,int idY,int idZ,int valueType) {
+float Grid3D::getVertexValue(int idX,int idY,int idZ,int valueType) {
 	shared_ptr<Vertex> vertex = getVertex(idX,idY,idZ);
-	if(vertex==nullptr)
+	if(vertex==nullptr){
 		return OUTOFRANGE_DISTANCE;
-	else{
-		if(valueType == 0)
+    }else{
+		if(valueType == 0){
 			return vertex->getFunValue();
-		else{
+        }else{
 			if(vertex->getNormal()!=nullptr)
 				return (*vertex->getNormal())[0];
 			else
@@ -260,13 +263,14 @@ double Grid3D::getVertexValue(int idX,int idY,int idZ,int valueType) {
 }
 
 
-double Grid3D::getInterpolatedFunctionValue(float x,float y,float z,int valueType) {
+float Grid3D::getInterpolatedFunctionValue(float x,float y,float z,int valueType) {
 	if(m_interpolate) {
 		int iX = (int)x;
 		int iY = (int)y;
 		int iZ = (int)z;
-        if(iX >= m_dimX || iY >= m_dimY || iZ >= m_dimZ)
-            return DBL_MAX;
+        if(iX >= m_dimX || iY >= m_dimY || iZ >= m_dimZ){
+            return FLT_MAX;
+        }
 		float u = x-iX;
 		float v = y-iY;
 		float w = z-iZ;
@@ -274,21 +278,37 @@ double Grid3D::getInterpolatedFunctionValue(float x,float y,float z,int valueTyp
 		float vR = 1-v;
 		float wR = 1-w;
 		float sum = 0;
-		sum += getVertexValue(iX,iY,iZ,valueType) * uR*vR*wR;
-		sum += getVertexValue(iX+1,iY,iZ,valueType) * u*vR*wR;
-		sum += getVertexValue(iX,iY+1,iZ,valueType) * uR*v*wR;
-		sum += getVertexValue(iX+1,iY+1,iZ,valueType) * u*v*wR;
-		sum += getVertexValue(iX,iY,iZ+1,valueType) * uR*vR*w;
-		sum += getVertexValue(iX+1,iY,iZ+1,valueType) * u*vR*w;
-		sum += getVertexValue(iX,iY+1,iZ+1,valueType) * uR*v*w;
-		sum += getVertexValue(iX+1,iY+1,iZ+1,valueType) * u*v*w;
+        double val = getVertexValue(iX,iY,iZ,valueType);
+        if(val != FLT_MAX)
+		    sum +=  val * uR*vR*wR;
+        val = getVertexValue(iX+1,iY,iZ,valueType);
+        if(val != FLT_MAX)
+            sum += val * u*vR*wR;
+        val = getVertexValue(iX,iY+1,iZ,valueType);
+        if(val != FLT_MAX)
+		    sum += val * uR*v*wR;
+        val = getVertexValue(iX+1,iY+1,iZ,valueType);
+        if(val != FLT_MAX)
+            sum += val * u*v*wR;
+        val = getVertexValue(iX,iY,iZ+1,valueType);
+        if(val != FLT_MAX)
+            sum += val * uR*vR*w;
+        val = getVertexValue(iX+1,iY,iZ+1,valueType);
+        if(val != FLT_MAX)
+            sum += val * u*vR*w;
+        val = getVertexValue(iX,iY+1,iZ+1,valueType);
+        if(val != FLT_MAX)
+            sum +=  val * uR*v*w;
+        val = getVertexValue(iX+1,iY+1,iZ+1,valueType);
+        if(val != FLT_MAX)
+            sum += val * u*v*w;
 		return sum;
 	}else{
 		return getVertexValue((int)x,(int)y,(int)z,valueType);
 	}
 }
 
-double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z,int valueType) {
+float Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z,int valueType) {
 	//if(x<m_MinX || x>m_MaxX || y<m_MinY || y>m_MaxY || z<m_MinZ || z>m_MaxZ)
 	//	return OUTOFRANGE_DISTANCE;
 	//else
@@ -296,7 +316,12 @@ double Grid3D::getImplicitFunctionValueWorldCoordinates(float x,float y,float z,
 	x = (x - m_MinX)/(m_MaxX-m_MinX) * (m_dimX);
 	y = (y - m_MinY)/(m_MaxY-m_MinY) * (m_dimY);
 	z = (z - m_MinZ)/(m_MaxZ-m_MinZ) * (m_dimZ);
-	return getInterpolatedFunctionValue(x,y,z,valueType);
-
+    float val = getInterpolatedFunctionValue(x,y,z,valueType);
+    if(std::isnan(val)!= 0 || std::isinf(val)!= 0){
+        std::cout << "Interpolatd Value: " << val << "\n";
+        std::cout << "X: " << x << " Y: " << y << " Z: " << z << "\n";
+        return 0.0f;
+    }
+	return val;
 //return x*x*4 + y*y*6 + z*z*8 - 1;
 }

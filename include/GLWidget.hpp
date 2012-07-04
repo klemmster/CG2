@@ -25,8 +25,8 @@ public slots:
     void sigShowRepeated(bool show);
 
     void sigFindInRadius();
-    void sigSetRadius(double r);
-    void sigSetH(double h);
+    void sigSetRadius(float r);
+    void sigSetH(float h);
     void sigSetK(int k);
     void sigSetN(int n);
     void sigSetM(int m);
@@ -56,6 +56,7 @@ protected:
 	float m_scale;
     float m_radius;
     int m_dims;
+    bool wireHalfEdge;
 
 private:
     bool showTree;

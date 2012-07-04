@@ -12,9 +12,21 @@ else()
 	MESSAGE("Unable to find OpenMesh include folder, please add your path to CMakeLists.txt")
 endif()
 
-find_library( MESH_CORE_LIB
-	NAMES libOpenMeshCore.a
-	PATHS /usr/local/lib/OpenMesh/ )
+if(APPLE)
+    find_library( MESH_CORE_LIB
+        NAMES libOpenMeshCore.a
+        PATHS /usr/local/lib/OpenMesh/ )
+    find_library( MESH_TOOL_LIB
+        NAMES libOpenMeshTools.a
+        PATHS /usr/local/lib/OpenMesh/ )
+elseIf(UNIX)
+    find_library( MESH_CORE_LIB
+        NAMES libOpenMeshCore.a
+        PATHS /usr/lib/OpenMesh/ )
+    find_library( MESH_TOOL_LIB
+        NAMES libOpenMeshTools.a
+        PATHS /usr/lib/OpenMesh/ )
+endif()
 
 if ( MESH_CORE_LIB )
 	MESSAGE("Found OpenMeshCore lib folder at ${MESH_CORE_LIB}")
@@ -22,9 +34,6 @@ else()
 	MESSAGE("Unable to find OpenMeshCore lib folder, please add your path to CMakeLists.txt")
 endif()
 
-find_library( MESH_TOOL_LIB
-	NAMES libOpenMeshTools.a
-	PATHS /usr/local/lib/OpenMesh/ )
 
 if ( MESH_TOOL_LIB )
 	MESSAGE("Found OpenMeshTools lib folder at ${MESH_TOOL_LIB}")

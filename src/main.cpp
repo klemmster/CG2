@@ -29,16 +29,16 @@ int main(int argc, char *argv[])
     if(argc > 2){
         scale = atof(argv[2]);
     }else{
-        scale = 1;
+        scale = 0.002f;
     }
     if(argc > 3){
         radius = atof(argv[3]);
     }else{
-        radius = 1.0;
+        radius = 0.18;
     }if(argc > 4){
         dims = atoi(argv[4]);
     }else{
-        dims = 10;
+        dims = 32;
     }
 
     ui.glWidget->setFilename(fileName,scale, radius, dims);

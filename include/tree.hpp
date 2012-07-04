@@ -29,7 +29,7 @@ public:
     void draw(const VertexList vertices);
 
     VertexList findKNearestNeighbours(const VertexPtr source, const size_t numNeighbours);
-    VertexList findInRadius(const VertexPtr source, const double radius);
+    VertexList findInRadius(const VertexPtr source, const float radius);
     const VertexList& getVertices() const{ return m_origVertices; };
     const VertexList& getMinVertices() const;
     const VertexList& getMaxVertices() const;

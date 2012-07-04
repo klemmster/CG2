@@ -231,7 +231,7 @@ void KDTree::findInRadius(const NodePtr& src, const HyperSphere& sphere,
     }
 }
 
-VertexList KDTree::findInRadius(const VertexPtr source, const double radius){
+VertexList KDTree::findInRadius(const VertexPtr source, const float radius){
     VertexList result;
     //Stopwatch findS("Radius - Search");
     HyperSphere hyperSphere(source, radius, m_K);
