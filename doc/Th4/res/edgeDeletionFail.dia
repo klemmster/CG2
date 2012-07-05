@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dia:diagram xmlns:dia="http://www.lysator.liu.se/~alla/dia/">
+  <dia:diagramdata>
+    <dia:attribute name="background">
+      <dia:color val="#ffffff"/>
+    </dia:attribute>
+    <dia:attribute name="pagebreak">
+      <dia:color val="#000099"/>
+    </dia:attribute>
+    <dia:attribute name="paper">
+      <dia:composite type="paper">
+        <dia:attribute name="name">
+          <dia:string>#A4#</dia:string>
+        </dia:attribute>
+        <dia:attribute name="tmargin">
+          <dia:real val="2.8222000598907471"/>
+        </dia:attribute>
+        <dia:attribute name="bmargin">
+          <dia:real val="2.8222000598907471"/>
+        </dia:attribute>
+        <dia:attribute name="lmargin">
+          <dia:real val="2.8222000598907471"/>
+        </dia:attribute>
+        <dia:attribute name="rmargin">
+          <dia:real val="2.8222000598907471"/>
+        </dia:attribute>
+        <dia:attribute name="is_portrait">
+          <dia:boolean val="true"/>
+        </dia:attribute>
+        <dia:attribute name="scaling">
+          <dia:real val="1"/>
+        </dia:attribute>
+        <dia:attribute name="fitto">
+          <dia:boolean val="false"/>
+        </dia:attribute>
+      </dia:composite>
+    </dia:attribute>
+    <dia:attribute name="grid">
+      <dia:composite type="grid">
+        <dia:attribute name="width_x">
+          <dia:real val="1"/>
+        </dia:attribute>
+        <dia:attribute name="width_y">
+          <dia:real val="1"/>
+        </dia:attribute>
+        <dia:attribute name="visible_x">
+          <dia:int val="1"/>
+        </dia:attribute>
+        <dia:attribute name="visible_y">
+          <dia:int val="1"/>
+        </dia:attribute>
+        <dia:composite type="color"/>
+      </dia:composite>
+    </dia:attribute>
+    <dia:attribute name="color">
+      <dia:color val="#d8e5e5"/>
+    </dia:attribute>
+    <dia:attribute name="guides">
+      <dia:composite type="guides">
+        <dia:attribute name="hguides"/>
+        <dia:attribute name="vguides"/>
+      </dia:composite>
+    </dia:attribute>
+  </dia:diagramdata>
+  <dia:layer name="Hintergrund" visible="true" active="true">
+    <dia:object type="Standard - Polygon" version="0" id="O0">
+      <dia:attribute name="obj_pos">
+        <dia:point val="0.89375,2.29687"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="0.832365,2.23688;7.81054,7.89695"/>
+      </dia:attribute>
+      <dia:attribute name="poly_points">
+        <dia:point val="0.89375,2.29687"/>
+        <dia:point val="7.64375,2.29687"/>
+        <dia:point val="1.01875,7.77187"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0.11999999731779099"/>
+      </dia:attribute>
+      <dia:attribute name="inner_color">
+        <dia:color val="#d2d2d2"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Standard - Polygon" version="0" id="O1">
+      <dia:attribute name="obj_pos">
+        <dia:point val="7.56875,7.87187"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="0.803948,2.14272;7.73107,7.93255"/>
+      </dia:attribute>
+      <dia:attribute name="poly_points">
+        <dia:point val="7.56875,7.87187"/>
+        <dia:point val="7.66875,2.27187"/>
+        <dia:point val="0.96875,7.79687"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0.11999999731779099"/>
+      </dia:attribute>
+      <dia:attribute name="inner_color">
+        <dia:color val="#d2d2d2"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Standard - Polygon" version="0" id="O2">
+      <dia:attribute name="obj_pos">
+        <dia:point val="7.69375,2.29687"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="7.53141,2.23688;14.5124,7.92507"/>
+      </dia:attribute>
+      <dia:attribute name="poly_points">
+        <dia:point val="7.69375,2.29687"/>
+        <dia:point val="14.3438,2.29687"/>
+        <dia:point val="7.59375,7.79687"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0.11999999731779099"/>
+      </dia:attribute>
+      <dia:attribute name="inner_color">
+        <dia:color val="#d2d2d2"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Standard - Polygon" version="0" id="O3">
+      <dia:attribute name="obj_pos">
+        <dia:point val="14.4437,7.79687"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="7.45094,2.17196;14.5051,7.88249"/>
+      </dia:attribute>
+      <dia:attribute name="poly_points">
+        <dia:point val="14.4437,7.79687"/>
+        <dia:point val="14.3187,2.29687"/>
+        <dia:point val="7.61875,7.82187"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0.11999999731779099"/>
+      </dia:attribute>
+      <dia:attribute name="inner_color">
+        <dia:color val="#d2d2d2"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Standard - Polygon" version="0" id="O4">
+      <dia:attribute name="obj_pos">
+        <dia:point val="0.868552,12.581"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="0.807167,12.521;7.78534,18.1811"/>
+      </dia:attribute>
+      <dia:attribute name="poly_points">
+        <dia:point val="0.868552,12.581"/>
+        <dia:point val="7.61855,12.581"/>
+        <dia:point val="0.993552,18.056"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0.11999999731779099"/>
+      </dia:attribute>
+      <dia:attribute name="inner_color">
+        <dia:color val="#d2d2d2"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Standard - Polygon" version="0" id="O5">
+      <dia:attribute name="obj_pos">
+        <dia:point val="7.54355,18.156"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="0.77875,12.4269;7.70587,18.2167"/>
+      </dia:attribute>
+      <dia:attribute name="poly_points">
+        <dia:point val="7.54355,18.156"/>
+        <dia:point val="7.64355,12.556"/>
+        <dia:point val="0.943552,18.081"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0.11999999731779099"/>
+      </dia:attribute>
+      <dia:attribute name="inner_color">
+        <dia:color val="#d2d2d2"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Standard - Polygon" version="0" id="O6">
+      <dia:attribute name="obj_pos">
+        <dia:point val="14.4186,18.081"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="7.42574,12.4561;14.4799,18.1666"/>
+      </dia:attribute>
+      <dia:attribute name="poly_points">
+        <dia:point val="14.4186,18.081"/>
+        <dia:point val="14.2936,12.581"/>
+        <dia:point val="7.59355,18.106"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0.11999999731779099"/>
+      </dia:attribute>
+      <dia:attribute name="inner_color">
+        <dia:color val="#d2d2d2"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O7">
+      <dia:attribute name="obj_pos">
+        <dia:point val="0.603906,12.2922"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="0.603906,12.2922;1.16875,12.857"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="0.603906,12.2922"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O8">
+      <dia:attribute name="obj_pos">
+        <dia:point val="7.27375,12.3197"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="7.27375,12.3197;7.83859,12.8845"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="7.27375,12.3197"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O9">
+      <dia:attribute name="obj_pos">
+        <dia:point val="0.74875,17.7697"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="0.74875,17.7697;1.31359,18.3345"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="0.74875,17.7697"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O10">
+      <dia:attribute name="obj_pos">
+        <dia:point val="7.27875,17.8472"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="7.27875,17.8472;7.84359,18.412"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="7.27875,17.8472"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O11">
+      <dia:attribute name="obj_pos">
+        <dia:point val="14.0088,12.3247"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="14.0088,12.3247;14.5736,12.8895"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="14.0088,12.3247"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O12">
+      <dia:attribute name="obj_pos">
+        <dia:point val="14.1388,17.8022"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="14.1388,17.8022;14.7036,18.367"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="14.1388,17.8022"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O13">
+      <dia:attribute name="obj_pos">
+        <dia:point val="0.61875,1.97969"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="0.61875,1.97969;1.18359,2.54453"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="0.61875,1.97969"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O14">
+      <dia:attribute name="obj_pos">
+        <dia:point val="0.67375,7.45719"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="0.67375,7.45719;1.23859,8.02203"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="0.67375,7.45719"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O15">
+      <dia:attribute name="obj_pos">
+        <dia:point val="7.37875,2.03469"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="7.37875,2.03469;7.94359,2.59953"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="7.37875,2.03469"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O16">
+      <dia:attribute name="obj_pos">
+        <dia:point val="7.28375,7.51219"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="7.28375,7.51219;7.84859,8.07703"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="7.28375,7.51219"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O17">
+      <dia:attribute name="obj_pos">
+        <dia:point val="14.1387,7.53969"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="14.1387,7.53969;14.7036,8.10453"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="14.1387,7.53969"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+    <dia:object type="Logic - Connector" version="1" id="O18">
+      <dia:attribute name="obj_pos">
+        <dia:point val="14.0687,2.06719"/>
+      </dia:attribute>
+      <dia:attribute name="obj_bb">
+        <dia:rectangle val="14.0687,2.06719;14.6336,2.63203"/>
+      </dia:attribute>
+      <dia:attribute name="meta">
+        <dia:composite type="dict"/>
+      </dia:attribute>
+      <dia:attribute name="elem_corner">
+        <dia:point val="14.0687,2.06719"/>
+      </dia:attribute>
+      <dia:attribute name="elem_width">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="elem_height">
+        <dia:real val="0.56484374999999543"/>
+      </dia:attribute>
+      <dia:attribute name="line_width">
+        <dia:real val="0"/>
+      </dia:attribute>
+      <dia:attribute name="line_colour">
+        <dia:color val="#000000"/>
+      </dia:attribute>
+      <dia:attribute name="fill_colour">
+        <dia:color val="#ffffff"/>
+      </dia:attribute>
+      <dia:attribute name="show_background">
+        <dia:boolean val="true"/>
+      </dia:attribute>
+      <dia:attribute name="line_style">
+        <dia:enum val="0"/>
+        <dia:real val="1"/>
+      </dia:attribute>
+      <dia:attribute name="flip_horizontal">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="flip_vertical">
+        <dia:boolean val="false"/>
+      </dia:attribute>
+      <dia:attribute name="subscale">
+        <dia:real val="1"/>
+      </dia:attribute>
+    </dia:object>
+  </dia:layer>
+</dia:diagram>
