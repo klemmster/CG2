@@ -185,6 +185,30 @@ float HalfEdgeMesh::getQuality(const TriHalfEdgeMesh::FaceHandle& faceHandle){
     return maxFunVal;
 }
 
+float HalfEdgeMesh::getMeshQuality(){
+    float sum = 0.0f;
+    TriHalfEdgeMesh::FaceIter it;
+    size_t count=0;
+    for(it=m_Mesh.faces_begin(); it!=m_Mesh.faces_end(); ++it){
+        sum += getQuality(it.handle());
+        count++;
+    }
+    return sum/count;
+}
+
+void HalfEdgeMesh::optimizeMesh(size_t numIter){
+    if(numIter == 0){
+        return;
+    }
+    float qualitySum = getMeshQuality();
+    std::cout << "QualitySum: " << qualitySum << "\n";
+    //TODO: Check quality
+    //if(
+    projectAll();
+    optimizeMesh(--numIter);
+
+}
+
 float HalfEdgeMesh::getRingQuality(const TriHalfEdgeMesh::VertexHandle& vrtx){
 
     float maxCost = 0.0f;

@@ -418,6 +418,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         m_showMarchingCubes = !m_showMarchingCubes;
         updateGL();
         break;
+    case Qt::Key_Z:
+        halfEdgeMesh.optimizeMesh(20);
+        updateGL();
+        break;
     default:
         event->ignore();
         return;

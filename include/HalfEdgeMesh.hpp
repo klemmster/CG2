@@ -31,6 +31,8 @@ public:
     float getQuality(const TriHalfEdgeMesh::FaceHandle& face);
     float getRingQuality(const TriHalfEdgeMesh::VertexHandle& vrtxHandle);
     float getEdgeQuality(const TriHalfEdgeMesh::EdgeHandle& edgeHandle);
+    float getMeshQuality();
+    void optimizeMesh(size_t numIter=20);
     TriHalfEdgeMesh getMesh() { return m_Mesh; }
     void draw(bool wireframe);
 
