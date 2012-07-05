@@ -156,8 +156,15 @@ float HalfEdgeMesh::getQuality(const TriHalfEdgeMesh::FaceHandle& faceHandle){
 
     float maxFunVal = 0.0f;
 
-    TriHalfEdgeMesh::FaceVertexIter vrtxIT = m_Mesh.fv_iter(faceHandle);
-    vector<TriHalfEdgeMesh::VertexHandle> vertexHandlers(vrtxIT);
+    vector<TriHalfEdgeMesh::VertexHandle> vertexHandlers;
+    TriHalfEdgeMesh::FaceVertexIter vrtxIT;
+    for(vrtxIT=m_Mesh.fv_iter(faceHandle); vrtxIT; ++vrtxIT){
+        vertexHandlers.push_back(vrtxIT.handle());
+    }
+
+    if(vertexHandlers.size() < 3){
+        std::cout << "Not a triangle\n";
+    }
 
     TriHalfEdgeMesh::Point pA = m_Mesh.point(vertexHandlers[0]);
     TriHalfEdgeMesh::Point pB = m_Mesh.point(vertexHandlers[1]);
