@@ -28,6 +28,9 @@ public:
     void loadFromFile(const std::string fileName);
     void setGrid(Grid3D grid) {m_Grid = grid;};
     void projectAll();
+    float getQuality(const TriHalfEdgeMesh::FaceHandle& face);
+    float getRingQuality(const TriHalfEdgeMesh::VertexHandle& vrtxHandle);
+    float getEdgeQuality(const TriHalfEdgeMesh::EdgeHandle& edgeHandle);
     TriHalfEdgeMesh getMesh() { return m_Mesh; }
     void draw(bool wireframe);
 

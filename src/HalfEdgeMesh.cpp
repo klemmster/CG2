@@ -90,6 +90,7 @@ void HalfEdgeMesh::project(TriHalfEdgeMesh::VertexHandle& vertex){
         std::cout << "Got unreal Value\n";
         return;
     }
+
     float xDelta = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0]+delta, point[1], point[2], 0);
     if(isnan(xDelta)!= 0 || isinf(xDelta)!= 0){
         std::cout << "Got unreal Value XDelta\n";
@@ -104,6 +105,7 @@ void HalfEdgeMesh::project(TriHalfEdgeMesh::VertexHandle& vertex){
         //std::cout << "xDelta: " << xDelta << "\n";
         xDelta -= funValue;
     }
+
     float yDelta = m_Grid.getImplicitFunctionValueWorldCoordinates(point[0], point[1]+delta, point[2], 0);
     if(yDelta == FLT_MAX){
         yDelta = delta;
@@ -142,9 +144,74 @@ void HalfEdgeMesh::project(TriHalfEdgeMesh::VertexHandle& vertex){
         point[1] -= yDelta * funValue / length;
         point[2] -= zDelta * funValue / length;
     }
-
     m_Mesh.set_point(vertex, point);
 
+}
+
+float HalfEdgeMesh::getQuality(const TriHalfEdgeMesh::FaceHandle& faceHandle){
+    int steps = 4;
+    float uA = 1.0f;
+    float uB = 0.0f;
+    float uC = 0.0f;
+
+    float maxFunVal = 0.0f;
+
+    TriHalfEdgeMesh::FaceVertexIter vrtxIT = m_Mesh.fv_iter(faceHandle);
+    vector<TriHalfEdgeMesh::VertexHandle> vertexHandlers(vrtxIT);
+
+    TriHalfEdgeMesh::Point pA = m_Mesh.point(vertexHandlers[0]);
+    TriHalfEdgeMesh::Point pB = m_Mesh.point(vertexHandlers[1]);
+    TriHalfEdgeMesh::Point pC = m_Mesh.point(vertexHandlers[2]);
+
+    for(int a=0; a<steps; ++a){
+        uA = (float)a / (steps-1);
+        for(int b=0; b<steps; ++b){
+            uB = (float)b/(steps-1) * (1.0f - uA);
+            uC = 1.0f - uA - uB;
+
+            TriHalfEdgeMesh::Point weightedA = pA *uA;
+            TriHalfEdgeMesh::Point weightedB = pB *uB;
+            TriHalfEdgeMesh::Point weightedC = pC *uC;
+
+            TriHalfEdgeMesh::Point sumPoint = weightedA + weightedB + weightedC;
+
+            float funVal = m_Grid.getImplicitFunctionValueWorldCoordinates(sumPoint[0],
+                    sumPoint[1], sumPoint[2], 0);
+            if(abs(funVal) > maxFunVal){
+                maxFunVal = abs(funVal);
+            }
+        }
+    }
+    return maxFunVal;
+}
+
+float HalfEdgeMesh::getRingQuality(const TriHalfEdgeMesh::VertexHandle& vrtx){
+
+    float maxCost = 0.0f;
+    for(TriHalfEdgeMesh::VertexFaceIter faceIT=m_Mesh.vf_iter(vrtx); faceIT; ++faceIT){
+        float quality = getQuality(faceIT.handle());
+        if(quality > maxCost){
+            maxCost = quality;
+        }
+    }
+    return maxCost;
+}
+
+float HalfEdgeMesh::getEdgeQuality(const TriHalfEdgeMesh::EdgeHandle& edgeHandle){
+    TriHalfEdgeMesh::Edge edge = m_Mesh.edge(edgeHandle);
+    TriHalfEdgeMesh::HalfedgeHandle heha = m_Mesh.halfedge_handle(edgeHandle, 0);
+
+    std::array< TriHalfEdgeMesh::FaceHandle, 2> faces;
+    faces[0] = m_Mesh.face_handle(heha);
+    faces[1] = m_Mesh.opposite_face_handle(heha);
+
+    float maxCost = 0.0f;
+    for(auto fh : faces){
+        float cost = getQuality(fh);
+        if(cost > maxCost)
+            maxCost=cost;
+    }
+    return maxCost;
 }
 
 void HalfEdgeMesh::projectAll(){
