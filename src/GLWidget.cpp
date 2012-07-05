@@ -100,7 +100,7 @@ void GLWidget::initializeGL() {
     //TODO: generated once, could need button
     //halfEdgeMesh.generateHalfEdge(marchingCubes.getVertices());
     halfEdgeMesh.setGrid(grid);
-    halfEdgeMesh.loadFromFile("openMeshCatSMALL.off");
+    halfEdgeMesh.loadFromFile("openMeshCatVERYSMALL.off");
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -418,6 +418,10 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         m_showMarchingCubes = !m_showMarchingCubes;
         updateGL();
         break;
+    case Qt::Key_Z:
+        halfEdgeMesh.optimizeMesh(20);
+        updateGL();
+        break;
     default:
         event->ignore();
         return;
@@ -478,7 +482,7 @@ void GLWidget::sigFindInRadius(){
     updateGL();
 }
 
-void GLWidget::sigSetRadius(float r){
+void GLWidget::sigSetRadius(double r){
     if(r>0){
         radius = (float)r;
         cout << "Set Radius to: " << radius << "\n";
@@ -490,7 +494,7 @@ void GLWidget::sigSetRadius(float r){
     updateGL();
 }
 
-void GLWidget::sigSetH(float h) {
+void GLWidget::sigSetH(double h) {
     if (h > 0){
         //radius = (float)h;
         cout << "Set H to: " << h << "\n";

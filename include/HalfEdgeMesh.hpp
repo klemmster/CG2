@@ -28,12 +28,21 @@ public:
     void loadFromFile(const std::string fileName);
     void setGrid(Grid3D grid) {m_Grid = grid;};
     void projectAll();
+    float getQuality(const TriHalfEdgeMesh::FaceHandle& face);
+    float getRingQuality(const TriHalfEdgeMesh::VertexHandle& vrtxHandle);
+    float getEdgeQuality(const TriHalfEdgeMesh::EdgeHandle& edgeHandle);
+    float getMeshQuality();
+    void optimizeMesh(size_t numIter=20);
     TriHalfEdgeMesh getMesh() { return m_Mesh; }
     void draw(bool wireframe);
 
 private:
 
     void project(TriHalfEdgeMesh::VertexHandle& vertex);
+    void optimizeByFlip();
+    void optimizeBySplit();
+    void optimizeByCollapse();
+    void optimizeByShift();
     TriHalfEdgeMesh m_Mesh;
     Grid3D m_Grid;
 };
