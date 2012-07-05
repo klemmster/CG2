@@ -419,7 +419,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         updateGL();
         break;
     case Qt::Key_Z:
-        halfEdgeMesh.optimizeMesh(1);
+        halfEdgeMesh.optimizeMesh(20);
         updateGL();
         break;
     default:
@@ -482,7 +482,7 @@ void GLWidget::sigFindInRadius(){
     updateGL();
 }
 
-void GLWidget::sigSetRadius(float r){
+void GLWidget::sigSetRadius(double r){
     if(r>0){
         radius = (float)r;
         cout << "Set Radius to: " << radius << "\n";
@@ -494,7 +494,7 @@ void GLWidget::sigSetRadius(float r){
     updateGL();
 }
 
-void GLWidget::sigSetH(float h) {
+void GLWidget::sigSetH(double h) {
     if (h > 0){
         //radius = (float)h;
         cout << "Set H to: " << h << "\n";

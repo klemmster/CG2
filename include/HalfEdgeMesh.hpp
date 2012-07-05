@@ -40,7 +40,9 @@ private:
 
     void project(TriHalfEdgeMesh::VertexHandle& vertex);
     void optimizeByFlip();
-    void optimizeBySplitAndProject();
+    void optimizeBySplit();
+    void optimizeByCollapse();
+    void optimizeByShift();
     TriHalfEdgeMesh m_Mesh;
     Grid3D m_Grid;
 };

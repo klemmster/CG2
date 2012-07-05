@@ -209,18 +209,66 @@ void HalfEdgeMesh::optimizeMesh(size_t numIter){
     }
     float qualitySum = getMeshQuality();
     std::cout << "QualitySum: " << qualitySum << "\n";
-    //TODO: Check quality
-    //if(
-    //projectAll();
-    //optimizeByFlip();
-    optimizeBySplitAndProject();
+    if(qualitySum < 0.003){
+        return;
+    }
+    //optimizeByCollapse();
+    optimizeBySplit();
+    optimizeByFlip();
+    optimizeByShift();
+    projectAll();
     optimizeMesh(--numIter);
 }
 
-void HalfEdgeMesh::optimizeBySplitAndProject(){
+void HalfEdgeMesh::optimizeByShift(){
+
+    TriHalfEdgeMesh::VertexIter it;
+    TriHalfEdgeMesh::VertexVertexIter circleIT;
+    TriHalfEdgeMesh::Point averagePt;
+
+    for(it=m_Mesh.vertices_begin(); it!=m_Mesh.vertices_end(); ++it){
+        circleIT = m_Mesh.vv_iter(it.handle());
+        size_t count = 0;
+        TriHalfEdgeMesh::Point tmpPt;
+        tmpPt[0] = 0.0f;
+        tmpPt[1] = 0.0f;
+        tmpPt[2] = 0.0f;
+        for(; circleIT; ++circleIT){
+            tmpPt += m_Mesh.point(circleIT.handle());
+            count++;
+        }
+        tmpPt /= count;
+        m_Mesh.set_point(it.handle(), tmpPt);
+    }
+}
+
+void HalfEdgeMesh::optimizeByCollapse(){
+    TriHalfEdgeMesh::EdgeIter it;
+    TriHalfEdgeMesh::HalfedgeHandle a;
+    std::vector<TriHalfEdgeMesh::EdgeHandle> handles;
+
+    for(it=m_Mesh.edges_begin(); it!=m_Mesh.edges_end(); ++it){
+        handles.push_back(it.handle());
+    }
+
+    for(auto handle: handles){
+        std::cout << "Edge: " << handle << "\n";
+        a = m_Mesh.halfedge_handle(handle, 0);
+        std::cout << "HalfEdge: " << a << "\n";
+        if(m_Mesh.is_collapse_ok(a)){
+            std::cout << "Collapse\n";
+            //m_Mesh.collapse(a);
+        }else{
+            std::cout << "collapse not ok\n";
+        }
+    }
+}
+
+void HalfEdgeMesh::optimizeBySplit(){
     TriHalfEdgeMesh::Point a;
     TriHalfEdgeMesh::Point b;
     TriHalfEdgeMesh::Point z;
+    TriHalfEdgeMesh::VertexHandle newVrtxHandle;
 
     TriHalfEdgeMesh::EdgeIter it;
     std::vector<TriHalfEdgeMesh::EdgeHandle> handles;
@@ -228,36 +276,50 @@ void HalfEdgeMesh::optimizeBySplitAndProject(){
     for(it=m_Mesh.edges_begin(); it!=m_Mesh.edges_end(); ++it){
         handles.push_back(it.handle());
     }
+
     for(auto handle : handles){
-        a = m_Mesh.point(m_Mesh.to_vertex_handle(m_Mesh.halfedge_handle(handle,0)));
-        b = m_Mesh.point(m_Mesh.to_vertex_handle(m_Mesh.halfedge_handle(handle,1)));
-        z = (a+b)/2.0;
-        m_Mesh.split(handle, z);
+        if(m_Mesh.n_vertices() <= 8000){
+            a = m_Mesh.point(m_Mesh.to_vertex_handle(m_Mesh.halfedge_handle(handle,0)));
+            b = m_Mesh.point(m_Mesh.to_vertex_handle(m_Mesh.halfedge_handle(handle,1)));
+            z = (a+b)/2.0;
+            newVrtxHandle = m_Mesh.add_vertex(z);
+            m_Mesh.split(handle, newVrtxHandle);
+        }
     }
 }
 
 void HalfEdgeMesh::optimizeByFlip(){
 
     TriHalfEdgeMesh::EdgeIter it;
+    TriHalfEdgeMesh::VertexHandle a;
+    TriHalfEdgeMesh::VertexHandle b;
+    std::vector<TriHalfEdgeMesh::EdgeHandle> handles;
+    for(it=m_Mesh.edges_begin(); it!=m_Mesh.edges_end(); ++it){
+        handles.push_back(it.handle());
+    }
 
-    for(it=m_Mesh.edges_sbegin(); it!=m_Mesh.edges_end();){
-        if(!m_Mesh.is_boundary(it.handle())){
-            if(m_Mesh.is_flip_ok(it.handle())){
-                float prevQuali = getEdgeQuality(it.handle());
-                m_Mesh.flip(it.handle());
-                float nextQuali = getEdgeQuality(it.handle());
-                //If the mesh was better bevor, backflip
-                if(prevQuali < nextQuali){
-                    std::cout << "Was better before\n";
-                    m_Mesh.flip(it.handle());
+    for(auto handle: handles){
+        a = m_Mesh.to_vertex_handle(m_Mesh.halfedge_handle(handle,0));
+        b = m_Mesh.to_vertex_handle(m_Mesh.halfedge_handle(handle,1));
+        if(m_Mesh.valence(a) == 6 && m_Mesh.valence(b) == 6){
+            if(!m_Mesh.is_boundary(handle)){
+                if(m_Mesh.is_flip_ok(handle)){
+                    float prevQuali = getEdgeQuality(handle);
+                        m_Mesh.flip(handle);
+                    float nextQuali = getEdgeQuality(handle);
+                    //If the mesh was better bevor, backflip
+                    if(prevQuali <= nextQuali){
+                        //std::cout << "Was better before\n";
+                        m_Mesh.flip(handle);
+                    }
+                }else{
+                    std::cout << "FLip NOT ok\n";
                 }
             }else{
-                ++it;
-                std::cout << "FLip NOT ok\n";
+                std::cout << "Hit Boundary\n";
             }
         }else{
-            ++it;
-            std::cout << "Hit Boundary\n";
+            //std::cout << "Valance to scmall\n";
         }
     }
 }
