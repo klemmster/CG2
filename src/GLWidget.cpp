@@ -100,7 +100,7 @@ void GLWidget::initializeGL() {
     //TODO: generated once, could need button
     //halfEdgeMesh.generateHalfEdge(marchingCubes.getVertices());
     halfEdgeMesh.setGrid(grid);
-    halfEdgeMesh.loadFromFile("openMeshCatSMALL.off");
+    halfEdgeMesh.loadFromFile("openMeshCatVERYSMALL.off");
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -419,7 +419,7 @@ void GLWidget::keyPressEvent(QKeyEvent* event) {
         updateGL();
         break;
     case Qt::Key_Z:
-        halfEdgeMesh.optimizeMesh(20);
+        halfEdgeMesh.optimizeMesh(1);
         updateGL();
         break;
     default:

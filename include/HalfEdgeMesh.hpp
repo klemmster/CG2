@@ -39,6 +39,8 @@ public:
 private:
 
     void project(TriHalfEdgeMesh::VertexHandle& vertex);
+    void optimizeByFlip();
+    void optimizeBySplitAndProject();
     TriHalfEdgeMesh m_Mesh;
     Grid3D m_Grid;
 };
